@@ -78,7 +78,7 @@ canvas { display: block; width: 100% !important; height: 100% !important; }
 
 <div class="layout">
   <div id="viewer">
-    <div id="loading">Loading 3D avatar...</div>
+    <div id="loading">Loading 3D avatar...<br><small id="loading-detail" style="color:#555;font-size:11px;margin-top:8px;display:block">Initializing Three.js...</small></div>
   </div>
   <div class="sidebar">
     <div class="search-row">
@@ -102,7 +102,9 @@ canvas { display: block; width: 100% !important; height: 100% !important; }
 
 <script type="importmap">
 {"imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+  "three": "/three/three.module.js",
+  "three/addons/loaders/GLTFLoader.js": "/three/GLTFLoader.js",
+  "three/addons/controls/OrbitControls.js": "/three/OrbitControls.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
 }}
 </script>
@@ -183,6 +185,7 @@ const BONE_GROUPS = {
 };
 
 // ── Load avatar ────────────────────────────────────────────────────────────
+document.getElementById('loading-detail').textContent = 'Loading GLB model...';
 new GLTFLoader().load('/avatar/arab-man.glb', (gltf) => {
   const avatar = gltf.scene;
   avatar.traverse(obj => {
@@ -197,7 +200,15 @@ new GLTFLoader().load('/avatar/arab-man.glb', (gltf) => {
   document.getElementById('loading').style.display = 'none';
   buildUI();
   console.log('Avatar loaded:', boneMap.size, 'bones');
-}, undefined, (e) => { console.error(e); document.getElementById('loading').textContent = 'Failed to load avatar'; });
+},
+(progress) => {
+  const pct = progress.total ? Math.round(progress.loaded/progress.total*100) : '...';
+  document.getElementById('loading-detail').textContent = `Loading model: ${pct}%`;
+},
+(e) => {
+  console.error('GLB load error:', e);
+  document.getElementById('loading').innerHTML = `<div style="color:#ef4444">Failed to load 3D model</div><div style="color:#555;font-size:11px;margin-top:4px">${e.message || e}</div>`;
+});
 
 // ── Apply rotation ─────────────────────────────────────────────────────────
 function applyBone(name) {
