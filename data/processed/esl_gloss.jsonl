@@ -1,0 +1,1246 @@
+{"input": "Archery", "output": "ARCHERY", "lang": "en", "category": "Sports"}
+{"input": "Rowing Boat", "output": "ROWING_BOAT", "lang": "en", "category": "Sports"}
+{"input": "Sports union", "output": "SPORTS_UNION", "lang": "en", "category": "Sports"}
+{"input": "Sports", "output": "SPORTS", "lang": "en", "category": "Sports"}
+{"input": "Sports", "output": "SPORTS", "lang": "en", "category": "Sports"}
+{"input": "Swimming pool", "output": "SWIMMING_POOL", "lang": "en", "category": "Sports"}
+{"input": "Throw In", "output": "THROW_IN", "lang": "en", "category": "Sports"}
+{"input": "Warning", "output": "WARNING", "lang": "en", "category": "Sports"}
+{"input": "Trophy", "output": "TROPHY", "lang": "en", "category": "Sports"}
+{"input": "water Polo", "output": "WATER_POLO", "lang": "en", "category": "Sports"}
+{"input": "Vollyball", "output": "VOLLYBALL", "lang": "en", "category": "Sports"}
+{"input": "Referee Flag", "output": "REFEREE_FLAG", "lang": "en", "category": "Sports"}
+{"input": "Rule", "output": "RULE", "lang": "en", "category": "Sports"}
+{"input": "Running Race", "output": "RUNNING_RACE", "lang": "en", "category": "Sports"}
+{"input": "Playground", "output": "PLAYGROUND", "lang": "en", "category": "Sports"}
+{"input": "Shooting", "output": "SHOOTING", "lang": "en", "category": "Sports"}
+{"input": "Shot Put", "output": "SHOT_PUT", "lang": "en", "category": "Sports"}
+{"input": "Skating", "output": "SKATING", "lang": "en", "category": "Sports"}
+{"input": "Swimming", "output": "SWIMMING", "lang": "en", "category": "Sports"}
+{"input": "Target", "output": "TARGET", "lang": "en", "category": "Sports"}
+{"input": "Penalty", "output": "PENALTY", "lang": "en", "category": "Sports"}
+{"input": "Table Tennis", "output": "TABLE_TENNIS", "lang": "en", "category": "Sports"}
+{"input": "Basketball", "output": "BASKETBALL", "lang": "en", "category": "Sports"}
+{"input": "Tennis", "output": "TENNIS", "lang": "en", "category": "Sports"}
+{"input": "Billiard", "output": "BILLIARD", "lang": "en", "category": "Sports"}
+{"input": "Boxing", "output": "BOXING", "lang": "en", "category": "Sports"}
+{"input": "Chess", "output": "CHESS", "lang": "en", "category": "Sports"}
+{"input": "Cycling", "output": "CYCLING", "lang": "en", "category": "Sports"}
+{"input": "Camel Racing", "output": "CAMEL_RACING", "lang": "en", "category": "Sports"}
+{"input": "Penalty Card", "output": "PENALTY_CARD", "lang": "en", "category": "Sports"}
+{"input": "Goalball", "output": "GOALBALL", "lang": "en", "category": "Sports"}
+{"input": "Golf", "output": "GOLF", "lang": "en", "category": "Sports"}
+{"input": "Bowling", "output": "BOWLING", "lang": "en", "category": "Sports"}
+{"input": "Car Racing", "output": "CAR_RACING", "lang": "en", "category": "Sports"}
+{"input": "Club", "output": "CLUB", "lang": "en", "category": "Sports"}
+{"input": "Falconer", "output": "FALCONER", "lang": "en", "category": "Sports"}
+{"input": "Football", "output": "FOOTBALL", "lang": "en", "category": "Sports"}
+{"input": "Weight Lifting", "output": "WEIGHT_LIFTING", "lang": "en", "category": "Sports"}
+{"input": "Competition", "output": "COMPETITION", "lang": "en", "category": "Sports"}
+{"input": "Horse Racing", "output": "HORSE_RACING", "lang": "en", "category": "Sports"}
+{"input": "League Championship", "output": "LEAGUE_CHAMPIONSHIP", "lang": "en", "category": "Sports"}
+{"input": "Marathon", "output": "MARATHON", "lang": "en", "category": "Sports"}
+{"input": "Handball", "output": "HANDBALL", "lang": "en", "category": "Sports"}
+{"input": "Olympiad", "output": "OLYMPIAD", "lang": "en", "category": "Sports"}
+{"input": "Whistle", "output": "WHISTLE", "lang": "en", "category": "Sports"}
+{"input": "Mint", "output": "MINT", "lang": "en", "category": "Plants"}
+{"input": "Ginger", "output": "GINGER", "lang": "en", "category": "Plants"}
+{"input": "Frankincense", "output": "FRANKINCENSE", "lang": "en", "category": "Plants"}
+{"input": "Corn", "output": "CORN", "lang": "en", "category": "Plants"}
+{"input": "Grass", "output": "GRASS", "lang": "en", "category": "Plants"}
+{"input": "Flower", "output": "FLOWER", "lang": "en", "category": "Plants"}
+{"input": "Cloves", "output": "CLOVES", "lang": "en", "category": "Plants"}
+{"input": "Cinnamon", "output": "CINNAMON", "lang": "en", "category": "Plants"}
+{"input": "Karate", "output": "KARATE", "lang": "en", "category": "Sports"}
+{"input": "Basil", "output": "BASIL", "lang": "en", "category": "Plants"}
+{"input": "Broccoli", "output": "BROCCOLI", "lang": "en", "category": "Plants"}
+{"input": "Algae", "output": "ALGAE", "lang": "en", "category": "Plants"}
+{"input": "Arabian Jasmine", "output": "ARABIAN_JASMINE", "lang": "en", "category": "Plants"}
+{"input": "Cardamom", "output": "CARDAMOM", "lang": "en", "category": "Plants"}
+{"input": "Wheat", "output": "WHEAT", "lang": "en", "category": "Plants"}
+{"input": "Thorn", "output": "THORN", "lang": "en", "category": "Plants"}
+{"input": "Rubber Tree", "output": "RUBBER_TREE", "lang": "en", "category": "Plants"}
+{"input": "Ziziphus", "output": "ZIZIPHUS", "lang": "en", "category": "Plants"}
+{"input": "Saffron", "output": "SAFFRON", "lang": "en", "category": "Plants"}
+{"input": "Sunflower", "output": "SUNFLOWER", "lang": "en", "category": "Plants"}
+{"input": "Rose", "output": "ROSE", "lang": "en", "category": "Plants"}
+{"input": "Jasmine", "output": "JASMINE", "lang": "en", "category": "Plants"}
+{"input": "Sugar Cane", "output": "SUGAR_CANE", "lang": "en", "category": "Plants"}
+{"input": "Gum Tree", "output": "GUM_TREE", "lang": "en", "category": "Plants"}
+{"input": "100 02", "output": "100_02", "lang": "en", "category": "Numbers"}
+{"input": "93", "output": "93", "lang": "en", "category": "Numbers"}
+{"input": "94", "output": "94", "lang": "en", "category": "Numbers"}
+{"input": "Palm", "output": "PALM", "lang": "en", "category": "Plants"}
+{"input": "92", "output": "92", "lang": "en", "category": "Numbers"}
+{"input": "91", "output": "91", "lang": "en", "category": "Numbers"}
+{"input": "90", "output": "90", "lang": "en", "category": "Numbers"}
+{"input": "70000", "output": "70000", "lang": "en", "category": "Numbers"}
+{"input": "70000", "output": "70000", "lang": "en", "category": "Numbers"}
+{"input": "7000", "output": "7000", "lang": "en", "category": "Numbers"}
+{"input": "600", "output": "600", "lang": "en", "category": "Numbers"}
+{"input": "700000", "output": "700000", "lang": "en", "category": "Numbers"}
+{"input": "600", "output": "600", "lang": "en", "category": "Numbers"}
+{"input": "60000", "output": "60000", "lang": "en", "category": "Numbers"}
+{"input": "60000", "output": "60000", "lang": "en", "category": "Numbers"}
+{"input": "6000", "output": "6000", "lang": "en", "category": "Numbers"}
+{"input": "70", "output": "70", "lang": "en", "category": "Numbers"}
+{"input": "700", "output": "700", "lang": "en", "category": "Numbers"}
+{"input": "Ten", "output": "TEN", "lang": "en", "category": "Numbers"}
+{"input": "700", "output": "700", "lang": "en", "category": "Numbers"}
+{"input": "Six", "output": "SIX", "lang": "en", "category": "Numbers"}
+{"input": "60", "output": "60", "lang": "en", "category": "Numbers"}
+{"input": "Nine", "output": "NINE", "lang": "en", "category": "Numbers"}
+{"input": "80", "output": "80", "lang": "en", "category": "Numbers"}
+{"input": "Seven", "output": "SEVEN", "lang": "en", "category": "Numbers"}
+{"input": "18", "output": "18", "lang": "en", "category": "Numbers"}
+{"input": "400", "output": "400", "lang": "en", "category": "Numbers"}
+{"input": "97", "output": "97", "lang": "en", "category": "Numbers"}
+{"input": "17", "output": "17", "lang": "en", "category": "Numbers"}
+{"input": "16", "output": "16", "lang": "en", "category": "Numbers"}
+{"input": "18", "output": "18", "lang": "en", "category": "Numbers"}
+{"input": "17", "output": "17", "lang": "en", "category": "Numbers"}
+{"input": "16", "output": "16", "lang": "en", "category": "Numbers"}
+{"input": "12", "output": "12", "lang": "en", "category": "Numbers"}
+{"input": "15", "output": "15", "lang": "en", "category": "Numbers"}
+{"input": "15", "output": "15", "lang": "en", "category": "Numbers"}
+{"input": "100", "output": "100", "lang": "en", "category": "Numbers"}
+{"input": "11", "output": "11", "lang": "en", "category": "Numbers"}
+{"input": "100", "output": "100", "lang": "en", "category": "Numbers"}
+{"input": "10000", "output": "10000", "lang": "en", "category": "Numbers"}
+{"input": "40000", "output": "40000", "lang": "en", "category": "Numbers"}
+{"input": "20000", "output": "20000", "lang": "en", "category": "Numbers"}
+{"input": "3000", "output": "3000", "lang": "en", "category": "Numbers"}
+{"input": "40000", "output": "40000", "lang": "en", "category": "Numbers"}
+{"input": "30000", "output": "30000", "lang": "en", "category": "Numbers"}
+{"input": "300", "output": "300", "lang": "en", "category": "Numbers"}
+{"input": "300000", "output": "300000", "lang": "en", "category": "Numbers"}
+{"input": "28", "output": "28", "lang": "en", "category": "Numbers"}
+{"input": "30000", "output": "30000", "lang": "en", "category": "Numbers"}
+{"input": "23", "output": "23", "lang": "en", "category": "Numbers"}
+{"input": "50", "output": "50", "lang": "en", "category": "Numbers"}
+{"input": "600000", "output": "600000", "lang": "en", "category": "Numbers"}
+{"input": "200", "output": "200", "lang": "en", "category": "Numbers"}
+{"input": "500", "output": "500", "lang": "en", "category": "Numbers"}
+{"input": "500", "output": "500", "lang": "en", "category": "Numbers"}
+{"input": "5000", "output": "5000", "lang": "en", "category": "Numbers"}
+{"input": "95", "output": "95", "lang": "en", "category": "Numbers"}
+{"input": "500000", "output": "500000", "lang": "en", "category": "Numbers"}
+{"input": "50000", "output": "50000", "lang": "en", "category": "Numbers"}
+{"input": "50000", "output": "50000", "lang": "en", "category": "Numbers"}
+{"input": "96", "output": "96", "lang": "en", "category": "Numbers"}
+{"input": "Twelve", "output": "TWELVE", "lang": "en", "category": "Numbers"}
+{"input": "98", "output": "98", "lang": "en", "category": "Numbers"}
+{"input": "One", "output": "ONE", "lang": "en", "category": "Numbers"}
+{"input": "900", "output": "900", "lang": "en", "category": "Numbers"}
+{"input": "900", "output": "900", "lang": "en", "category": "Numbers"}
+{"input": "9000", "output": "9000", "lang": "en", "category": "Numbers"}
+{"input": "Three", "output": "THREE", "lang": "en", "category": "Numbers"}
+{"input": "90000", "output": "90000", "lang": "en", "category": "Numbers"}
+{"input": "900000", "output": "900000", "lang": "en", "category": "Numbers"}
+{"input": "800", "output": "800", "lang": "en", "category": "Numbers"}
+{"input": "800", "output": "800", "lang": "en", "category": "Numbers"}
+{"input": "8000", "output": "8000", "lang": "en", "category": "Numbers"}
+{"input": "80000", "output": "80000", "lang": "en", "category": "Numbers"}
+{"input": "80000", "output": "80000", "lang": "en", "category": "Numbers"}
+{"input": "Four", "output": "FOUR", "lang": "en", "category": "Numbers"}
+{"input": "Five", "output": "FIVE", "lang": "en", "category": "Numbers"}
+{"input": "800000", "output": "800000", "lang": "en", "category": "Numbers"}
+{"input": "Eight", "output": "EIGHT", "lang": "en", "category": "Numbers"}
+{"input": "99", "output": "99", "lang": "en", "category": "Numbers"}
+{"input": "90000", "output": "90000", "lang": "en", "category": "Numbers"}
+{"input": "40", "output": "40", "lang": "en", "category": "Numbers"}
+{"input": "Eleven", "output": "ELEVEN", "lang": "en", "category": "Numbers"}
+{"input": "14", "output": "14", "lang": "en", "category": "Numbers"}
+{"input": "14", "output": "14", "lang": "en", "category": "Numbers"}
+{"input": "13", "output": "13", "lang": "en", "category": "Numbers"}
+{"input": "400", "output": "400", "lang": "en", "category": "Numbers"}
+{"input": "1000", "output": "1000", "lang": "en", "category": "Numbers"}
+{"input": "13", "output": "13", "lang": "en", "category": "Numbers"}
+{"input": "100000", "output": "100000", "lang": "en", "category": "Numbers"}
+{"input": "10000", "output": "10000", "lang": "en", "category": "Numbers"}
+{"input": "1000000 1", "output": "1000000_1", "lang": "en", "category": "Numbers"}
+{"input": "1000000", "output": "1000000", "lang": "en", "category": "Numbers"}
+{"input": "1000000000", "output": "1000000000", "lang": "en", "category": "Numbers"}
+{"input": "1000 02", "output": "1000_02", "lang": "en", "category": "Numbers"}
+{"input": "1000000", "output": "1000000", "lang": "en", "category": "Numbers"}
+{"input": "19", "output": "19", "lang": "en", "category": "Numbers"}
+{"input": "19", "output": "19", "lang": "en", "category": "Numbers"}
+{"input": "4000", "output": "4000", "lang": "en", "category": "Numbers"}
+{"input": "200000", "output": "200000", "lang": "en", "category": "Numbers"}
+{"input": "400000", "output": "400000", "lang": "en", "category": "Numbers"}
+{"input": "30", "output": "30", "lang": "en", "category": "Numbers"}
+{"input": "29", "output": "29", "lang": "en", "category": "Numbers"}
+{"input": "300", "output": "300", "lang": "en", "category": "Numbers"}
+{"input": "Two", "output": "TWO", "lang": "en", "category": "Numbers"}
+{"input": "26", "output": "26", "lang": "en", "category": "Numbers"}
+{"input": "25", "output": "25", "lang": "en", "category": "Numbers"}
+{"input": "24", "output": "24", "lang": "en", "category": "Numbers"}
+{"input": "22", "output": "22", "lang": "en", "category": "Numbers"}
+{"input": "21", "output": "21", "lang": "en", "category": "Numbers"}
+{"input": "20", "output": "20", "lang": "en", "category": "Numbers"}
+{"input": "20", "output": "20", "lang": "en", "category": "Numbers"}
+{"input": "200", "output": "200", "lang": "en", "category": "Numbers"}
+{"input": "2000", "output": "2000", "lang": "en", "category": "Numbers"}
+{"input": "20000", "output": "20000", "lang": "en", "category": "Numbers"}
+{"input": "27", "output": "27", "lang": "en", "category": "Numbers"}
+{"input": "Zero", "output": "ZERO", "lang": "en", "category": "Numbers"}
+{"input": "Death Certificate", "output": "DEATH_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "Certificate Of Study", "output": "CERTIFICATE_OF_STUDY", "lang": "en", "category": "Official Documents"}
+{"input": "Salary Certificate", "output": "SALARY_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "College Degree", "output": "COLLEGE_DEGREE", "lang": "en", "category": "Official Documents"}
+{"input": "Birth Certificate", "output": "BIRTH_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "Absher Card 02", "output": "ABSHER_CARD_02", "lang": "en", "category": "Official Documents"}
+{"input": "Disabled Card 02", "output": "DISABLED_CARD_02", "lang": "en", "category": "Official Documents"}
+{"input": "House Ownership", "output": "HOUSE_OWNERSHIP", "lang": "en", "category": "Official Documents"}
+{"input": "Disabled Card", "output": "DISABLED_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Housing Loan", "output": "HOUSING_LOAN", "lang": "en", "category": "Official Documents"}
+{"input": "Insurance Card", "output": "INSURANCE_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Medical Certificate", "output": "MEDICAL_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "Land Ownership", "output": "LAND_OWNERSHIP", "lang": "en", "category": "Official Documents"}
+{"input": "Citizenship Paper", "output": "CITIZENSHIP_PAPER", "lang": "en", "category": "Official Documents"}
+{"input": "Absher Card 01", "output": "ABSHER_CARD_01", "lang": "en", "category": "Official Documents"}
+{"input": "Citizenship Paper", "output": "CITIZENSHIP_PAPER", "lang": "en", "category": "Official Documents"}
+{"input": "Citizenship Paper", "output": "CITIZENSHIP_PAPER", "lang": "en", "category": "Official Documents"}
+{"input": "City Number In Citizenship", "output": "CITY_NUMBER_IN_CITIZENSHIP", "lang": "en", "category": "Official Documents"}
+{"input": "Certificate Of Good Conduct", "output": "CERTIFICATE_OF_GOOD_CONDUCT", "lang": "en", "category": "Official Documents"}
+{"input": "Clearance", "output": "CLEARANCE", "lang": "en", "category": "Official Documents"}
+{"input": "Owners Card 02", "output": "OWNERS_CARD_02", "lang": "en", "category": "Official Documents"}
+{"input": "Photograph", "output": "PHOTOGRAPH", "lang": "en", "category": "Official Documents"}
+{"input": "Power Of Attorney", "output": "POWER_OF_ATTORNEY", "lang": "en", "category": "Official Documents"}
+{"input": "Owners Card 01", "output": "OWNERS_CARD_01", "lang": "en", "category": "Official Documents"}
+{"input": "Car Ownership Card", "output": "CAR_OWNERSHIP_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Membership Card", "output": "MEMBERSHIP_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Divorce Certificate", "output": "DIVORCE_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "Ration Card", "output": "RATION_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Driving License", "output": "DRIVING_LICENSE", "lang": "en", "category": "Official Documents"}
+{"input": "Emirates Id Card", "output": "EMIRATES_ID_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Health Card", "output": "HEALTH_CARD", "lang": "en", "category": "Official Documents"}
+{"input": "Emirates Id Card 02", "output": "EMIRATES_ID_CARD_02", "lang": "en", "category": "Official Documents"}
+{"input": "Insurance Against Others", "output": "INSURANCE_AGAINST_OTHERS", "lang": "en", "category": "Official Documents"}
+{"input": "Shahada La Yamlak", "output": "SHAHADA_LA_YAMLAK", "lang": "en", "category": "Official Documents"}
+{"input": "Marriage Certificate", "output": "MARRIAGE_CERTIFICATE", "lang": "en", "category": "Official Documents"}
+{"input": "Plumber", "output": "PLUMBER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Pilot", "output": "PILOT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Shahada La Yamlak", "output": "SHAHADA_LA_YAMLAK", "lang": "en", "category": "Official Documents"}
+{"input": "Officer", "output": "OFFICER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Muzammar", "output": "MUZAMMAR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Notary", "output": "NOTARY", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Minister", "output": "MINISTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Manager", "output": "MANAGER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Makeup", "output": "MAKEUP", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Major", "output": "MAJOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Major General", "output": "MAJOR_GENERAL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Lt General", "output": "LT_GENERAL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Lieutenant Colonel", "output": "LIEUTENANT_COLONEL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Lieutenant", "output": "LIEUTENANT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Lieutenant 2", "output": "LIEUTENANT_2", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Maestro", "output": "MAESTRO", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Lawyer", "output": "LAWYER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Porter", "output": "PORTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Psychologist", "output": "PSYCHOLOGIST", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Labor", "output": "LABOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Wakeel", "output": "WAKEEL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Programmer", "output": "PROGRAMMER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Typist", "output": "TYPIST", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Waiter", "output": "WAITER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Telephone operator", "output": "TELEPHONE_OPERATOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Wakeel 1", "output": "WAKEEL_1", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Teacher", "output": "TEACHER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Surgeon", "output": "SURGEON", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Stableman", "output": "STABLEMAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Stableman", "output": "STABLEMAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Soldier", "output": "SOLDIER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Soldier", "output": "SOLDIER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Shepherd", "output": "SHEPHERD", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Smith", "output": "SMITH", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Shepherd", "output": "SHEPHERD", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Sheikh", "output": "SHEIKH", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Sign Language", "output": "SIGN_LANGUAGE", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Sculptor", "output": "SCULPTOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Reporter", "output": "REPORTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Secretary", "output": "SECRETARY", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Sculptor", "output": "SCULPTOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Prosecutor", "output": "PROSECUTOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Servent", "output": "SERVENT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "King", "output": "KING", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Journalist", "output": "JOURNALIST", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Labor", "output": "LABOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Clerk", "output": "CLERK", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Physiotherapist", "output": "PHYSIOTHERAPIST", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Painter", "output": "PAINTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Captain", "output": "CAPTAIN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Photographer", "output": "PHOTOGRAPHER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Mosque Preacher", "output": "MOSQUE_PREACHER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Brigadier", "output": "BRIGADIER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Musician", "output": "MUSICIAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Astronomer", "output": "ASTRONOMER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Defense Minister", "output": "DEFENSE_MINISTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Astronomer", "output": "ASTRONOMER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Barber", "output": "BARBER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Defense Minister", "output": "DEFENSE_MINISTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Colonel", "output": "COLONEL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Cloth Ironer", "output": "CLOTH_IRONER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "CID", "output": "CID", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Hannaya", "output": "HANNAYA", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Interpreter", "output": "INTERPRETER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Hair Styler", "output": "HAIR_STYLER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Jokey", "output": "JOKEY", "lang": "en", "category": "Professions and Jobs"}
+{"input": "HOD", "output": "HOD", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Guide", "output": "GUIDE", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Guard", "output": "GUARD", "lang": "en", "category": "Professions and Jobs"}
+{"input": "General", "output": "GENERAL", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Watchman", "output": "WATCHMAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Employee", "output": "EMPLOYEE", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Firefighter", "output": "FIREFIGHTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Driver", "output": "DRIVER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Farmer", "output": "FARMER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Designer", "output": "DESIGNER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Doctor", "output": "DOCTOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Engineer", "output": "ENGINEER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Civilian", "output": "CIVILIAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "CID", "output": "CID", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Welder", "output": "WELDER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Guard", "output": "GUARD", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Captain", "output": "CAPTAIN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Butcher", "output": "BUTCHER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Astronaut", "output": "ASTRONAUT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "cameraman", "output": "CAMERAMAN", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Astronaut", "output": "ASTRONAUT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Baker", "output": "BAKER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Assistant", "output": "ASSISTANT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Ambassador", "output": "AMBASSADOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Asst Teacher", "output": "ASST_TEACHER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Air host", "output": "AIR_HOST", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Astronaut", "output": "ASTRONAUT", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Carpenter", "output": "CARPENTER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Crown Prince", "output": "CROWN_PRINCE", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Cashier", "output": "CASHIER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Chef", "output": "CHEF", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Jeweler", "output": "JEWELER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Interviewer", "output": "INTERVIEWER", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Imam", "output": "IMAM", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Inspector", "output": "INSPECTOR", "lang": "en", "category": "Professions and Jobs"}
+{"input": "Saqoo", "output": "SAQOO", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Saloona", "output": "SALOONA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Qars", "output": "QARS", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Popular Cuisines", "output": "POPULAR_CUISINES", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Marqooqa", "output": "MARQOOQA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Khanfaroosh", "output": "KHANFAROOSH", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Khubz Khameer", "output": "KHUBZ_KHAMEER", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Maleh", "output": "MALEH", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Khabeesa", "output": "KHABEESA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Jami", "output": "JAMI", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Jabbab", "output": "JABBAB", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Harees", "output": "HAREES", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Bethhetha", "output": "BETHHETHA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Jashaa", "output": "JASHAA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Belalayt", "output": "BELALAYT", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Bajeela", "output": "BAJEELA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Aseeda", "output": "ASEEDA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Qasheed", "output": "QASHEED", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Nakhi", "output": "NAKHI", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Naghar", "output": "NAGHAR", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Sureed", "output": "SUREED", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Majboos", "output": "MAJBOOS", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Ursiya", "output": "URSIYA", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Mahilli Zayed", "output": "MAHILLI_ZAYED", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Dabs Al Tamar", "output": "DABS_AL_TAMAR", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Laqeemat", "output": "LAQEEMAT", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Biryani", "output": "BIRYANI", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Yeqat", "output": "YEQAT", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Khubz Raqaaq", "output": "KHUBZ_RAQAAQ", "lang": "en", "category": "Popular Cuisines"}
+{"input": "Ain Khat", "output": "AIN_KHAT", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Qasrul Emiraat 1", "output": "QASRUL_EMIRAAT_1", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Qariyatul Alamiya", "output": "QARIYATUL_ALAMIYA", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Qasrul Emiraat 2", "output": "QASRUL_EMIRAAT_2", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Muntazah Sharjah", "output": "MUNTAZAH_SHARJAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Masjid Shaikh Zayed", "output": "MASJID_SHAIKH_ZAYED", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Kasir Amwaaj", "output": "KASIR_AMWAAJ", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jumairah", "output": "JUMAIRAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Masjid Al Bidyah", "output": "MASJID_AL_BIDYAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Mumbazzara", "output": "MUMBAZZARA", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jbr", "output": "JBR", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jabal Hafeet", "output": "JABAL_HAFEET", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jabal Jais", "output": "JABAL_JAIS", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Hadiqa Haiwanaat", "output": "HADIQA_HAIWANAAT", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jazera Nakhla", "output": "JAZERA_NAKHLA", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jamiya Shaikh Zayd", "output": "JAMIYA_SHAIKH_ZAYD", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Burj Al Arab", "output": "BURJ_AL_ARAB", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Burj Khalifa", "output": "BURJ_KHALIFA", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Bohera Khalid", "output": "BOHERA_KHALID", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Alfigate", "output": "ALFIGATE", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Awafi", "output": "AWAFI", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Al Qasbah", "output": "AL_QASBAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Jameya", "output": "JAMEYA", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Al Mumzar", "output": "AL_MUMZAR", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Souq Al Markazi Sharjah", "output": "SOUQ_AL_MARKAZI_SHARJAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Souq Jummah", "output": "SOUQ_JUMMAH", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Hazza Bin Zayed", "output": "HAZZA_BIN_ZAYED", "lang": "en", "category": "Landmarks and Locations"}
+{"input": "Day 2", "output": "DAY_2", "lang": "en", "category": "Measurement Units"}
+{"input": "Sunset", "output": "SUNSET", "lang": "en", "category": "Measurement Units"}
+{"input": "Week", "output": "WEEK", "lang": "en", "category": "Measurement Units"}
+{"input": "Winter", "output": "WINTER", "lang": "en", "category": "Measurement Units"}
+{"input": "Sunday", "output": "SUNDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Sunrise", "output": "SUNRISE", "lang": "en", "category": "Measurement Units"}
+{"input": "Spring", "output": "SPRING", "lang": "en", "category": "Measurement Units"}
+{"input": "Summer", "output": "SUMMER", "lang": "en", "category": "Measurement Units"}
+{"input": "Second", "output": "SECOND", "lang": "en", "category": "Measurement Units"}
+{"input": "Quater Hour", "output": "QUATER_HOUR", "lang": "en", "category": "Measurement Units"}
+{"input": "Monday", "output": "MONDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Minute", "output": "MINUTE", "lang": "en", "category": "Measurement Units"}
+{"input": "Saturday", "output": "SATURDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Century", "output": "CENTURY", "lang": "en", "category": "Measurement Units"}
+{"input": "Late", "output": "LATE", "lang": "en", "category": "Measurement Units"}
+{"input": "Night", "output": "NIGHT", "lang": "en", "category": "Measurement Units"}
+{"input": "Year", "output": "YEAR", "lang": "en", "category": "Measurement Units"}
+{"input": "Tuesday", "output": "TUESDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Thursday", "output": "THURSDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Tommorw", "output": "TOMMORW", "lang": "en", "category": "Measurement Units"}
+{"input": "Time", "output": "TIME", "lang": "en", "category": "Measurement Units"}
+{"input": "Gregorian Calendar", "output": "GREGORIAN_CALENDAR", "lang": "en", "category": "Measurement Units"}
+{"input": "Friday", "output": "FRIDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Hour", "output": "HOUR", "lang": "en", "category": "Measurement Units"}
+{"input": "Hijri Calander", "output": "HIJRI_CALANDER", "lang": "en", "category": "Measurement Units"}
+{"input": "Four Seasons", "output": "FOUR_SEASONS", "lang": "en", "category": "Measurement Units"}
+{"input": "Early", "output": "EARLY", "lang": "en", "category": "Measurement Units"}
+{"input": "Decade", "output": "DECADE", "lang": "en", "category": "Measurement Units"}
+{"input": "Fall", "output": "FALL", "lang": "en", "category": "Measurement Units"}
+{"input": "Daytime", "output": "DAYTIME", "lang": "en", "category": "Measurement Units"}
+{"input": "Yesterday", "output": "YESTERDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Day", "output": "DAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Ministry Of Presidential Affairs", "output": "MINISTRY_OF_PRESIDENTIAL_AFFAIRS", "lang": "en", "category": "Ministries Departments"}
+{"input": "Wednesday", "output": "WEDNESDAY", "lang": "en", "category": "Measurement Units"}
+{"input": "Ministry Of Justice", "output": "MINISTRY_OF_JUSTICE", "lang": "en", "category": "Ministries Departments"}
+{"input": "Police Academy", "output": "POLICE_ACADEMY", "lang": "en", "category": "Ministries Departments"}
+{"input": "National Center Of Meteorology", "output": "NATIONAL_CENTER_OF_METEOROLOGY", "lang": "en", "category": "Ministries Departments"}
+{"input": "The Ministry Of Higher Education", "output": "THE_MINISTRY_OF_HIGHER_EDUCATION", "lang": "en", "category": "Ministries Departments"}
+{"input": "Pensions And Social Insurance", "output": "PENSIONS_AND_SOCIAL_INSURANCE", "lang": "en", "category": "Ministries Departments"}
+{"input": "The Ministry Of Public Works", "output": "THE_MINISTRY_OF_PUBLIC_WORKS", "lang": "en", "category": "Ministries Departments"}
+{"input": "University City Sharjah", "output": "UNIVERSITY_CITY_SHARJAH", "lang": "en", "category": "Ministries Departments"}
+{"input": "Uae Red Crescent Authority", "output": "UAE_RED_CRESCENT_AUTHORITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Water And Electricity Authority", "output": "WATER_AND_ELECTRICITY_AUTHORITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Zakat Fund", "output": "ZAKAT_FUND", "lang": "en", "category": "Ministries Departments"}
+{"input": "Authority", "output": "AUTHORITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Zayed Housing Program", "output": "ZAYED_HOUSING_PROGRAM", "lang": "en", "category": "Ministries Departments"}
+{"input": "Court", "output": "COURT", "lang": "en", "category": "Ministries Departments"}
+{"input": "Customs", "output": "CUSTOMS", "lang": "en", "category": "Ministries Departments"}
+{"input": "Dewan", "output": "DEWAN", "lang": "en", "category": "Ministries Departments"}
+{"input": "Zayed Higher Institute", "output": "ZAYED_HIGHER_INSTITUTE", "lang": "en", "category": "Ministries Departments"}
+{"input": "Embassy", "output": "EMBASSY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Emirates Identity Authority", "output": "EMIRATES_IDENTITY_AUTHORITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Zayed Military College", "output": "ZAYED_MILITARY_COLLEGE", "lang": "en", "category": "Ministries Departments"}
+{"input": "Federal National Council", "output": "FEDERAL_NATIONAL_COUNCIL", "lang": "en", "category": "Ministries Departments"}
+{"input": "Islamic Affairs And Endowments", "output": "ISLAMIC_AFFAIRS_AND_ENDOWMENTS", "lang": "en", "category": "Ministries Departments"}
+{"input": "Emirates University", "output": "EMIRATES_UNIVERSITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "League Of Arab States", "output": "LEAGUE_OF_ARAB_STATES", "lang": "en", "category": "Ministries Departments"}
+{"input": "Marriage Fund", "output": "MARRIAGE_FUND", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Defense", "output": "MINISTRY_OF_DEFENSE", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Community Development", "output": "MINISTRY_OF_COMMUNITY_DEVELOPMENT", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Endowments", "output": "MINISTRY_OF_ENDOWMENTS", "lang": "en", "category": "Ministries Departments"}
+{"input": "Zayed University", "output": "ZAYED_UNIVERSITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Abu Dhabi Media Company", "output": "ABU_DHABI_MEDIA_COMPANY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Finance", "output": "MINISTRY_OF_FINANCE", "lang": "en", "category": "Ministries Departments"}
+{"input": "National Center For Statistics 2", "output": "NATIONAL_CENTER_FOR_STATISTICS_2", "lang": "en", "category": "Ministries Departments"}
+{"input": "Youth And Sports Welfare", "output": "YOUTH_AND_SPORTS_WELFARE", "lang": "en", "category": "Ministries Departments"}
+{"input": "National Center For Statistics 1", "output": "NATIONAL_CENTER_FOR_STATISTICS_1", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Interior", "output": "MINISTRY_OF_INTERIOR", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Health", "output": "MINISTRY_OF_HEALTH", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Foreign Affairs", "output": "MINISTRY_OF_FOREIGN_AFFAIRS", "lang": "en", "category": "Ministries Departments"}
+{"input": "Committee", "output": "COMMITTEE", "lang": "en", "category": "Ministries Departments"}
+{"input": "Ministry Of Health", "output": "MINISTRY_OF_HEALTH", "lang": "en", "category": "Ministries Departments"}
+{"input": "General Civil Aviation Authority", "output": "GENERAL_CIVIL_AVIATION_AUTHORITY", "lang": "en", "category": "Ministries Departments"}
+{"input": "Recommended", "output": "RECOMMENDED", "lang": "en", "category": "Common Verbs"}
+{"input": "Gcc", "output": "GCC", "lang": "en", "category": "Ministries Departments"}
+{"input": "Remove", "output": "REMOVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Rubbing", "output": "RUBBING", "lang": "en", "category": "Common Verbs"}
+{"input": "Relax", "output": "RELAX", "lang": "en", "category": "Common Verbs"}
+{"input": "sell", "output": "SELL", "lang": "en", "category": "Common Verbs"}
+{"input": "Push", "output": "PUSH", "lang": "en", "category": "Common Verbs"}
+{"input": "Rush", "output": "RUSH", "lang": "en", "category": "Common Verbs"}
+{"input": "Sends", "output": "SENDS", "lang": "en", "category": "Common Verbs"}
+{"input": "requests", "output": "REQUESTS", "lang": "en", "category": "Common Verbs"}
+{"input": "Shouts", "output": "SHOUTS", "lang": "en", "category": "Common Verbs"}
+{"input": "punishment", "output": "PUNISHMENT", "lang": "en", "category": "Common Verbs"}
+{"input": "Sew", "output": "SEW", "lang": "en", "category": "Common Verbs"}
+{"input": "Open", "output": "OPEN", "lang": "en", "category": "Common Verbs"}
+{"input": "Out", "output": "OUT", "lang": "en", "category": "Common Verbs"}
+{"input": "pulls", "output": "PULLS", "lang": "en", "category": "Common Verbs"}
+{"input": "plays Guitar", "output": "PLAYS_GUITAR", "lang": "en", "category": "Common Verbs"}
+{"input": "Plays", "output": "PLAYS", "lang": "en", "category": "Common Verbs"}
+{"input": "Photographer", "output": "PHOTOGRAPHER", "lang": "en", "category": "Common Verbs"}
+{"input": "Plow", "output": "PLOW", "lang": "en", "category": "Common Verbs"}
+{"input": "Sleep", "output": "SLEEP", "lang": "en", "category": "Common Verbs"}
+{"input": "Wearing", "output": "WEARING", "lang": "en", "category": "Common Verbs"}
+{"input": "Pray", "output": "PRAY", "lang": "en", "category": "Common Verbs"}
+{"input": "Wave", "output": "WAVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Weighs", "output": "WEIGHS", "lang": "en", "category": "Common Verbs"}
+{"input": "wins", "output": "WINS", "lang": "en", "category": "Common Verbs"}
+{"input": "Yanzaa", "output": "YANZAA", "lang": "en", "category": "Common Verbs"}
+{"input": "Washing", "output": "WASHING", "lang": "en", "category": "Common Verbs"}
+{"input": "Borrow", "output": "BORROW", "lang": "en", "category": "Common Verbs"}
+{"input": "puts", "output": "PUTS", "lang": "en", "category": "Common Verbs"}
+{"input": "Racing", "output": "RACING", "lang": "en", "category": "Common Verbs"}
+{"input": "Read", "output": "READ", "lang": "en", "category": "Common Verbs"}
+{"input": "Receives", "output": "RECEIVES", "lang": "en", "category": "Common Verbs"}
+{"input": "Love", "output": "LOVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Prevent", "output": "PREVENT", "lang": "en", "category": "Common Verbs"}
+{"input": "Murder", "output": "MURDER", "lang": "en", "category": "Common Verbs"}
+{"input": "obeys", "output": "OBEYS", "lang": "en", "category": "Common Verbs"}
+{"input": "Mistake", "output": "MISTAKE", "lang": "en", "category": "Common Verbs"}
+{"input": "The Ministry Of Education", "output": "THE_MINISTRY_OF_EDUCATION", "lang": "en", "category": "Ministries Departments"}
+{"input": "Participate", "output": "PARTICIPATE", "lang": "en", "category": "Common Verbs"}
+{"input": "Painting", "output": "PAINTING", "lang": "en", "category": "Common Verbs"}
+{"input": "performs ablution", "output": "PERFORMS_ABLUTION", "lang": "en", "category": "Common Verbs"}
+{"input": "Lose", "output": "LOSE", "lang": "en", "category": "Common Verbs"}
+{"input": "silence", "output": "SILENCE", "lang": "en", "category": "Common Verbs"}
+{"input": "watch", "output": "WATCH", "lang": "en", "category": "Common Verbs"}
+{"input": "Planting", "output": "PLANTING", "lang": "en", "category": "Common Verbs"}
+{"input": "Sign", "output": "SIGN", "lang": "en", "category": "Common Verbs"}
+{"input": "Wipe", "output": "WIPE", "lang": "en", "category": "Common Verbs"}
+{"input": "watering", "output": "WATERING", "lang": "en", "category": "Common Verbs"}
+{"input": "Yatayamam", "output": "YATAYAMAM", "lang": "en", "category": "Common Verbs"}
+{"input": "Write", "output": "WRITE", "lang": "en", "category": "Common Verbs"}
+{"input": "Arranging", "output": "ARRANGING", "lang": "en", "category": "Common Verbs"}
+{"input": "Angry", "output": "ANGRY", "lang": "en", "category": "Common Verbs"}
+{"input": "Work", "output": "WORK", "lang": "en", "category": "Common Verbs"}
+{"input": "War", "output": "WAR", "lang": "en", "category": "Common Verbs"}
+{"input": "wants", "output": "WANTS", "lang": "en", "category": "Common Verbs"}
+{"input": "Annoyed", "output": "ANNOYED", "lang": "en", "category": "Common Verbs"}
+{"input": "Warning", "output": "WARNING", "lang": "en", "category": "Common Verbs"}
+{"input": "smokes", "output": "SMOKES", "lang": "en", "category": "Common Verbs"}
+{"input": "Smells", "output": "SMELLS", "lang": "en", "category": "Common Verbs"}
+{"input": "steals", "output": "STEALS", "lang": "en", "category": "Common Verbs"}
+{"input": "Speaks", "output": "SPEAKS", "lang": "en", "category": "Common Verbs"}
+{"input": "Standing", "output": "STANDING", "lang": "en", "category": "Common Verbs"}
+{"input": "swims", "output": "SWIMS", "lang": "en", "category": "Common Verbs"}
+{"input": "Think", "output": "THINK", "lang": "en", "category": "Common Verbs"}
+{"input": "visits", "output": "VISITS", "lang": "en", "category": "Common Verbs"}
+{"input": "wakes up", "output": "WAKES_UP", "lang": "en", "category": "Common Verbs"}
+{"input": "Sing", "output": "SING", "lang": "en", "category": "Common Verbs"}
+{"input": "Walk", "output": "WALK", "lang": "en", "category": "Common Verbs"}
+{"input": "wants", "output": "WANTS", "lang": "en", "category": "Common Verbs"}
+{"input": "Tastes", "output": "TASTES", "lang": "en", "category": "Common Verbs"}
+{"input": "Barbecue", "output": "BARBECUE", "lang": "en", "category": "Common Verbs"}
+{"input": "Lifts", "output": "LIFTS", "lang": "en", "category": "Common Verbs"}
+{"input": "dancing", "output": "DANCING", "lang": "en", "category": "Common Verbs"}
+{"input": "Deceive", "output": "DECEIVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Loses", "output": "LOSES", "lang": "en", "category": "Common Verbs"}
+{"input": "Decide", "output": "DECIDE", "lang": "en", "category": "Common Verbs"}
+{"input": "Cry", "output": "CRY", "lang": "en", "category": "Common Verbs"}
+{"input": "Delayed", "output": "DELAYED", "lang": "en", "category": "Common Verbs"}
+{"input": "Demolish", "output": "DEMOLISH", "lang": "en", "category": "Common Verbs"}
+{"input": "Copy", "output": "COPY", "lang": "en", "category": "Common Verbs"}
+{"input": "despise", "output": "DESPISE", "lang": "en", "category": "Common Verbs"}
+{"input": "Dig", "output": "DIG", "lang": "en", "category": "Common Verbs"}
+{"input": "Disappears", "output": "DISAPPEARS", "lang": "en", "category": "Common Verbs"}
+{"input": "Dive", "output": "DIVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Draws", "output": "DRAWS", "lang": "en", "category": "Common Verbs"}
+{"input": "discharged", "output": "DISCHARGED", "lang": "en", "category": "Common Verbs"}
+{"input": "deteriorating", "output": "DETERIORATING", "lang": "en", "category": "Common Verbs"}
+{"input": "Disobey", "output": "DISOBEY", "lang": "en", "category": "Common Verbs"}
+{"input": "contemplation", "output": "CONTEMPLATION", "lang": "en", "category": "Common Verbs"}
+{"input": "Confirm", "output": "CONFIRM", "lang": "en", "category": "Common Verbs"}
+{"input": "Cooking", "output": "COOKING", "lang": "en", "category": "Common Verbs"}
+{"input": "Build", "output": "BUILD", "lang": "en", "category": "Common Verbs"}
+{"input": "Burns", "output": "BURNS", "lang": "en", "category": "Common Verbs"}
+{"input": "Calling Duaa", "output": "CALLING_DUAA", "lang": "en", "category": "Common Verbs"}
+{"input": "Burns", "output": "BURNS", "lang": "en", "category": "Common Verbs"}
+{"input": "Break", "output": "BREAK", "lang": "en", "category": "Common Verbs"}
+{"input": "Celebrate", "output": "CELEBRATE", "lang": "en", "category": "Common Verbs"}
+{"input": "carry", "output": "CARRY", "lang": "en", "category": "Common Verbs"}
+{"input": "Characterized", "output": "CHARACTERIZED", "lang": "en", "category": "Common Verbs"}
+{"input": "Choose", "output": "CHOOSE", "lang": "en", "category": "Common Verbs"}
+{"input": "Call", "output": "CALL", "lang": "en", "category": "Common Verbs"}
+{"input": "Close", "output": "CLOSE", "lang": "en", "category": "Common Verbs"}
+{"input": "Combing", "output": "COMBING", "lang": "en", "category": "Common Verbs"}
+{"input": "complement", "output": "COMPLEMENT", "lang": "en", "category": "Common Verbs"}
+{"input": "Concentrate", "output": "CONCENTRATE", "lang": "en", "category": "Common Verbs"}
+{"input": "Common Verbs", "output": "COMMON_VERBS", "lang": "en", "category": "Common Verbs"}
+{"input": "drink", "output": "DRINK", "lang": "en", "category": "Common Verbs"}
+{"input": "Looking", "output": "LOOKING", "lang": "en", "category": "Common Verbs"}
+{"input": "Due", "output": "DUE", "lang": "en", "category": "Common Verbs"}
+{"input": "Hears", "output": "HEARS", "lang": "en", "category": "Common Verbs"}
+{"input": "hits", "output": "HITS", "lang": "en", "category": "Common Verbs"}
+{"input": "Hunting", "output": "HUNTING", "lang": "en", "category": "Common Verbs"}
+{"input": "Ignores", "output": "IGNORES", "lang": "en", "category": "Common Verbs"}
+{"input": "Informer", "output": "INFORMER", "lang": "en", "category": "Common Verbs"}
+{"input": "Dreaming", "output": "DREAMING", "lang": "en", "category": "Common Verbs"}
+{"input": "helps", "output": "HELPS", "lang": "en", "category": "Common Verbs"}
+{"input": "He Goes", "output": "HE_GOES", "lang": "en", "category": "Common Verbs"}
+{"input": "Initiative", "output": "INITIATIVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Judged", "output": "JUDGED", "lang": "en", "category": "Common Verbs"}
+{"input": "kneads", "output": "KNEADS", "lang": "en", "category": "Common Verbs"}
+{"input": "Jump", "output": "JUMP", "lang": "en", "category": "Common Verbs"}
+{"input": "laces tie", "output": "LACES_TIE", "lang": "en", "category": "Common Verbs"}
+{"input": "laughs", "output": "LAUGHS", "lang": "en", "category": "Common Verbs"}
+{"input": "Itikaaf", "output": "ITIKAAF", "lang": "en", "category": "Common Verbs"}
+{"input": "Hates", "output": "HATES", "lang": "en", "category": "Common Verbs"}
+{"input": "Earn", "output": "EARN", "lang": "en", "category": "Common Verbs"}
+{"input": "Invites Invitation", "output": "INVITES_INVITATION", "lang": "en", "category": "Common Verbs"}
+{"input": "harvest", "output": "HARVEST", "lang": "en", "category": "Common Verbs"}
+{"input": "Trying", "output": "TRYING", "lang": "en", "category": "Common Verbs"}
+{"input": "Travels", "output": "TRAVELS", "lang": "en", "category": "Common Verbs"}
+{"input": "Hates", "output": "HATES", "lang": "en", "category": "Common Verbs"}
+{"input": "Evolve", "output": "EVOLVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Volunteer", "output": "VOLUNTEER", "lang": "en", "category": "Common Verbs"}
+{"input": "Flirt", "output": "FLIRT", "lang": "en", "category": "Common Verbs"}
+{"input": "Find", "output": "FIND", "lang": "en", "category": "Common Verbs"}
+{"input": "Forgives", "output": "FORGIVES", "lang": "en", "category": "Common Verbs"}
+{"input": "Examine", "output": "EXAMINE", "lang": "en", "category": "Common Verbs"}
+{"input": "Full", "output": "FULL", "lang": "en", "category": "Common Verbs"}
+{"input": "folds", "output": "FOLDS", "lang": "en", "category": "Common Verbs"}
+{"input": "driving", "output": "DRIVING", "lang": "en", "category": "Common Verbs"}
+{"input": "Give", "output": "GIVE", "lang": "en", "category": "Common Verbs"}
+{"input": "Enter", "output": "ENTER", "lang": "en", "category": "Common Verbs"}
+{"input": "End", "output": "END", "lang": "en", "category": "Common Verbs"}
+{"input": "Explain", "output": "EXPLAIN", "lang": "en", "category": "Common Verbs"}
+{"input": "Blame", "output": "BLAME", "lang": "en", "category": "Common Verbs"}
+{"input": "Fly", "output": "FLY", "lang": "en", "category": "Common Verbs"}
+{"input": "Grows", "output": "GROWS", "lang": "en", "category": "Common Verbs"}
+{"input": "feeds", "output": "FEEDS", "lang": "en", "category": "Common Verbs"}
+{"input": "Amma", "output": "AMMA", "lang": "en", "category": "Family"}
+{"input": "Second Wife", "output": "SECOND_WIFE", "lang": "en", "category": "Family"}
+{"input": "Second Wife-", "output": "SECOND_WIFE-", "lang": "en", "category": "Family"}
+{"input": "Naphew", "output": "NAPHEW", "lang": "en", "category": "Family"}
+{"input": "Naphew", "output": "NAPHEW", "lang": "en", "category": "Family"}
+{"input": "Mother", "output": "MOTHER", "lang": "en", "category": "Family"}
+{"input": "Grandmother", "output": "GRANDMOTHER", "lang": "en", "category": "Family"}
+{"input": "Lactation Brother", "output": "LACTATION_BROTHER", "lang": "en", "category": "Family"}
+{"input": "Grandfather", "output": "GRANDFATHER", "lang": "en", "category": "Family"}
+{"input": "Couple", "output": "COUPLE", "lang": "en", "category": "Family"}
+{"input": "Father", "output": "FATHER", "lang": "en", "category": "Family"}
+{"input": "Daughter", "output": "DAUGHTER", "lang": "en", "category": "Family"}
+{"input": "Family", "output": "FAMILY", "lang": "en", "category": "Family"}
+{"input": "Aunt", "output": "AUNT", "lang": "en", "category": "Family"}
+{"input": "Brothers Wife", "output": "BROTHERS_WIFE", "lang": "en", "category": "Family"}
+{"input": "Aunt", "output": "AUNT", "lang": "en", "category": "Family"}
+{"input": "Brother in law", "output": "BROTHER_IN_LAW", "lang": "en", "category": "Family"}
+{"input": "Wife", "output": "WIFE", "lang": "en", "category": "Family"}
+{"input": "Uncle", "output": "UNCLE", "lang": "en", "category": "Family"}
+{"input": "Gas Cylinder", "output": "GAS_CYLINDER", "lang": "en", "category": "Household Items"}
+{"input": "Glass", "output": "GLASS", "lang": "en", "category": "Household Items"}
+{"input": "Twins", "output": "TWINS", "lang": "en", "category": "Family"}
+{"input": "Remote", "output": "REMOTE", "lang": "en", "category": "Household Items"}
+{"input": "Son", "output": "SON", "lang": "en", "category": "Family"}
+{"input": "Chandelier", "output": "CHANDELIER", "lang": "en", "category": "Household Items"}
+{"input": "Bell", "output": "BELL", "lang": "en", "category": "Household Items"}
+{"input": "Carpet", "output": "CARPET", "lang": "en", "category": "Household Items"}
+{"input": "Coffee Cup", "output": "COFFEE_CUP", "lang": "en", "category": "Household Items"}
+{"input": "Mattress", "output": "MATTRESS", "lang": "en", "category": "Household Items"}
+{"input": "Air Conditioner", "output": "AIR_CONDITIONER", "lang": "en", "category": "Household Items"}
+{"input": "Bed", "output": "BED", "lang": "en", "category": "Household Items"}
+{"input": "Dinning Room", "output": "DINNING_ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Majlis", "output": "MAJLIS", "lang": "en", "category": "Household Items"}
+{"input": "Maids Room", "output": "MAIDS_ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Mabkhara", "output": "MABKHARA", "lang": "en", "category": "Household Items"}
+{"input": "Light Bulb", "output": "LIGHT_BULB", "lang": "en", "category": "Household Items"}
+{"input": "Library", "output": "LIBRARY", "lang": "en", "category": "Household Items"}
+{"input": "Library", "output": "LIBRARY", "lang": "en", "category": "Household Items"}
+{"input": "Majlis", "output": "MAJLIS", "lang": "en", "category": "Household Items"}
+{"input": "Light Bulb", "output": "LIGHT_BULB", "lang": "en", "category": "Household Items"}
+{"input": "Fork", "output": "FORK", "lang": "en", "category": "Household Items"}
+{"input": "Flower Vase", "output": "FLOWER_VASE", "lang": "en", "category": "Household Items"}
+{"input": "Ladder", "output": "LADDER", "lang": "en", "category": "Household Items"}
+{"input": "Ladder", "output": "LADDER", "lang": "en", "category": "Household Items"}
+{"input": "Electric Kettle", "output": "ELECTRIC_KETTLE", "lang": "en", "category": "Household Items"}
+{"input": "Electric Wire", "output": "ELECTRIC_WIRE", "lang": "en", "category": "Household Items"}
+{"input": "Electricity", "output": "ELECTRICITY", "lang": "en", "category": "Household Items"}
+{"input": "Dvd Player", "output": "DVD_PLAYER", "lang": "en", "category": "Household Items"}
+{"input": "Entrance Door", "output": "ENTRANCE_DOOR", "lang": "en", "category": "Household Items"}
+{"input": "Washbasin", "output": "WASHBASIN", "lang": "en", "category": "Household Items"}
+{"input": "Washbasin", "output": "WASHBASIN", "lang": "en", "category": "Household Items"}
+{"input": "Water Heater", "output": "WATER_HEATER", "lang": "en", "category": "Household Items"}
+{"input": "Vase", "output": "VASE", "lang": "en", "category": "Household Items"}
+{"input": "Wall Clock", "output": "WALL_CLOCK", "lang": "en", "category": "Household Items"}
+{"input": "Villa", "output": "VILLA", "lang": "en", "category": "Household Items"}
+{"input": "Microwave", "output": "MICROWAVE", "lang": "en", "category": "Household Items"}
+{"input": "Telephone", "output": "TELEPHONE", "lang": "en", "category": "Household Items"}
+{"input": "Wall", "output": "WALL", "lang": "en", "category": "Household Items"}
+{"input": "Tent Room", "output": "TENT_ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Teapot", "output": "TEAPOT", "lang": "en", "category": "Household Items"}
+{"input": "Tent", "output": "TENT", "lang": "en", "category": "Household Items"}
+{"input": "Freezer", "output": "FREEZER", "lang": "en", "category": "Household Items"}
+{"input": "Fan", "output": "FAN", "lang": "en", "category": "Household Items"}
+{"input": "Lamp", "output": "LAMP", "lang": "en", "category": "Household Items"}
+{"input": "Table", "output": "TABLE", "lang": "en", "category": "Household Items"}
+{"input": "Suitcase", "output": "SUITCASE", "lang": "en", "category": "Household Items"}
+{"input": "Mirror", "output": "MIRROR", "lang": "en", "category": "Household Items"}
+{"input": "Surface", "output": "SURFACE", "lang": "en", "category": "Household Items"}
+{"input": "Washing Machine", "output": "WASHING_MACHINE", "lang": "en", "category": "Household Items"}
+{"input": "Wardrobe", "output": "WARDROBE", "lang": "en", "category": "Household Items"}
+{"input": "Door", "output": "DOOR", "lang": "en", "category": "Household Items"}
+{"input": "Tv", "output": "TV", "lang": "en", "category": "Household Items"}
+{"input": "Wall", "output": "WALL", "lang": "en", "category": "Household Items"}
+{"input": "Teacup", "output": "TEACUP", "lang": "en", "category": "Household Items"}
+{"input": "Tent", "output": "TENT", "lang": "en", "category": "Household Items"}
+{"input": "Switch", "output": "SWITCH", "lang": "en", "category": "Household Items"}
+{"input": "Tape Recorder", "output": "TAPE_RECORDER", "lang": "en", "category": "Household Items"}
+{"input": "Swimming Pool", "output": "SWIMMING_POOL", "lang": "en", "category": "Household Items"}
+{"input": "Tray", "output": "TRAY", "lang": "en", "category": "Household Items"}
+{"input": "Window", "output": "WINDOW", "lang": "en", "category": "Household Items"}
+{"input": "Door 1", "output": "DOOR_1", "lang": "en", "category": "Household Items"}
+{"input": "Oven", "output": "OVEN", "lang": "en", "category": "Household Items"}
+{"input": "Oven", "output": "OVEN", "lang": "en", "category": "Household Items"}
+{"input": "Curtain", "output": "CURTAIN", "lang": "en", "category": "Household Items"}
+{"input": "Painting", "output": "PAINTING", "lang": "en", "category": "Household Items"}
+{"input": "Mug", "output": "MUG", "lang": "en", "category": "Household Items"}
+{"input": "Mulhaq", "output": "MULHAQ", "lang": "en", "category": "Household Items"}
+{"input": "Mirror", "output": "MIRROR", "lang": "en", "category": "Household Items"}
+{"input": "Knife", "output": "KNIFE", "lang": "en", "category": "Household Items"}
+{"input": "Kitchen", "output": "KITCHEN", "lang": "en", "category": "Household Items"}
+{"input": "Iron", "output": "IRON", "lang": "en", "category": "Household Items"}
+{"input": "House", "output": "HOUSE", "lang": "en", "category": "Household Items"}
+{"input": "Keys", "output": "KEYS", "lang": "en", "category": "Household Items"}
+{"input": "Heater", "output": "HEATER", "lang": "en", "category": "Household Items"}
+{"input": "Home Lawn", "output": "HOME_LAWN", "lang": "en", "category": "Household Items"}
+{"input": "Hanger", "output": "HANGER", "lang": "en", "category": "Household Items"}
+{"input": "Hanger", "output": "HANGER", "lang": "en", "category": "Household Items"}
+{"input": "Guest Room", "output": "GUEST_ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Hanger", "output": "HANGER", "lang": "en", "category": "Household Items"}
+{"input": "Guest House", "output": "GUEST_HOUSE", "lang": "en", "category": "Household Items"}
+{"input": "Garage", "output": "GARAGE", "lang": "en", "category": "Household Items"}
+{"input": "Plate", "output": "PLATE", "lang": "en", "category": "Household Items"}
+{"input": "Refrigerator", "output": "REFRIGERATOR", "lang": "en", "category": "Household Items"}
+{"input": "Pillow", "output": "PILLOW", "lang": "en", "category": "Household Items"}
+{"input": "Chandelier", "output": "CHANDELIER", "lang": "en", "category": "Household Items"}
+{"input": "Chair", "output": "CHAIR", "lang": "en", "category": "Household Items"}
+{"input": "Bell", "output": "BELL", "lang": "en", "category": "Household Items"}
+{"input": "Bedroom", "output": "BEDROOM", "lang": "en", "category": "Household Items"}
+{"input": "Car", "output": "CAR", "lang": "en", "category": "Household Items"}
+{"input": "Bed Sheet", "output": "BED_SHEET", "lang": "en", "category": "Household Items"}
+{"input": "Bathroom Shower", "output": "BATHROOM_SHOWER", "lang": "en", "category": "Household Items"}
+{"input": "Bathroom", "output": "BATHROOM", "lang": "en", "category": "Household Items"}
+{"input": "Bathroom Shower", "output": "BATHROOM_SHOWER", "lang": "en", "category": "Household Items"}
+{"input": "Arabic Drawing Room", "output": "ARABIC_DRAWING_ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Alarm Clock", "output": "ALARM_CLOCK", "lang": "en", "category": "Household Items"}
+{"input": "Storage", "output": "STORAGE", "lang": "en", "category": "Household Items"}
+{"input": "Apartment", "output": "APARTMENT", "lang": "en", "category": "Household Items"}
+{"input": "Spoon", "output": "SPOON", "lang": "en", "category": "Household Items"}
+{"input": "Safe", "output": "SAFE", "lang": "en", "category": "Household Items"}
+{"input": "Room", "output": "ROOM", "lang": "en", "category": "Household Items"}
+{"input": "Bathroom", "output": "BATHROOM", "lang": "en", "category": "Household Items"}
+{"input": "&#216;&#168;&#216;&#166;&#216;&#177;", "output": "&#216;&#168;&#216;&#166;&#216;&#177;", "lang": "en", "category": "Household Items"}
+{"input": "Sister", "output": "SISTER", "lang": "en", "category": "Family"}
+{"input": "Sibling", "output": "SIBLING", "lang": "en", "category": "Family"}
+{"input": "brother", "output": "BROTHER", "lang": "en", "category": "Family"}
+{"input": "Pearl", "output": "PEARL", "lang": "en", "category": "Environment"}
+{"input": "Acceptable", "output": "ACCEPTABLE", "lang": "en", "category": "Education"}
+{"input": "Day", "output": "DAY", "lang": "en", "category": "Environment"}
+{"input": "School Agent", "output": "SCHOOL_AGENT", "lang": "en", "category": "Education"}
+{"input": "Diesel", "output": "DIESEL", "lang": "en", "category": "Environment"}
+{"input": "Desert", "output": "DESERT", "lang": "en", "category": "Environment"}
+{"input": "Diamond", "output": "DIAMOND", "lang": "en", "category": "Environment"}
+{"input": "Subtraction", "output": "SUBTRACTION", "lang": "en", "category": "Education"}
+{"input": "Earthquake", "output": "EARTHQUAKE", "lang": "en", "category": "Environment"}
+{"input": "History", "output": "HISTORY", "lang": "en", "category": "Education"}
+{"input": "Darkness", "output": "DARKNESS", "lang": "en", "category": "Environment"}
+{"input": "Environment", "output": "ENVIRONMENT", "lang": "en", "category": "Environment"}
+{"input": "School Bag", "output": "SCHOOL_BAG", "lang": "en", "category": "Education"}
+{"input": "Equator", "output": "EQUATOR", "lang": "en", "category": "Environment"}
+{"input": "Farm", "output": "FARM", "lang": "en", "category": "Environment"}
+{"input": "School", "output": "SCHOOL", "lang": "en", "category": "Education"}
+{"input": "School Schedule", "output": "SCHOOL_SCHEDULE", "lang": "en", "category": "Education"}
+{"input": "Science", "output": "SCIENCE", "lang": "en", "category": "Education"}
+{"input": "Sharpner", "output": "SHARPNER", "lang": "en", "category": "Education"}
+{"input": "Flood", "output": "FLOOD", "lang": "en", "category": "Environment"}
+{"input": "Islamic Education", "output": "ISLAMIC_EDUCATION", "lang": "en", "category": "Education"}
+{"input": "Field", "output": "FIELD", "lang": "en", "category": "Environment"}
+{"input": "Crescent", "output": "CRESCENT", "lang": "en", "category": "Environment"}
+{"input": "Successful", "output": "SUCCESSFUL", "lang": "en", "category": "Education"}
+{"input": "Gravity", "output": "GRAVITY", "lang": "en", "category": "Environment"}
+{"input": "Globe", "output": "GLOBE", "lang": "en", "category": "Environment"}
+{"input": "Line", "output": "LINE", "lang": "en", "category": "Education"}
+{"input": "Law", "output": "LAW", "lang": "en", "category": "Education"}
+{"input": "Iron", "output": "IRON", "lang": "en", "category": "Environment"}
+{"input": "Island 02", "output": "ISLAND_02", "lang": "en", "category": "Environment"}
+{"input": "Latitude", "output": "LATITUDE", "lang": "en", "category": "Environment"}
+{"input": "Multiply", "output": "MULTIPLY", "lang": "en", "category": "Education"}
+{"input": "Principal", "output": "PRINCIPAL", "lang": "en", "category": "Education"}
+{"input": "Mathematics", "output": "MATHEMATICS", "lang": "en", "category": "Education"}
+{"input": "Queue", "output": "QUEUE", "lang": "en", "category": "Education"}
+{"input": "Teacher", "output": "TEACHER", "lang": "en", "category": "Education"}
+{"input": "Longitude", "output": "LONGITUDE", "lang": "en", "category": "Environment"}
+{"input": "The First", "output": "THE_FIRST", "lang": "en", "category": "Education"}
+{"input": "Lightning", "output": "LIGHTNING", "lang": "en", "category": "Environment"}
+{"input": "Very Good", "output": "VERY_GOOD", "lang": "en", "category": "Education"}
+{"input": "Cloud", "output": "CLOUD", "lang": "en", "category": "Environment"}
+{"input": "Peninsula", "output": "PENINSULA", "lang": "en", "category": "Environment"}
+{"input": "Petrol", "output": "PETROL", "lang": "en", "category": "Environment"}
+{"input": "Repeat", "output": "REPEAT", "lang": "en", "category": "Education"}
+{"input": "Ebb", "output": "EBB", "lang": "en", "category": "Environment"}
+{"input": "Cold", "output": "COLD", "lang": "en", "category": "Environment"}
+{"input": "Answer", "output": "ANSWER", "lang": "en", "category": "Education"}
+{"input": "Rombus", "output": "ROMBUS", "lang": "en", "category": "Education"}
+{"input": "Fog", "output": "FOG", "lang": "en", "category": "Environment"}
+{"input": "Arabic Language", "output": "ARABIC_LANGUAGE", "lang": "en", "category": "Education"}
+{"input": "Glass", "output": "GLASS", "lang": "en", "category": "Environment"}
+{"input": "Jungle", "output": "JUNGLE", "lang": "en", "category": "Environment"}
+{"input": "Bell", "output": "BELL", "lang": "en", "category": "Education"}
+{"input": "Blackboard Eraser", "output": "BLACKBOARD_ERASER", "lang": "en", "category": "Education"}
+{"input": "Khaleej 01", "output": "KHALEEJ_01", "lang": "en", "category": "Environment"}
+{"input": "Blackboard", "output": "BLACKBOARD", "lang": "en", "category": "Education"}
+{"input": "Khaleej 02", "output": "KHALEEJ_02", "lang": "en", "category": "Environment"}
+{"input": "Lake", "output": "LAKE", "lang": "en", "category": "Environment"}
+{"input": "Circle", "output": "CIRCLE", "lang": "en", "category": "Education"}
+{"input": "Lunar Eclipse", "output": "LUNAR_ECLIPSE", "lang": "en", "category": "Environment"}
+{"input": "Class", "output": "CLASS", "lang": "en", "category": "Education"}
+{"input": "Magnet", "output": "MAGNET", "lang": "en", "category": "Environment"}
+{"input": "College", "output": "COLLEGE", "lang": "en", "category": "Education"}
+{"input": "Contest", "output": "CONTEST", "lang": "en", "category": "Education"}
+{"input": "Course", "output": "COURSE", "lang": "en", "category": "Education"}
+{"input": "Night", "output": "NIGHT", "lang": "en", "category": "Environment"}
+{"input": "Moon", "output": "MOON", "lang": "en", "category": "Environment"}
+{"input": "Computer", "output": "COMPUTER", "lang": "en", "category": "Education"}
+{"input": "Culture", "output": "CULTURE", "lang": "en", "category": "Education"}
+{"input": "Degree", "output": "DEGREE", "lang": "en", "category": "Education"}
+{"input": "Gold", "output": "GOLD", "lang": "en", "category": "Environment"}
+{"input": "Compass", "output": "COMPASS", "lang": "en", "category": "Environment"}
+{"input": "Plastic", "output": "PLASTIC", "lang": "en", "category": "Environment"}
+{"input": "Division", "output": "DIVISION", "lang": "en", "category": "Education"}
+{"input": "Port", "output": "PORT", "lang": "en", "category": "Environment"}
+{"input": "Education", "output": "EDUCATION", "lang": "en", "category": "Education"}
+{"input": "English Language", "output": "ENGLISH_LANGUAGE", "lang": "en", "category": "Education"}
+{"input": "Rising Tide", "output": "RISING_TIDE", "lang": "en", "category": "Environment"}
+{"input": "Rain", "output": "RAIN", "lang": "en", "category": "Environment"}
+{"input": "Eraser", "output": "ERASER", "lang": "en", "category": "Education"}
+{"input": "Excellent", "output": "EXCELLENT", "lang": "en", "category": "Education"}
+{"input": "Sand", "output": "SAND", "lang": "en", "category": "Environment"}
+{"input": "Exam", "output": "EXAM", "lang": "en", "category": "Education"}
+{"input": "River", "output": "RIVER", "lang": "en", "category": "Environment"}
+{"input": "History", "output": "HISTORY", "lang": "en", "category": "Education"}
+{"input": "Rectangle", "output": "RECTANGLE", "lang": "en", "category": "Education"}
+{"input": "Sea", "output": "SEA", "lang": "en", "category": "Environment"}
+{"input": "Silver", "output": "SILVER", "lang": "en", "category": "Environment"}
+{"input": "Repeat", "output": "REPEAT", "lang": "en", "category": "Education"}
+{"input": "Sky", "output": "SKY", "lang": "en", "category": "Environment"}
+{"input": "Solar Eclipse", "output": "SOLAR_ECLIPSE", "lang": "en", "category": "Environment"}
+{"input": "Results", "output": "RESULTS", "lang": "en", "category": "Education"}
+{"input": "South Pole", "output": "SOUTH_POLE", "lang": "en", "category": "Environment"}
+{"input": "Last One", "output": "LAST_ONE", "lang": "en", "category": "Education"}
+{"input": "Writing", "output": "WRITING", "lang": "en", "category": "Education"}
+{"input": "Stars", "output": "STARS", "lang": "en", "category": "Environment"}
+{"input": "Library", "output": "LIBRARY", "lang": "en", "category": "Education"}
+{"input": "Less Then", "output": "LESS_THEN", "lang": "en", "category": "Education"}
+{"input": "Sun", "output": "SUN", "lang": "en", "category": "Environment"}
+{"input": "Space", "output": "SPACE", "lang": "en", "category": "Environment"}
+{"input": "City", "output": "CITY", "lang": "en", "category": "Environment"}
+{"input": "Notebook", "output": "NOTEBOOK", "lang": "en", "category": "Education"}
+{"input": "Thunder", "output": "THUNDER", "lang": "en", "category": "Environment"}
+{"input": "Plus", "output": "PLUS", "lang": "en", "category": "Education"}
+{"input": "Question", "output": "QUESTION", "lang": "en", "category": "Education"}
+{"input": "Cave", "output": "CAVE", "lang": "en", "category": "Environment"}
+{"input": "Beach", "output": "BEACH", "lang": "en", "category": "Environment"}
+{"input": "Triangle", "output": "TRIANGLE", "lang": "en", "category": "Education"}
+{"input": "Uneducated", "output": "UNEDUCATED", "lang": "en", "category": "Education"}
+{"input": "Asphalt", "output": "ASPHALT", "lang": "en", "category": "Environment"}
+{"input": "Charcoal", "output": "CHARCOAL", "lang": "en", "category": "Environment"}
+{"input": "University", "output": "UNIVERSITY", "lang": "en", "category": "Education"}
+{"input": "Ruler", "output": "RULER", "lang": "en", "category": "Education"}
+{"input": "North Pole", "output": "NORTH_POLE", "lang": "en", "category": "Environment"}
+{"input": "Book", "output": "BOOK", "lang": "en", "category": "Education"}
+{"input": "World", "output": "WORLD", "lang": "en", "category": "Environment"}
+{"input": "Wind", "output": "WIND", "lang": "en", "category": "Environment"}
+{"input": "Air", "output": "AIR", "lang": "en", "category": "Environment"}
+{"input": "Failed", "output": "FAILED", "lang": "en", "category": "Education"}
+{"input": "Geography", "output": "GEOGRAPHY", "lang": "en", "category": "Education"}
+{"input": "Water Vapors", "output": "WATER_VAPORS", "lang": "en", "category": "Environment"}
+{"input": "Good", "output": "GOOD", "lang": "en", "category": "Education"}
+{"input": "Waterfall", "output": "WATERFALL", "lang": "en", "category": "Environment"}
+{"input": "Tornado", "output": "TORNADO", "lang": "en", "category": "Environment"}
+{"input": "Grater Then", "output": "GRATER_THEN", "lang": "en", "category": "Education"}
+{"input": "Well", "output": "WELL", "lang": "en", "category": "Environment"}
+{"input": "Ocean", "output": "OCEAN", "lang": "en", "category": "Environment"}
+{"input": "Volcano", "output": "VOLCANO", "lang": "en", "category": "Environment"}
+{"input": "Wood", "output": "WOOD", "lang": "en", "category": "Environment"}
+{"input": "South", "output": "SOUTH", "lang": "en", "category": "Directions and Locations"}
+{"input": "There", "output": "THERE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Peak", "output": "PEAK", "lang": "en", "category": "Directions and Locations"}
+{"input": "Right", "output": "RIGHT", "lang": "en", "category": "Directions and Locations"}
+{"input": "Through", "output": "THROUGH", "lang": "en", "category": "Directions and Locations"}
+{"input": "Left", "output": "LEFT", "lang": "en", "category": "Directions and Locations"}
+{"input": "Far Away", "output": "FAR_AWAY", "lang": "en", "category": "Directions and Locations"}
+{"input": "North", "output": "NORTH", "lang": "en", "category": "Directions and Locations"}
+{"input": "Close", "output": "CLOSE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Down", "output": "DOWN", "lang": "en", "category": "Directions and Locations"}
+{"input": "Behind", "output": "BEHIND", "lang": "en", "category": "Directions and Locations"}
+{"input": "Beside", "output": "BESIDE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Before", "output": "BEFORE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Under", "output": "UNDER", "lang": "en", "category": "Directions and Locations"}
+{"input": "About", "output": "ABOUT", "lang": "en", "category": "Directions and Locations"}
+{"input": "Above", "output": "ABOVE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Khaarij", "output": "KHAARIJ", "lang": "en", "category": "Directions and Locations"}
+{"input": "Inside", "output": "INSIDE", "lang": "en", "category": "Directions and Locations"}
+{"input": "East", "output": "EAST", "lang": "en", "category": "Directions and Locations"}
+{"input": "Between", "output": "BETWEEN", "lang": "en", "category": "Directions and Locations"}
+{"input": "West", "output": "WEST", "lang": "en", "category": "Directions and Locations"}
+{"input": "Center", "output": "CENTER", "lang": "en", "category": "Directions and Locations"}
+{"input": "Cap", "output": "CAP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Cap", "output": "CAP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Button", "output": "BUTTON", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Top", "output": "TOP", "lang": "en", "category": "Directions and Locations"}
+{"input": "Black Head Ring", "output": "BLACK_HEAD_RING", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Burqa", "output": "BURQA", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Abaya", "output": "ABAYA", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Bangles", "output": "BANGLES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Abaya", "output": "ABAYA", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Cufflinks", "output": "CUFFLINKS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Dakhoon", "output": "DAKHOON", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Earings", "output": "EARINGS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Necktie", "output": "NECKTIE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Necklace", "output": "NECKLACE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Nail Polish", "output": "NAIL_POLISH", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Nail Extensions", "output": "NAIL_EXTENSIONS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Makeup", "output": "MAKEUP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Madkhan", "output": "MADKHAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Kandora Women", "output": "KANDORA_WOMEN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Kandora Man", "output": "KANDORA_MAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Niqab", "output": "NIQAB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Comb", "output": "COMB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Colored Lenses", "output": "COLORED_LENSES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Cap", "output": "CAP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Contact Lense", "output": "CONTACT_LENSE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Chain", "output": "CHAIN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Black Robe Man", "output": "BLACK_ROBE_MAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Anklet", "output": "ANKLET", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Wristwatch", "output": "WRISTWATCH", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Women Pants", "output": "WOMEN_PANTS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Wizaar", "output": "WIZAAR", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Black Robe Man", "output": "BLACK_ROBE_MAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Nightwear", "output": "NIGHTWEAR", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Necklace", "output": "NECKLACE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Long Dress", "output": "LONG_DRESS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hair Cap", "output": "HAIR_CAP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Long Dress", "output": "LONG_DRESS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Gloves", "output": "GLOVES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Here", "output": "HERE", "lang": "en", "category": "Directions and Locations"}
+{"input": "Eyelashes", "output": "EYELASHES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Eyepencil", "output": "EYEPENCIL", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Eyeglasses", "output": "EYEGLASSES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Earings", "output": "EARINGS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Eyeglasses", "output": "EYEGLASSES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Wig", "output": "WIG", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Niqaab", "output": "NIQAAB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Trousers", "output": "TROUSERS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Headscarf", "output": "HEADSCARF", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Uniform", "output": "UNIFORM", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Head Scarf Man", "output": "HEAD_SCARF_MAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Head Scarf Man", "output": "HEAD_SCARF_MAN", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hairband", "output": "HAIRBAND", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hand Jewelry", "output": "HAND_JEWELRY", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Head Jewelry", "output": "HEAD_JEWELRY", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hairband", "output": "HAIRBAND", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Headscarf", "output": "HEADSCARF", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hair Clip", "output": "HAIR_CLIP", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sandal", "output": "SANDAL", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sandals", "output": "SANDALS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Robe", "output": "ROBE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Perfume", "output": "PERFUME", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Perfume", "output": "PERFUME", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Oud", "output": "OUD", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Ring", "output": "RING", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Niqab", "output": "NIQAB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sandal", "output": "SANDAL", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Oud Perfume", "output": "OUD_PERFUME", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Heavy Necklace", "output": "HEAVY_NECKLACE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hijaab", "output": "HIJAAB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Heels", "output": "HEELS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Tilli", "output": "TILLI", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Towel", "output": "TOWEL", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Tie Hair", "output": "TIE_HAIR", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Tassel", "output": "TASSEL", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sword", "output": "SWORD", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sunglasses", "output": "SUNGLASSES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Thobe", "output": "THOBE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Sports Shoes", "output": "SPORTS_SHOES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Socks", "output": "SOCKS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Skirt", "output": "SKIRT", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Shoes", "output": "SHOES", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Shorts", "output": "SHORTS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Shaver", "output": "SHAVER", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Long", "output": "LONG", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Curious", "output": "CURIOUS", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Cool", "output": "COOL", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Coward", "output": "COWARD", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Disloyalty", "output": "DISLOYALTY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Beggar", "output": "BEGGAR", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Beautiful", "output": "BEAUTIFUL", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Arrogant", "output": "ARROGANT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Less", "output": "LESS", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Confused", "output": "CONFUSED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Brave", "output": "BRAVE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Citizen", "output": "CITIZEN", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Bitter", "output": "BITTER", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Fast", "output": "FAST", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Liar", "output": "LIAR", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Happly", "output": "HAPPLY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Generous", "output": "GENEROUS", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Envy", "output": "ENVY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Humble", "output": "HUMBLE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Operation Theater", "output": "OPERATION_THEATER", "lang": "en", "category": "Health"}
+{"input": "Ointment", "output": "OINTMENT", "lang": "en", "category": "Health"}
+{"input": "Worry", "output": "WORRY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Normal Delivery", "output": "NORMAL_DELIVERY", "lang": "en", "category": "Health"}
+{"input": "Name", "output": "NAME", "lang": "en", "category": "Health"}
+{"input": "Morning", "output": "MORNING", "lang": "en", "category": "Health"}
+{"input": "Mucus Phlegm", "output": "MUCUS_PHLEGM", "lang": "en", "category": "Health"}
+{"input": "Menstrual Period", "output": "MENSTRUAL_PERIOD", "lang": "en", "category": "Health"}
+{"input": "Mens Waiting Area", "output": "MENS_WAITING_AREA", "lang": "en", "category": "Health"}
+{"input": "Medical Report", "output": "MEDICAL_REPORT", "lang": "en", "category": "Health"}
+{"input": "Laboratory", "output": "LABORATORY", "lang": "en", "category": "Health"}
+{"input": "Internist", "output": "INTERNIST", "lang": "en", "category": "Health"}
+{"input": "Minor ailments", "output": "MINOR_AILMENTS", "lang": "en", "category": "Health"}
+{"input": "Meem", "output": "MEEM", "lang": "en", "category": "Alphabets"}
+{"input": "Aeen", "output": "AEEN", "lang": "en", "category": "Alphabets"}
+{"input": "Pain", "output": "PAIN", "lang": "en", "category": "Health"}
+{"input": "Orthopedic Doctor", "output": "ORTHOPEDIC_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Tua", "output": "TUA", "lang": "en", "category": "Alphabets"}
+{"input": "Wow", "output": "WOW", "lang": "en", "category": "Alphabets"}
+{"input": "Operation", "output": "OPERATION", "lang": "en", "category": "Health"}
+{"input": "Al", "output": "AL", "lang": "en", "category": "Alphabets"}
+{"input": "Zaal", "output": "ZAAL", "lang": "en", "category": "Alphabets"}
+{"input": "Xray", "output": "XRAY", "lang": "en", "category": "Health"}
+{"input": "Vomit", "output": "VOMIT", "lang": "en", "category": "Health"}
+{"input": "Hospital wards", "output": "HOSPITAL_WARDS", "lang": "en", "category": "Health"}
+{"input": "Hamza Yaa", "output": "HAMZA_YAA", "lang": "en", "category": "Alphabets"}
+{"input": "Cancer", "output": "CANCER", "lang": "en", "category": "Health"}
+{"input": "Jeem", "output": "JEEM", "lang": "en", "category": "Alphabets"}
+{"input": "Allergy", "output": "ALLERGY", "lang": "en", "category": "Health"}
+{"input": "Noon", "output": "NOON", "lang": "en", "category": "Alphabets"}
+{"input": "Age", "output": "AGE", "lang": "en", "category": "Health"}
+{"input": "Qaaf", "output": "QAAF", "lang": "en", "category": "Alphabets"}
+{"input": "Continue Treatment", "output": "CONTINUE_TREATMENT", "lang": "en", "category": "Health"}
+{"input": "Daman Card", "output": "DAMAN_CARD", "lang": "en", "category": "Health"}
+{"input": "Jeans", "output": "JEANS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hina", "output": "HINA", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Zaai", "output": "ZAAI", "lang": "en", "category": "Alphabets"}
+{"input": "Heartburn", "output": "HEARTBURN", "lang": "en", "category": "Health"}
+{"input": "Selfish", "output": "SELFISH", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Shocked", "output": "SHOCKED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sad", "output": "SAD", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Right", "output": "RIGHT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sheen", "output": "SHEEN", "lang": "en", "category": "Alphabets"}
+{"input": "Laam", "output": "LAAM", "lang": "en", "category": "Alphabets"}
+{"input": "Patience", "output": "PATIENCE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Poor", "output": "POOR", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Weak Skinny", "output": "WEAK_SKINNY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Baa", "output": "BAA", "lang": "en", "category": "Alphabets"}
+{"input": "Thirsty", "output": "THIRSTY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Unmarried", "output": "UNMARRIED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Ent Doctor", "output": "ENT_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Stingy", "output": "STINGY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Slow", "output": "SLOW", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Thin", "output": "THIN", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Ugly", "output": "UGLY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Stupid", "output": "STUPID", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Stubborn", "output": "STUBBORN", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Light Weight", "output": "LIGHT_WEIGHT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Dirty", "output": "DIRTY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Arabi", "output": "ARABI", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Clean", "output": "CLEAN", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Worried", "output": "WORRIED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Lazy", "output": "LAZY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Intelligent", "output": "INTELLIGENT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Easy", "output": "EASY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Important", "output": "IMPORTANT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Hypocrite", "output": "HYPOCRITE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Hot", "output": "HOT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Hungry", "output": "HUNGRY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Heavy", "output": "HEAVY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Full", "output": "FULL", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Fat", "output": "FAT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Foreigner", "output": "FOREIGNER", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Fatigue", "output": "FATIGUE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Medicine", "output": "MEDICINE", "lang": "en", "category": "Health"}
+{"input": "Medical Team", "output": "MEDICAL_TEAM", "lang": "en", "category": "Health"}
+{"input": "Injection", "output": "INJECTION", "lang": "en", "category": "Health"}
+{"input": "Syrup", "output": "SYRUP", "lang": "en", "category": "Health"}
+{"input": "Saa", "output": "SAA", "lang": "en", "category": "Alphabets"}
+{"input": "Pregnant", "output": "PREGNANT", "lang": "en", "category": "Health"}
+{"input": "Laa", "output": "LAA", "lang": "en", "category": "Alphabets"}
+{"input": "Paralysis", "output": "PARALYSIS", "lang": "en", "category": "Health"}
+{"input": "Taa", "output": "TAA", "lang": "en", "category": "Alphabets"}
+{"input": "Taa", "output": "TAA", "lang": "en", "category": "Alphabets"}
+{"input": "Swelling", "output": "SWELLING", "lang": "en", "category": "Health"}
+{"input": "Haa", "output": "HAA", "lang": "en", "category": "Alphabets"}
+{"input": "Hamza Nabira", "output": "HAMZA_NABIRA", "lang": "en", "category": "Alphabets"}
+{"input": "Virus", "output": "VIRUS", "lang": "en", "category": "Health"}
+{"input": "Vaccination", "output": "VACCINATION", "lang": "en", "category": "Health"}
+{"input": "Hamza Satr", "output": "HAMZA_SATR", "lang": "en", "category": "Alphabets"}
+{"input": "Hamza Wow", "output": "HAMZA_WOW", "lang": "en", "category": "Alphabets"}
+{"input": "Be Careful", "output": "BE_CAREFUL", "lang": "en", "category": "Health"}
+{"input": "Bleeding", "output": "BLEEDING", "lang": "en", "category": "Health"}
+{"input": "Raa", "output": "RAA", "lang": "en", "category": "Alphabets"}
+{"input": "Saad", "output": "SAAD", "lang": "en", "category": "Alphabets"}
+{"input": "Sewing Needle", "output": "SEWING_NEEDLE", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Cough", "output": "COUGH", "lang": "en", "category": "Health"}
+{"input": "Seen", "output": "SEEN", "lang": "en", "category": "Alphabets"}
+{"input": "Scissors", "output": "SCISSORS", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Jacket", "output": "JACKET", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Underwear", "output": "UNDERWEAR", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Hina", "output": "HINA", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Yaa", "output": "YAA", "lang": "en", "category": "Alphabets"}
+{"input": "Niqaab", "output": "NIQAAB", "lang": "en", "category": "Clothing and Toiletries"}
+{"input": "Heart Doctor", "output": "HEART_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Health", "output": "HEALTH", "lang": "en", "category": "Health"}
+{"input": "Scared", "output": "SCARED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Rich", "output": "RICH", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Headache", "output": "HEADACHE", "lang": "en", "category": "Health"}
+{"input": "Kaaf", "output": "KAAF", "lang": "en", "category": "Alphabets"}
+{"input": "First Aid", "output": "FIRST_AID", "lang": "en", "category": "Health"}
+{"input": "Narrow", "output": "NARROW", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Alif", "output": "ALIF", "lang": "en", "category": "Alphabets"}
+{"input": "Unemployed", "output": "UNEMPLOYED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Used", "output": "USED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Fine", "output": "FINE", "lang": "en", "category": "Health"}
+{"input": "Daad", "output": "DAAD", "lang": "en", "category": "Alphabets"}
+{"input": "Daal", "output": "DAAL", "lang": "en", "category": "Alphabets"}
+{"input": "Emergency", "output": "EMERGENCY", "lang": "en", "category": "Health"}
+{"input": "Drop", "output": "DROP", "lang": "en", "category": "Health"}
+{"input": "Faa", "output": "FAA", "lang": "en", "category": "Alphabets"}
+{"input": "Doctor", "output": "DOCTOR", "lang": "en", "category": "Health"}
+{"input": "More", "output": "MORE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Tasty", "output": "TASTY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sticky", "output": "STICKY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sweet", "output": "SWEET", "lang": "en", "category": "Attributes and Situations"}
+{"input": "More", "output": "MORE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Difficult", "output": "DIFFICULT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Crying", "output": "CRYING", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Thick", "output": "THICK", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Depressed", "output": "DEPRESSED", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Admire", "output": "ADMIRE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sacrifice", "output": "SACRIFICE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Old", "output": "OLD", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Not Important", "output": "NOT_IMPORTANT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Ok Good", "output": "OK_GOOD", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Short", "output": "SHORT", "lang": "en", "category": "Attributes and Situations"}
+{"input": "New", "output": "NEW", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Shy", "output": "SHY", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Nervous", "output": "NERVOUS", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Wide", "output": "WIDE", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Sour", "output": "SOUR", "lang": "en", "category": "Attributes and Situations"}
+{"input": "Stomach Ache", "output": "STOMACH_ACHE", "lang": "en", "category": "Health"}
+{"input": "Pills", "output": "PILLS", "lang": "en", "category": "Health"}
+{"input": "Physiotherapy", "output": "PHYSIOTHERAPY", "lang": "en", "category": "Health"}
+{"input": "Pharmacy", "output": "PHARMACY", "lang": "en", "category": "Health"}
+{"input": "Bat", "output": "BAT", "lang": "en", "category": "Animals"}
+{"input": "Lion", "output": "LION", "lang": "en", "category": "Animals"}
+{"input": "Pediatrician", "output": "PEDIATRICIAN", "lang": "en", "category": "Health"}
+{"input": "Locust", "output": "LOCUST", "lang": "en", "category": "Animals"}
+{"input": "Oxygen", "output": "OXYGEN", "lang": "en", "category": "Health"}
+{"input": "Outpatient Clinics", "output": "OUTPATIENT_CLINICS", "lang": "en", "category": "Health"}
+{"input": "louse", "output": "LOUSE", "lang": "en", "category": "Animals"}
+{"input": "Monkey", "output": "MONKEY", "lang": "en", "category": "Animals"}
+{"input": "Women Waiting Area", "output": "WOMEN_WAITING_AREA", "lang": "en", "category": "Health"}
+{"input": "Wait", "output": "WAIT", "lang": "en", "category": "Health"}
+{"input": "Mosquito", "output": "MOSQUITO", "lang": "en", "category": "Animals"}
+{"input": "Thiqa Card", "output": "THIQA_CARD", "lang": "en", "category": "Health"}
+{"input": "Mountain Goat", "output": "MOUNTAIN_GOAT", "lang": "en", "category": "Animals"}
+{"input": "Thermometer", "output": "THERMOMETER", "lang": "en", "category": "Health"}
+{"input": "Mouse", "output": "MOUSE", "lang": "en", "category": "Animals"}
+{"input": "Ophthalmologist", "output": "OPHTHALMOLOGIST", "lang": "en", "category": "Health"}
+{"input": "Penguin", "output": "PENGUIN", "lang": "en", "category": "Animals"}
+{"input": "Rabbit", "output": "RABBIT", "lang": "en", "category": "Animals"}
+{"input": "How Are You", "output": "HOW_ARE_YOU", "lang": "en", "category": "Health"}
+{"input": "Rabbit", "output": "RABBIT", "lang": "en", "category": "Animals"}
+{"input": "Scorpion", "output": "SCORPION", "lang": "en", "category": "Animals"}
+{"input": "Hospital Police", "output": "HOSPITAL_POLICE", "lang": "en", "category": "Health"}
+{"input": "Constipation", "output": "CONSTIPATION", "lang": "en", "category": "Health"}
+{"input": "Spider", "output": "SPIDER", "lang": "en", "category": "Animals"}
+{"input": "Cleanliness", "output": "CLEANLINESS", "lang": "en", "category": "Health"}
+{"input": "Squid", "output": "SQUID", "lang": "en", "category": "Animals"}
+{"input": "Starfish", "output": "STARFISH", "lang": "en", "category": "Animals"}
+{"input": "Card Type", "output": "CARD_TYPE", "lang": "en", "category": "Health"}
+{"input": "Caesarean Birth", "output": "CAESAREAN_BIRTH", "lang": "en", "category": "Health"}
+{"input": "Horse", "output": "HORSE", "lang": "en", "category": "Animals"}
+{"input": "Caesarean Birth 2", "output": "CAESAREAN_BIRTH_2", "lang": "en", "category": "Health"}
+{"input": "Tiger", "output": "TIGER", "lang": "en", "category": "Animals"}
+{"input": "Cat", "output": "CAT", "lang": "en", "category": "Animals"}
+{"input": "Dolphin", "output": "DOLPHIN", "lang": "en", "category": "Animals"}
+{"input": "Blood", "output": "BLOOD", "lang": "en", "category": "Health"}
+{"input": "Breastfeeding", "output": "BREASTFEEDING", "lang": "en", "category": "Health"}
+{"input": "Blood Pressure Gauge", "output": "BLOOD_PRESSURE_GAUGE", "lang": "en", "category": "Health"}
+{"input": "Consultant Doctor", "output": "CONSULTANT_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Eagle", "output": "EAGLE", "lang": "en", "category": "Animals"}
+{"input": "Elephant", "output": "ELEPHANT", "lang": "en", "category": "Animals"}
+{"input": "Blood Preassure", "output": "BLOOD_PREASSURE", "lang": "en", "category": "Health"}
+{"input": "Falcon", "output": "FALCON", "lang": "en", "category": "Animals"}
+{"input": "Be Patient", "output": "BE_PATIENT", "lang": "en", "category": "Health"}
+{"input": "Girrafe", "output": "GIRRAFE", "lang": "en", "category": "Animals"}
+{"input": "Avoid", "output": "AVOID", "lang": "en", "category": "Health"}
+{"input": "Gorilla 2", "output": "GORILLA_2", "lang": "en", "category": "Animals"}
+{"input": "Frog", "output": "FROG", "lang": "en", "category": "Animals"}
+{"input": "Bacteria", "output": "BACTERIA", "lang": "en", "category": "Health"}
+{"input": "Zebra", "output": "ZEBRA", "lang": "en", "category": "Animals"}
+{"input": "Anesthesiologist", "output": "ANESTHESIOLOGIST", "lang": "en", "category": "Health"}
+{"input": "Lizard", "output": "LIZARD", "lang": "en", "category": "Animals"}
+{"input": "Appointment Booking", "output": "APPOINTMENT_BOOKING", "lang": "en", "category": "Health"}
+{"input": "Octopus", "output": "OCTOPUS", "lang": "en", "category": "Animals"}
+{"input": "Analysis", "output": "ANALYSIS", "lang": "en", "category": "Health"}
+{"input": "Heart Disease", "output": "HEART_DISEASE", "lang": "en", "category": "Health"}
+{"input": "Ostrich 2", "output": "OSTRICH_2", "lang": "en", "category": "Animals"}
+{"input": "Gynaecologist", "output": "GYNAECOLOGIST", "lang": "en", "category": "Health"}
+{"input": "Ostrich", "output": "OSTRICH", "lang": "en", "category": "Animals"}
+{"input": "General Doctor", "output": "GENERAL_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Owl", "output": "OWL", "lang": "en", "category": "Animals"}
+{"input": "Kangaroo", "output": "KANGAROO", "lang": "en", "category": "Animals"}
+{"input": "File No", "output": "FILE_NO", "lang": "en", "category": "Health"}
+{"input": "Fracture", "output": "FRACTURE", "lang": "en", "category": "Health"}
+{"input": "Pigeon", "output": "PIGEON", "lang": "en", "category": "Animals"}
+{"input": "Fever", "output": "FEVER", "lang": "en", "category": "Health"}
+{"input": "Rooster", "output": "ROOSTER", "lang": "en", "category": "Animals"}
+{"input": "Seal", "output": "SEAL", "lang": "en", "category": "Animals"}
+{"input": "Evening", "output": "EVENING", "lang": "en", "category": "Health"}
+{"input": "Snake", "output": "SNAKE", "lang": "en", "category": "Animals"}
+{"input": "Diabetes", "output": "DIABETES", "lang": "en", "category": "Health"}
+{"input": "Tortoise", "output": "TORTOISE", "lang": "en", "category": "Animals"}
+{"input": "Dentist", "output": "DENTIST", "lang": "en", "category": "Health"}
+{"input": "Wolf", "output": "WOLF", "lang": "en", "category": "Animals"}
+{"input": "Woodpacker", "output": "WOODPACKER", "lang": "en", "category": "Animals"}
+{"input": "Pig", "output": "PIG", "lang": "en", "category": "Animals"}
+{"input": "Absher Card", "output": "ABSHER_CARD", "lang": "en", "category": "Health"}
+{"input": "Pregnant", "output": "PREGNANT", "lang": "en", "category": "Health"}
+{"input": "Jellyfish", "output": "JELLYFISH", "lang": "en", "category": "Animals"}
+{"input": "Hen", "output": "HEN", "lang": "en", "category": "Animals"}
+{"input": "Specialist Doctor", "output": "SPECIALIST_DOCTOR", "lang": "en", "category": "Health"}
+{"input": "Bird", "output": "BIRD", "lang": "en", "category": "Animals"}
+{"input": "Bull", "output": "BULL", "lang": "en", "category": "Animals"}
+{"input": "Sick Leave", "output": "SICK_LEAVE", "lang": "en", "category": "Health"}
+{"input": "Camel", "output": "CAMEL", "lang": "en", "category": "Animals"}
+{"input": "Bee", "output": "BEE", "lang": "en", "category": "Animals"}
+{"input": "Cockroach", "output": "COCKROACH", "lang": "en", "category": "Animals"}
+{"input": "Crab", "output": "CRAB", "lang": "en", "category": "Animals"}
+{"input": "Cheetah", "output": "CHEETAH", "lang": "en", "category": "Animals"}
+{"input": "Cow", "output": "COW", "lang": "en", "category": "Animals"}
+{"input": "Crocodile", "output": "CROCODILE", "lang": "en", "category": "Animals"}
+{"input": "Deer", "output": "DEER", "lang": "en", "category": "Animals"}
+{"input": "Bat", "output": "BAT", "lang": "en", "category": "Animals"}
+{"input": "Ant", "output": "ANT", "lang": "en", "category": "Animals"}
+{"input": "Antelope", "output": "ANTELOPE", "lang": "en", "category": "Animals"}
+{"input": "Desert Lizard", "output": "DESERT_LIZARD", "lang": "en", "category": "Animals"}
+{"input": "Dog", "output": "DOG", "lang": "en", "category": "Animals"}
+{"input": "Donkey", "output": "DONKEY", "lang": "en", "category": "Animals"}
+{"input": "Duck", "output": "DUCK", "lang": "en", "category": "Animals"}
+{"input": "Fish", "output": "FISH", "lang": "en", "category": "Animals"}
+{"input": "Fox", "output": "FOX", "lang": "en", "category": "Animals"}
+{"input": "Fly", "output": "FLY", "lang": "en", "category": "Animals"}
+{"input": "Gorilla", "output": "GORILLA", "lang": "en", "category": "Animals"}
+{"input": "Worm", "output": "WORM", "lang": "en", "category": "Animals"}
+{"input": "Brown 02", "output": "BROWN_02", "lang": "en", "category": "Colors"}
+{"input": "Skyblue", "output": "SKYBLUE", "lang": "en", "category": "Colors"}
+{"input": "Brown 01", "output": "BROWN_01", "lang": "en", "category": "Colors"}
+{"input": "Blue", "output": "BLUE", "lang": "en", "category": "Colors"}
+{"input": "Black 01", "output": "BLACK_01", "lang": "en", "category": "Colors"}
+{"input": "Al Alwaan", "output": "AL_ALWAAN", "lang": "en", "category": "Colors"}
+{"input": "Red", "output": "RED", "lang": "en", "category": "Colors"}
+{"input": "Rainbow Colors", "output": "RAINBOW_COLORS", "lang": "en", "category": "Colors"}
+{"input": "White", "output": "WHITE", "lang": "en", "category": "Colors"}
+{"input": "Pearl", "output": "PEARL", "lang": "en", "category": "Colors"}
+{"input": "Purple", "output": "PURPLE", "lang": "en", "category": "Colors"}
+{"input": "Orange", "output": "ORANGE", "lang": "en", "category": "Colors"}
+{"input": "Light Colors", "output": "LIGHT_COLORS", "lang": "en", "category": "Colors"}
+{"input": "Green", "output": "GREEN", "lang": "en", "category": "Colors"}
+{"input": "Gray", "output": "GRAY", "lang": "en", "category": "Colors"}
+{"input": "Golden", "output": "GOLDEN", "lang": "en", "category": "Colors"}
+{"input": "Dark Colors", "output": "DARK_COLORS", "lang": "en", "category": "Colors"}
+{"input": "Pink", "output": "PINK", "lang": "en", "category": "Colors"}
+{"input": "Yellow", "output": "YELLOW", "lang": "en", "category": "Colors"}

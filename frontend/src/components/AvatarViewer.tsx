@@ -102,7 +102,7 @@ interface AvatarViewerProps {
 }
 
 export function AvatarViewer({
-  avatarUrl = '/avatar/humanoid.glb',
+  avatarUrl = '/avatar/arab-man.glb',
   animation,
   className = '',
 }: AvatarViewerProps) {

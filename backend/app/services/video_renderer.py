@@ -68,15 +68,21 @@ class VideoRenderer:
     ]
 
     # Named bone positions (normalized 0-1, scaled to frame)
+    # Bone positions matched to Arab Man GLB rig (normalized 0-1)
     REST_POSITIONS = {
-        "LeftShoulder":  (0.35, 0.25),
-        "RightShoulder": (0.65, 0.25),
-        "LeftUpperArm":  (0.28, 0.38),
-        "RightUpperArm": (0.72, 0.38),
-        "LeftLowerArm":  (0.22, 0.52),
-        "RightLowerArm": (0.78, 0.52),
-        "LeftHip":       (0.40, 0.62),
-        "RightHip":      (0.60, 0.62),
+        "Head":          (0.50, 0.08),
+        "Neck":          (0.50, 0.16),
+        "Spine2":        (0.50, 0.25),
+        "LeftShoulder":  (0.35, 0.22),
+        "RightShoulder": (0.65, 0.22),
+        "LeftArm":       (0.28, 0.30),
+        "RightArm":      (0.72, 0.30),
+        "LeftForeArm":   (0.20, 0.42),
+        "RightForeArm":  (0.80, 0.42),
+        "LeftHand":      (0.14, 0.54),
+        "RightHand":     (0.86, 0.54),
+        "LeftUpLeg":     (0.42, 0.62),
+        "RightUpLeg":    (0.58, 0.62),
     }
 
     def __init__(self, config: Optional[RenderConfig] = None) -> None:

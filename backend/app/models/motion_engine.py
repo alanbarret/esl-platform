@@ -154,13 +154,17 @@ class MotionDatabase:
         fps = int(seq.fps)
         duration = seq.total_frames / fps
 
-        # Simplified: map body landmarks to bone tracks
-        # In production, use proper IK/FK retargeting
+        # Map MediaPipe body landmarks to Arab Man GLB bone names
+        # GLB rig uses mixamo-style naming
         LANDMARK_TO_BONE = {
-            11: "LeftShoulder", 12: "RightShoulder",
-            13: "LeftUpperArm", 14: "RightUpperArm",
-            15: "LeftLowerArm", 16: "RightLowerArm",
-            23: "LeftHip", 24: "RightHip",
+            11: "LeftShoulder",  12: "RightShoulder",
+            13: "LeftArm",       14: "RightArm",
+            15: "LeftForeArm",   16: "RightForeArm",
+            17: "LeftHand",      18: "RightHand",
+            23: "LeftUpLeg",     24: "RightUpLeg",
+            0:  "Head",
+            1:  "Neck",
+            24: "Spine2",
         }
 
         bone_tracks: dict[str, BoneTrack] = {
@@ -277,8 +281,11 @@ class MotionEngine:
     def _create_rest_pose(gloss: str, duration: float, fps: int) -> SignMotion:
         """Create a neutral/rest pose for unknown gloss tokens."""
         REST_BONES = [
-            "LeftShoulder", "RightShoulder", "LeftUpperArm", "RightUpperArm",
-            "LeftLowerArm", "RightLowerArm",
+            "LeftShoulder", "RightShoulder",
+            "LeftArm", "RightArm",
+            "LeftForeArm", "RightForeArm",
+            "LeftHand", "RightHand",
+            "Head", "Neck", "Spine2",
         ]
         tracks = []
         for bone in REST_BONES:
