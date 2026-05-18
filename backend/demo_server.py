@@ -117,6 +117,23 @@ SIGN_POSES = {
     "HOME": {"RightArm": (-0.4, 0, -0.3), "LeftArm": (-0.4, 0, 0.3)},
     "MORNING": {"RightArm": (-0.4, 0, -0.4), "RightForeArm": (-0.25, 0, 0.3)},
     "GOODBYE": {"RightArm": (-0.3, 0, -0.5), "RightForeArm": (-0.2, 0, 0.3)},
+    # Test poses
+    "THUMBS_UP": {
+        "RightArm": (-0.8, 0.0, -0.3), "RightForeArm": (-0.3, 0.0, 0.1),
+        "RightHandIndex1": (1.2,0,0), "RightHandIndex2": (1.0,0,0), "RightHandIndex3": (0.9,0,0),
+        "RightHandMiddle1": (1.2,0,0), "RightHandMiddle2": (1.0,0,0), "RightHandMiddle3": (0.9,0,0),
+        "RightHandRing1": (1.2,0,0), "RightHandRing2": (1.0,0,0), "RightHandRing3": (0.9,0,0),
+        "RightHandPinky1": (1.2,0,0), "RightHandPinky2": (1.0,0,0), "RightHandPinky3": (0.9,0,0),
+        "RightHandThumb1": (-0.3, 0.0, 0.3), "RightHandThumb2": (-0.2, 0.0, 0.1),
+    },
+    "V_SIGN": {
+        "RightArm": (-0.5, 0.0, -0.5), "RightForeArm": (-0.4, 0.0, 0.0),
+        "RightHandIndex1": (0,0,0), "RightHandIndex2": (0,0,0), "RightHandIndex3": (0,0,0),
+        "RightHandMiddle1": (0,0,0), "RightHandMiddle2": (0,0,0), "RightHandMiddle3": (0,0,0),
+        "RightHandRing1": (1.3,0,0), "RightHandRing2": (1.1,0,0), "RightHandRing3": (0.9,0,0),
+        "RightHandPinky1": (1.3,0,0), "RightHandPinky2": (1.1,0,0), "RightHandPinky3": (0.9,0,0),
+        "RightHandThumb1": (0.4, 0.0, -0.5), "RightHandThumb2": (0.3, 0.0, -0.3),
+    },
     "HELP": {"RightArm": (-0.3, 0, -0.4), "LeftArm": (-0.3, 0, 0.4)},
 }
 
@@ -204,6 +221,10 @@ class ESLHandler(BaseHTTPRequestHandler):
                             "signs_loaded": len(signs_data)})
         elif p == "/api/v1/models/status":
             self.send_json({"gloss_model": {"loaded": True, "device": "openai" if OPENAI_API_KEY else "cpu-rules"}})
+        elif p == "/api/v1/test-poses":
+            # Return list of available test poses with their animation data
+            test_names = ["THUMBS_UP", "V_SIGN", "HELLO", "DOCTOR", "WORK", "FAMILY", "SCHOOL"]
+            self.send_json({"poses": test_names})
         else:
             self.send_json({"error": "Not found"}, 404)
 
