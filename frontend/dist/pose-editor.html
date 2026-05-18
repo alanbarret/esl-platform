@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESL Pose Editor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #09090B; color: #e1e1e1; font-family: -apple-system, sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+header { background: #111; border-bottom: 1px solid #222; padding: 10px 16px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+header h1 { font-size: 15px; font-weight: 700; color: #fff; }
+.badge { background: #7c3aed; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
+.export-btn { margin-left: auto; background: #A8FF4B; color: #000; border: none; border-radius: 7px; padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.reset-btn { background: #333; color: #999; border: 1px solid #444; border-radius: 7px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+.export-btn:hover { background: #BFFF6E; }
+
+.layout { display: grid; grid-template-columns: 1fr 340px; flex: 1; overflow: hidden; }
+
+/* 3D Viewer */
+#viewer { width: 100%; height: 100%; position: relative; }
+canvas { display: block; width: 100% !important; height: 100% !important; }
+#loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #09090B; color: #666; font-size: 14px; }
+
+/* Sidebar */
+.sidebar { background: #111; border-left: 1px solid #1e1e1e; display: flex; flex-direction: column; overflow: hidden; }
+
+.search-row { padding: 8px 12px; border-bottom: 1px solid #1e1e1e; display: flex; gap: 6px; }
+.search-row input { flex: 1; background: #1a1a2e; border: 1px solid #333; border-radius: 6px; padding: 5px 10px; color: #fff; font-size: 12px; outline: none; }
+.search-row input:focus { border-color: #7c3aed; }
+
+.group-tabs { display: flex; gap: 4px; padding: 6px 12px; border-bottom: 1px solid #1e1e1e; flex-wrap: wrap; }
+.group-tab { background: #1a1a1a; border: 1px solid #333; border-radius: 100px; padding: 3px 10px; font-size: 10px; color: #888; cursor: pointer; white-space: nowrap; }
+.group-tab.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+
+.bones-list { flex: 1; overflow-y: auto; padding: 8px; }
+.bone-group { margin-bottom: 4px; }
+.bone-group-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #4b5563; padding: 4px 4px 2px; }
+
+.bone-card { background: #181818; border: 1px solid #222; border-radius: 8px; padding: 8px 10px; margin-bottom: 3px; }
+.bone-name { font-size: 11px; font-weight: 600; color: #c4b5fd; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.bone-reset { font-size: 9px; color: #555; cursor: pointer; padding: 1px 5px; border-radius: 3px; background: #222; border: none; color: #666; }
+.bone-reset:hover { color: #A8FF4B; }
+
+.axis-row { display: grid; grid-template-columns: 12px 1fr 38px; align-items: center; gap: 4px; margin-bottom: 3px; }
+.axis-label { font-size: 9px; font-weight: 700; text-align: center; border-radius: 3px; padding: 1px; }
+.axis-label.x { color: #ef4444; }
+.axis-label.y { color: #22c55e; }
+.axis-label.z { color: #3b82f6; }
+.axis-slider { width: 100%; height: 3px; -webkit-appearance: none; appearance: none; background: #333; border-radius: 2px; outline: none; cursor: pointer; }
+.axis-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #7c3aed; cursor: pointer; }
+.axis-slider.x::-webkit-slider-thumb { background: #ef4444; }
+.axis-slider.y::-webkit-slider-thumb { background: #22c55e; }
+.axis-slider.z::-webkit-slider-thumb { background: #3b82f6; }
+.axis-val { font-size: 9px; font-family: monospace; color: #999; text-align: right; }
+
+/* Export modal */
+#export-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
+#export-modal.show { display: flex; }
+.modal-box { background: #111; border: 1px solid #333; border-radius: 12px; padding: 20px; width: 500px; max-height: 70vh; display: flex; flex-direction: column; gap: 10px; }
+.modal-box h2 { font-size: 14px; font-weight: 700; }
+.modal-box textarea { background: #0a0a0a; border: 1px solid #333; border-radius: 6px; padding: 10px; color: #A8FF4B; font-size: 11px; font-family: monospace; flex: 1; resize: none; min-height: 200px; outline: none; }
+.modal-close { background: #333; border: none; color: #999; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 12px; }
+.modal-copy { background: #7c3aed; border: none; color: #fff; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 12px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px">🤖</div>
+  <h1>ESL Pose Editor</h1>
+  <span class="badge">3D LIVE</span>
+  <div style="margin-left:auto;display:flex;gap:6px">
+    <button class="reset-btn" onclick="resetAll()">↺ Reset All</button>
+    <button class="export-btn" onclick="exportPose()">⬇ Export Pose</button>
+  </div>
+</header>
+
+<div class="layout">
+  <div id="viewer">
+    <div id="loading">Loading 3D avatar...<br><small id="loading-detail" style="color:#555;font-size:11px;margin-top:8px;display:block">Initializing Three.js...</small></div>
+  </div>
+  <div class="sidebar">
+    <div class="search-row">
+      <input type="text" id="search" placeholder="Search bones..." oninput="filterBones()">
+    </div>
+    <div class="group-tabs" id="group-tabs"></div>
+    <div class="bones-list" id="bones-list"></div>
+  </div>
+</div>
+
+<div id="export-modal">
+  <div class="modal-box">
+    <h2>Export Pose Data</h2>
+    <textarea id="export-text" readonly></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="modal-close" onclick="document.getElementById('export-modal').classList.remove('show')">Close</button>
+      <button class="modal-copy" onclick="copyExport()">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{"imports": {
+  "three": "/three/three.module.js",
+  "three/addons/loaders/GLTFLoader.js": "/three/GLTFLoader.js",
+  "three/addons/controls/OrbitControls.js": "/three/OrbitControls.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ── Scene setup ────────────────────────────────────────────────────────────
+const viewer = document.getElementById('viewer');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+viewer.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x09090B);
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+camera.position.set(0, 1.3, 2.8);
+camera.lookAt(0, 1.0, 0);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1.0, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 0.5;
+controls.maxDistance = 6;
+
+// Lighting
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+const dir = new THREE.DirectionalLight(0xffffff, 1.3);
+dir.position.set(2, 4, 2); dir.castShadow = true;
+scene.add(dir);
+scene.add(Object.assign(new THREE.PointLight(0x8060ff, 0.5), { position: new THREE.Vector3(-2,2,-2) }));
+
+// Floor
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(6,6), new THREE.MeshStandardMaterial({color:0x111120,roughness:0.9}));
+floor.rotation.x = -Math.PI/2; floor.receiveShadow = true;
+scene.add(floor);
+
+// Grid
+scene.add(new THREE.GridHelper(4, 20, 0x1a1a2e, 0x1a1a2e));
+
+// Resize
+function resize() {
+  const w = viewer.clientWidth, h = viewer.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(viewer);
+resize();
+
+// ── Bone data ──────────────────────────────────────────────────────────────
+const boneMap = new Map();   // name -> Object3D
+const restMap = new Map();   // name -> Quaternion (rest)
+const offsetMap = new Map(); // name -> {rx,ry,rz} current offset
+
+// Bone groups for UI
+const BONE_GROUPS = {
+  'Spine & Head': ['Hips','Spine','Spine1','Spine2','Neck','Head'],
+  'Right Arm': ['RightShoulder','RightArm','RightForeArm','RightHand'],
+  'Left Arm': ['LeftShoulder','LeftArm','LeftForeArm','LeftHand'],
+  'Right Hand': ['RightHandThumb1','RightHandThumb2','RightHandThumb3',
+                  'RightHandIndex1','RightHandIndex2','RightHandIndex3',
+                  'RightHandMiddle1','RightHandMiddle2','RightHandMiddle3',
+                  'RightHandRing1','RightHandRing2','RightHandRing3',
+                  'RightHandPinky1','RightHandPinky2','RightHandPinky3'],
+  'Left Hand':  ['LeftHandThumb1','LeftHandThumb2','LeftHandThumb3',
+                  'LeftHandIndex1','LeftHandIndex2','LeftHandIndex3',
+                  'LeftHandMiddle1','LeftHandMiddle2','LeftHandMiddle3',
+                  'LeftHandRing1','LeftHandRing2','LeftHandRing3',
+                  'LeftHandPinky1','LeftHandPinky2','LeftHandPinky3'],
+  'Legs': ['LeftUpLeg','LeftLeg','LeftFoot','RightUpLeg','RightLeg','RightFoot'],
+};
+
+// ── Load avatar ────────────────────────────────────────────────────────────
+document.getElementById('loading-detail').textContent = 'Loading GLB model...';
+new GLTFLoader().load('/avatar/arab-man.glb', (gltf) => {
+  const avatar = gltf.scene;
+  avatar.traverse(obj => {
+    obj.castShadow = true; obj.receiveShadow = true;
+    if (obj.name) {
+      boneMap.set(obj.name, obj);
+      restMap.set(obj.name, obj.quaternion.clone());
+      offsetMap.set(obj.name, {rx:0, ry:0, rz:0});
+    }
+  });
+  scene.add(avatar);
+  document.getElementById('loading').style.display = 'none';
+  buildUI();
+  console.log('Avatar loaded:', boneMap.size, 'bones');
+},
+(progress) => {
+  const pct = progress.total ? Math.round(progress.loaded/progress.total*100) : '...';
+  document.getElementById('loading-detail').textContent = `Loading model: ${pct}%`;
+},
+(e) => {
+  console.error('GLB load error:', e);
+  document.getElementById('loading').innerHTML = `<div style="color:#ef4444">Failed to load 3D model</div><div style="color:#555;font-size:11px;margin-top:4px">${e.message || e}</div>`;
+});
+
+// ── Apply rotation ─────────────────────────────────────────────────────────
+function applyBone(name) {
+  const bone = boneMap.get(name);
+  const rest = restMap.get(name);
+  const off = offsetMap.get(name);
+  if (!bone || !rest || !off) return;
+  const offset = new THREE.Quaternion().setFromEuler(new THREE.Euler(off.rx, off.ry, off.rz, 'XYZ'));
+  bone.quaternion.copy(rest).multiply(offset);
+}
+
+// ── Build UI ───────────────────────────────────────────────────────────────
+let activeGroup = 'Right Arm';
+
+function buildUI() {
+  // Group tabs
+  const tabsEl = document.getElementById('group-tabs');
+  Object.keys(BONE_GROUPS).forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'group-tab' + (g === activeGroup ? ' active' : '');
+    btn.textContent = g;
+    btn.onclick = () => { activeGroup = g; document.querySelectorAll('.group-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderBones(); };
+    tabsEl.appendChild(btn);
+  });
+  renderBones();
+}
+
+function renderBones(filter = '') {
+  const list = document.getElementById('bones-list');
+  list.innerHTML = '';
+  const bones = filter
+    ? [...boneMap.keys()].filter(n => n.toLowerCase().includes(filter.toLowerCase()))
+    : (BONE_GROUPS[activeGroup] || []).filter(n => boneMap.has(n));
+
+  bones.forEach(name => {
+    const off = offsetMap.get(name) || {rx:0,ry:0,rz:0};
+    const card = document.createElement('div');
+    card.className = 'bone-card';
+    card.dataset.bone = name;
+    card.innerHTML = `
+      <div class="bone-name">
+        ${name}
+        <button class="bone-reset" onclick="resetBone('${name}')">reset</button>
+      </div>
+      ${['rx','ry','rz'].map((ax,i) => `
+      <div class="axis-row">
+        <span class="axis-label ${['x','y','z'][i]}">${ax.toUpperCase()}</span>
+        <input type="range" class="axis-slider ${['x','y','z'][i]}" data-bone="${name}" data-axis="${ax}"
+               min="-3.14" max="3.14" step="0.01" value="${off[ax]}"
+               oninput="onSlider(this)">
+        <span class="axis-val" id="val-${name}-${ax}">${off[ax].toFixed(2)}</span>
+      </div>`).join('')}
+    `;
+    list.appendChild(card);
+  });
+}
+
+window.onSlider = function(el) {
+  const name = el.dataset.bone, axis = el.dataset.axis;
+  const val = parseFloat(el.value);
+  if (!offsetMap.has(name)) offsetMap.set(name, {rx:0,ry:0,rz:0});
+  offsetMap.get(name)[axis] = val;
+  document.getElementById(`val-${name}-${axis}`).textContent = val.toFixed(2);
+  applyBone(name);
+};
+
+window.resetBone = function(name) {
+  offsetMap.set(name, {rx:0,ry:0,rz:0});
+  const bone = boneMap.get(name), rest = restMap.get(name);
+  if (bone && rest) bone.quaternion.copy(rest);
+  renderBones(document.getElementById('search').value);
+};
+
+window.resetAll = function() {
+  boneMap.forEach((bone, name) => {
+    offsetMap.set(name, {rx:0,ry:0,rz:0});
+    bone.quaternion.copy(restMap.get(name));
+  });
+  renderBones(document.getElementById('search').value);
+};
+
+window.filterBones = function() {
+  renderBones(document.getElementById('search').value);
+};
+
+window.exportPose = function() {
+  const nonzero = {};
+  offsetMap.forEach((off, name) => {
+    if (Math.abs(off.rx) > 0.005 || Math.abs(off.ry) > 0.005 || Math.abs(off.rz) > 0.005) {
+      nonzero[name] = [+off.rx.toFixed(3), +off.ry.toFixed(3), +off.rz.toFixed(3)];
+    }
+  });
+  const lines = [`// Pose export — copy to demo_server.py SIGN_POSES`, `"MY_POSE": {`];
+  Object.entries(nonzero).forEach(([bone, vals]) => lines.push(`    "${bone}": (${vals.join(', ')}),`));
+  lines.push(`},`);
+  document.getElementById('export-text').value = lines.join('\n');
+  document.getElementById('export-modal').classList.add('show');
+};
+
+window.copyExport = function() {
+  navigator.clipboard.writeText(document.getElementById('export-text').value);
+  document.querySelector('.modal-copy').textContent = '✓ Copied!';
+  setTimeout(() => document.querySelector('.modal-copy').textContent = 'Copy to Clipboard', 2000);
+};
+
+// ── Render loop ────────────────────────────────────────────────────────────
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>

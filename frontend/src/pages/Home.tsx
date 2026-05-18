@@ -46,6 +46,53 @@ export default function Home() {
             <p className="text-gray-400 text-sm">
               Convert Arabic or English text into Emirati Sign Language avatar video.
             </p>
+
+          {/* Test Pose Dropdown */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Test Poses</span>
+            <select
+              defaultValue=""
+              onChange={async (e) => {
+                const pose = e.target.value;
+                if (!pose) return;
+                try {
+                  const res = await fetch('/api/v1/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: pose, output_format: 'gltf' }),
+                  });
+                  const data = await res.json();
+                  if (data.gltf_animation) {
+                    setInputText(pose);
+                    useAppStore.setState({
+                      glossTokens: [pose],
+                      gltfAnimation: data.gltf_animation,
+                      isTranslating: false,
+                      error: null,
+                    });
+                  }
+                } catch (err) { console.error(err); }
+              }}
+              className="bg-[#1a1a2e] border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none cursor-pointer hover:border-violet-500 transition-all flex-1"
+            >
+              <option value="">-- Select a test pose --</option>
+              <optgroup label="Hand Poses">
+                <option value="THUMBS_UP">👍 Thumbs Up</option>
+                <option value="V_SIGN">✌️ V / Peace Sign</option>
+              </optgroup>
+              <optgroup label="UAE Sign Language">
+                <option value="HELLO">👋 Hello</option>
+                <option value="DOCTOR">🏥 Doctor</option>
+                <option value="WORK">💼 Work</option>
+                <option value="FAMILY">👨‍👩‍👧 Family</option>
+                <option value="SCHOOL">🏫 School</option>
+                <option value="SLEEP">😴 Sleep</option>
+                <option value="OPEN">📂 Open</option>
+                <option value="PUSH">🤜 Push</option>
+              </optgroup>
+            </select>
+          </div>
+
           </div>
 
           {/* Language selector */}

@@ -128,8 +128,8 @@ SIGN_POSES = {
     },
     "V_SIGN": {
         "RightArm": (0.0, 0.0, -1.3),
-        "RightForeArm": (0.0, 0.8, 0.0),   # ry=+0.8 supinates forearm (palm rotates outward)
-        "RightHand": (0.0, 0.6, 0.0),       # ry=+0.6 twists wrist to show palm
+        "RightForeArm": (0.0, -0.16, 0.0),
+        "RightHand": (0.0, -0.16, 0.0),
         # Index + Middle straight (V)
         "RightHandIndex1": (0,0,0), "RightHandIndex2": (0,0,0), "RightHandIndex3": (0,0,0),
         "RightHandMiddle1": (0,0,0), "RightHandMiddle2": (0,0,0), "RightHandMiddle3": (0,0,0),
