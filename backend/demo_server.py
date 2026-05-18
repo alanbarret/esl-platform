@@ -100,46 +100,29 @@ def quat(ax, ay, az):
 
 # Angles are ADDITIVE offsets from rest pose (applied via multiply in Three.js)
 # X = forward/back tilt, Y = twist, Z = raise/lower (positive = raise for right arm)
-# Poses extracted from real UAE Sign Language videos via MediaPipe Holistic
+# Real poses from UAE sign videos (spine/head removed to prevent bending)
 SIGN_POSES = {
-    "HELLO": {"RightArm": (-0.163, -0.092, -0.312), "RightForeArm": (-0.236, 0.023, 0.437), "LeftArm": (-0.278, 0.091, 0.292), "LeftForeArm": (0.083, -0.021, -0.469), "Head": (-1.534, -0.002, -0.003), "Spine2": (-2.034, 0.009, 0.005)},
-    "HOW": {"RightArm": (-0.163, -0.092, -0.312), "RightForeArm": (-0.236, 0.023, 0.437), "LeftArm": (-0.278, 0.091, 0.292), "LeftForeArm": (0.083, -0.021, -0.469), "Head": (-1.534, -0.002, -0.003), "Spine2": (-2.034, 0.009, 0.005)},
-    "YOU": {"RightArm": (-0.163, -0.092, -0.312), "RightForeArm": (-0.236, 0.023, 0.437), "LeftArm": (-0.278, 0.091, 0.292), "LeftForeArm": (0.083, -0.021, -0.469), "Head": (-1.534, -0.002, -0.003), "Spine2": (-2.034, 0.009, 0.005)},
-    "DOCTOR": {"RightArm": (-2.104, -0.053, -0.145), "RightForeArm": (-1.58, 0.371, 0.83), "LeftArm": (-0.785, 0.117, 0.253), "LeftForeArm": (-0.613, -0.016, -0.418), "Head": (-1.514, -0.0, -0.0), "Spine2": (-2.667, -0.109, -0.021)},
-    "WORK": {"RightArm": (-1.991, -0.128, -0.155), "RightForeArm": (-1.501, 0.199, 0.656), "LeftArm": (-1.851, 0.078, 0.158), "LeftForeArm": (-1.511, -0.239, -0.702), "Head": (-1.491, -0.01, -0.015), "Spine2": (-2.447, 0.02, 0.006)},
-    "FAMILY": {"RightArm": (-1.877, -0.155, -0.167), "RightForeArm": (-1.539, 0.234, 0.69), "LeftArm": (-2.018, 0.114, 0.152), "LeftForeArm": (-1.539, -0.23, -0.684), "Head": (-1.452, -0.001, -0.002), "Spine2": (-2.251, -0.002, -0.001)},
-    "SCHOOL": {"RightArm": (0.532, -0.027, -0.335), "RightForeArm": (1.919, 0.079, 0.412), "LeftArm": (0.643, 0.037, 0.449), "LeftForeArm": (1.835, 0.119, -0.544), "Head": (-1.37, -0.043, -0.074), "Spine2": (-2.035, -0.042, -0.023)},
-    "SLEEP": {"RightArm": (-2.215, -0.106, -0.139), "RightForeArm": (-1.692, 0.217, 0.638), "LeftArm": (-1.045, 0.074, 0.201), "LeftForeArm": (-0.663, -0.014, -0.412), "Head": (-1.52, -0.062, -0.091), "Spine2": (-2.958, 0.233, 0.01)},
-    "OPEN": {"RightArm": (-0.557, -0.208, -0.374), "RightForeArm": (-1.069, 0.091, 0.575), "LeftArm": (-0.688, 0.124, 0.271), "LeftForeArm": (-1.024, -0.009, -0.418), "Head": (-1.53, -0.017, -0.025), "Spine2": (-2.513, 0.055, 0.015)},
-    "OUT": {"RightArm": (-2.157, -0.192, -0.142), "RightForeArm": (-1.684, 0.168, 0.59), "LeftArm": (-0.73, 0.121, 0.263), "LeftForeArm": (-0.492, -0.01, -0.376), "Head": (-1.505, -0.08, -0.119), "Spine2": (-2.888, 0.053, 0.004)},
-    "PLAYS": {"RightArm": (-1.968, -0.323, -0.174), "RightForeArm": (-1.543, 0.124, 0.561), "LeftArm": (-2.025, 0.246, 0.16), "LeftForeArm": (-1.543, -0.118, -0.555), "Head": (-1.473, 0.001, 0.001), "Spine2": (-2.518, 0.048, 0.013)},
-    "SELL": {"RightArm": (-2.115, -0.307, -0.149), "RightForeArm": (-1.542, 0.204, 0.654), "LeftArm": (-2.051, 0.342, 0.161), "LeftForeArm": (-1.517, -0.241, -0.703), "Head": (-1.482, 0.002, 0.003), "Spine2": (-2.483, -0.024, -0.007)},
-    "PUSH": {"RightArm": (-2.151, -0.083, -0.143), "RightForeArm": (-1.44, 0.093, 0.535), "LeftArm": (-1.998, 0.153, 0.156), "LeftForeArm": (-1.397, -0.116, -0.57), "Head": (-1.487, -0.019, -0.028), "Spine2": (-2.847, 0.097, 0.01)},
-    "REMOVE": {"RightArm": (-2.231, -0.49, -0.121), "RightForeArm": (-1.506, 0.244, 0.709), "LeftArm": (-2.057, 0.084, 0.148), "LeftForeArm": (-1.603, -0.213, -0.651), "Head": (-1.429, 0.035, 0.056), "Spine2": (-2.559, 0.259, 0.065)},
-    "RELAX": {"RightArm": (-0.758, -0.088, -0.232), "RightForeArm": (-1.012, 0.054, 0.51), "LeftArm": (-0.745, 0.014, 0.171), "LeftForeArm": (-0.995, -0.021, -0.441), "Head": (-1.534, 0.001, 0.001), "Spine2": (-2.616, 0.041, 0.009)},
-    "RUSH": {"RightArm": (-2.043, -0.211, -0.155), "RightForeArm": (-1.391, 0.276, 0.784), "LeftArm": (-1.972, 0.06, 0.151), "LeftForeArm": (-1.524, -0.203, -0.656), "Head": (-1.527, -0.005, -0.007), "Spine2": (-2.613, 0.061, 0.013)},
-    "SEW": {"RightArm": (-2.071, -0.163, -0.151), "RightForeArm": (-1.561, 0.362, 0.827), "LeftArm": (-2.156, 0.228, 0.142), "LeftForeArm": (-1.507, -0.452, -0.954), "Head": (-1.518, -0.034, -0.05), "Spine2": (-3.095, 0.431, -0.01)},
-    "SHOUTS": {"RightArm": (-1.619, -0.48, -0.28), "RightForeArm": (-1.369, 0.043, 0.474), "LeftArm": (-0.539, 0.088, 0.254), "LeftForeArm": (-0.967, -0.061, -0.528), "Head": (-1.508, 0.003, 0.005), "Spine2": (-2.538, 0.103, 0.027)},
-    "RECOMMENDED": {"RightArm": (-2.101, -0.166, -0.148), "RightForeArm": (-1.722, 0.195, 0.611), "LeftArm": (-2.086, 0.174, 0.149), "LeftForeArm": (-1.694, -0.229, -0.65), "Head": (-1.503, -0.004, -0.006), "Spine2": (-2.808, 0.046, 0.005)},
-    "THANK_YOU": {"RightArm": (-0.4, 0, -0.3), "RightForeArm": (-0.3, 0, 0.3), "Head": (0.1, 0, 0)},
-    "YES": {"RightArm": (-0.2, 0, -0.2), "RightForeArm": (-0.2, 0, 0.2), "Head": (0.15, 0, 0)},
-    "NO": {"Head": (0, 0.25, 0), "RightArm": (-0.2, 0, -0.2)},
-    "GOOD": {"RightArm": (-0.3, 0, -0.3), "RightForeArm": (-0.25, 0, 0.3), "RightHandThumb1": (0, 0, -0.7)},
-    "PLEASE": {"RightArm": (-0.4, 0, -0.2), "RightForeArm": (-0.3, 0, 0.3), "RightHand": (0.6, 0, 0)},
+    "THANK_YOU": {"RightArm": (-0.4, 0, -0.3), "RightForeArm": (-0.3, 0, 0.3)},
+    "YES": {"RightArm": (-0.2, 0, -0.2), "RightForeArm": (-0.2, 0, 0.2)},
+    "NO": {"RightArm": (-0.2, 0, -0.2), "RightForeArm": (-0.2, 0, 0.25)},
+    "GOOD": {"RightArm": (-0.3, 0, -0.3), "RightForeArm": (-0.25, 0, 0.3)},
+    "PLEASE": {"RightArm": (-0.4, 0, -0.2), "RightForeArm": (-0.3, 0, 0.3)},
     "WELCOME": {"RightArm": (-0.3, 0, -0.5), "LeftArm": (-0.3, 0, 0.5), "RightForeArm": (-0.25, 0, 0.3), "LeftForeArm": (-0.25, 0, -0.3)},
-    "SORRY": {"RightArm": (-0.3, 0, -0.2), "RightForeArm": (-0.25, 0, 0.25), "Head": (0.08, 0, 0)},
-    "WHERE": {"RightArm": (-0.3, 0, -0.3), "RightForeArm": (-0.3, 0, 0.4), "Head": (0, 0.1, 0)},
+    "SORRY": {"RightArm": (-0.3, 0, -0.2), "RightForeArm": (-0.25, 0, 0.25)},
+    "WHERE": {"RightArm": (-0.3, 0, -0.3), "RightForeArm": (-0.3, 0, 0.4)},
     "WHAT": {"RightArm": (-0.2, 0, -0.3), "RightForeArm": (-0.25, 0, 0.3), "LeftArm": (-0.2, 0, 0.3)},
-    "NAME": {"RightArm": (-0.2, 0, -0.25), "RightForeArm": (-0.3, 0, 0.4), "RightHandIndex1": (-0.3, 0, 0)},
-    "WATER": {"RightArm": (-0.3, 0, -0.2), "RightForeArm": (-0.25, 0, 0.3), "RightHandIndex1": (-0.3, 0, 0)},
-    "FOOD": {"RightArm": (-0.5, 0, -0.2), "RightForeArm": (-0.3, 0, 0.5), "RightHand": (0.4, 0, 0)},
-    "HOME": {"RightArm": (-0.4, 0, -0.3), "LeftArm": (-0.4, 0, 0.3), "RightForeArm": (-0.25, 0, 0.3)},
+    "NAME": {"RightArm": (-0.2, 0, -0.25), "RightForeArm": (-0.3, 0, 0.4)},
+    "WATER": {"RightArm": (-0.3, 0, -0.2), "RightForeArm": (-0.25, 0, 0.3)},
+    "FOOD": {"RightArm": (-0.5, 0, -0.2), "RightForeArm": (-0.3, 0, 0.5)},
+    "HOME": {"RightArm": (-0.4, 0, -0.3), "LeftArm": (-0.4, 0, 0.3)},
     "MORNING": {"RightArm": (-0.4, 0, -0.4), "RightForeArm": (-0.25, 0, 0.3)},
-    "GOODBYE": {"RightArm": (-0.3, 0, -0.5), "RightForeArm": (-0.2, 0, 0.3), "RightHand": (0.2, 0.3, 0)},
-    "HELP": {"RightArm": (-0.3, 0, -0.4), "LeftArm": (-0.3, 0, 0.4), "RightForeArm": (-0.25, 0, 0.3), "LeftForeArm": (-0.25, 0, -0.3)},
+    "GOODBYE": {"RightArm": (-0.3, 0, -0.5), "RightForeArm": (-0.2, 0, 0.3)},
+    "HELP": {"RightArm": (-0.3, 0, -0.4), "LeftArm": (-0.3, 0, 0.4)},
 }
 
 DEFAULT_POSE = {"RightArm": (-0.3, 0, -0.2), "RightForeArm": (-0.25, 0, 0.3)}
+
+
 ALL_BONES = {
     "Hips","Spine","Spine1","Spine2","Neck","Head",
     "LeftShoulder","LeftArm","LeftForeArm","LeftHand",
