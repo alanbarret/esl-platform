@@ -119,7 +119,7 @@ SIGN_POSES = {
     "GOODBYE": {"RightArm": (-0.3, 0, -0.5), "RightForeArm": (-0.2, 0, 0.3)},
     # Test poses
     "THUMBS_UP": {
-        "RightArm": (-1.2, 0.0, 0.0), "RightForeArm": (-0.2, 0.0, 0.0),
+        "RightArm": (0.6, 0.0, 0.0), "RightForeArm": (0.0, 0.0, 0.0),
         "RightHandIndex1": (1.2,0,0), "RightHandIndex2": (1.0,0,0), "RightHandIndex3": (0.9,0,0),
         "RightHandMiddle1": (1.2,0,0), "RightHandMiddle2": (1.0,0,0), "RightHandMiddle3": (0.9,0,0),
         "RightHandRing1": (1.2,0,0), "RightHandRing2": (1.0,0,0), "RightHandRing3": (0.9,0,0),
@@ -127,7 +127,7 @@ SIGN_POSES = {
         "RightHandThumb1": (-0.3, 0.0, 0.3), "RightHandThumb2": (-0.2, 0.0, 0.1),
     },
     "V_SIGN": {
-        "RightArm": (-1.1, 0.0, -0.1), "RightForeArm": (-0.3, 0.0, 0.0),
+        "RightArm": (0.5, 0.0, 0.0), "RightForeArm": (0.1, 0.0, 0.0),
         "RightHandIndex1": (0,0,0), "RightHandIndex2": (0,0,0), "RightHandIndex3": (0,0,0),
         "RightHandMiddle1": (0,0,0), "RightHandMiddle2": (0,0,0), "RightHandMiddle3": (0,0,0),
         "RightHandRing1": (1.3,0,0), "RightHandRing2": (1.1,0,0), "RightHandRing3": (0.9,0,0),
