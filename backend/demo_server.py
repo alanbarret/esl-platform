@@ -127,11 +127,16 @@ SIGN_POSES = {
         "RightHandThumb1": (-0.3, 0.0, 0.3), "RightHandThumb2": (-0.2, 0.0, 0.1),
     },
     "V_SIGN": {
-        "RightArm": (0.0, 0.0, -1.3), "RightForeArm": (0.0, 0.0, 0.0),
+        "RightArm": (0.0, 0.0, -1.3),
+        "RightForeArm": (0.0, 0.8, 0.0),   # ry=+0.8 supinates forearm (palm rotates outward)
+        "RightHand": (0.0, 0.6, 0.0),       # ry=+0.6 twists wrist to show palm
+        # Index + Middle straight (V)
         "RightHandIndex1": (0,0,0), "RightHandIndex2": (0,0,0), "RightHandIndex3": (0,0,0),
         "RightHandMiddle1": (0,0,0), "RightHandMiddle2": (0,0,0), "RightHandMiddle3": (0,0,0),
+        # Ring + Pinky curled
         "RightHandRing1": (1.3,0,0), "RightHandRing2": (1.1,0,0), "RightHandRing3": (0.9,0,0),
         "RightHandPinky1": (1.3,0,0), "RightHandPinky2": (1.1,0,0), "RightHandPinky3": (0.9,0,0),
+        # Thumb tucked
         "RightHandThumb1": (0.4, 0.0, -0.5), "RightHandThumb2": (0.3, 0.0, -0.3),
     },
     "HELP": {"RightArm": (-0.3, 0, -0.4), "LeftArm": (-0.3, 0, 0.4)},
