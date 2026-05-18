@@ -71,8 +71,9 @@ export default function Home() {
             placeholder="اكتب نصًا بالعربية أو الإنجليزية..."
             dir="auto"
             rows={5}
-            className="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-3
-                       text-sm text-white placeholder-gray-600 resize-none outline-none
+            style={{ backgroundColor: '#1a1a2e', color: '#f1f1f1', caretColor: '#A8FF4B' }}
+            className="w-full border border-white/10 rounded-xl px-4 py-3
+                       text-sm placeholder-gray-500 resize-none outline-none
                        focus:border-violet-500 focus:ring-1 focus:ring-violet-500/40
                        transition-all font-arabic"
           />

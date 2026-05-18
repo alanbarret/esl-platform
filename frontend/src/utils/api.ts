@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { TranslateRequest, TranslateResponse, ModelStatus } from '../types';
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const BASE = '/api/v1';
 
 const client = axios.create({ baseURL: BASE, timeout: 120_000 });
 
