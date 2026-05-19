@@ -252,15 +252,8 @@ class Handler(BaseHTTPRequestHandler):
                             best = find_best_sign(t.upper(), threshold=0.85)
                             if best:
                                 ap = AVATAR_DIR / f"{best}.mp4"
-                        # 4. Extract mocap + render avatar on demand (background thread)
+                        # 4. Use neutral fallback avatar (no on-demand MediaPipe — too heavy)
                         if not (ap.exists() and ap.stat().st_size > 5000):
-                            sign_name = eng if (is_ar and eng) else t.upper()
-                            skel_vid = VIDEOS_DIR / f"{sign_name}.mp4"
-                            if skel_vid.exists():
-                                import threading
-                                threading.Thread(target=_extract_and_render, args=(sign_name,), daemon=True).start()
-                                print(f"[Avatar] Queued on-demand render for {sign_name}")
-                            # Use HOW_ARE_YOU as neutral fallback while rendering
                             fallback = AVATAR_DIR / 'HOW_ARE_YOU.mp4'
                             if fallback.exists(): ap = fallback
                     if ap.exists() and ap.stat().st_size > 5000:
