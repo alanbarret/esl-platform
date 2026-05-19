@@ -23,6 +23,47 @@ HAND_CONN = [
 ]
 
 def px(lm): return int(lm[0]*W), int(lm[1]*H)
+
+def make_default_hand(wrist_px, direction='down'):
+    """Generate a natural resting hand pose when no landmarks detected.
+    wrist_px: (x, y) wrist position in pixels
+    direction: 'down' for relaxed hanging hand
+    """
+    wx, wy = wrist_px
+    # Scale fingers relative to a typical hand size
+    fs = 18  # finger spread pixels
+    fl = 28  # finger length pixels
+    # 21 landmarks: wrist + 4 per finger (thumb,index,middle,ring,pinky)
+    # Relaxed hand pointing downward with slight spread
+    hand = [
+        [wx/W, wy/H, 0],                                          # 0 wrist
+        # Thumb (angled out)
+        [(wx-fs*0.8)/W, (wy+fl*0.4)/H, 0],                       # 1 thumb cmc
+        [(wx-fs*1.2)/W, (wy+fl*0.8)/H, 0],                       # 2 thumb mcp
+        [(wx-fs*1.4)/W, (wy+fl*1.2)/H, 0],                       # 3 thumb ip
+        [(wx-fs*1.5)/W, (wy+fl*1.5)/H, 0],                       # 4 thumb tip
+        # Index
+        [(wx-fs*0.5)/W, (wy+fl*0.3)/H, 0],                       # 5 index mcp
+        [(wx-fs*0.5)/W, (wy+fl*0.9)/H, 0],                       # 6 index pip
+        [(wx-fs*0.5)/W, (wy+fl*1.4)/H, 0],                       # 7 index dip
+        [(wx-fs*0.5)/W, (wy+fl*1.7)/H, 0],                       # 8 index tip
+        # Middle
+        [(wx)/W,        (wy+fl*0.3)/H, 0],                       # 9 middle mcp
+        [(wx)/W,        (wy+fl*1.0)/H, 0],                       # 10 middle pip
+        [(wx)/W,        (wy+fl*1.5)/H, 0],                       # 11 middle dip
+        [(wx)/W,        (wy+fl*1.8)/H, 0],                       # 12 middle tip
+        # Ring
+        [(wx+fs*0.5)/W, (wy+fl*0.3)/H, 0],                       # 13 ring mcp
+        [(wx+fs*0.5)/W, (wy+fl*0.9)/H, 0],                       # 14 ring pip
+        [(wx+fs*0.5)/W, (wy+fl*1.4)/H, 0],                       # 15 ring dip
+        [(wx+fs*0.5)/W, (wy+fl*1.65)/H, 0],                      # 16 ring tip
+        # Pinky
+        [(wx+fs*1.0)/W, (wy+fl*0.3)/H, 0],                       # 17 pinky mcp
+        [(wx+fs*1.0)/W, (wy+fl*0.8)/H, 0],                       # 18 pinky pip
+        [(wx+fs*1.0)/W, (wy+fl*1.2)/H, 0],                       # 19 pinky dip
+        [(wx+fs*1.0)/W, (wy+fl*1.45)/H, 0],                      # 20 pinky tip
+    ]
+    return hand
 def lp(a,b,t): return (int(a[0]+(b[0]-a[0])*t), int(a[1]+(b[1]-a[1])*t))
 def dist(a,b): return math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
 
@@ -363,10 +404,12 @@ def draw_avatar(img, pose, rhand, lhand):
     # ── Face (before hands so hands render on top) ────────────────────────────
     draw_face(img, nose, sh_w)
 
-    # ── Hands — drawn LAST so always on top of everything ────────────────────
-    for hand, wr_pt in [(rhand_use, rw), (lhand_use, lw)]:
+    # ── Hands — drawn LAST, always show fingers even without landmarks ────────
+    for hand_raw, wr_pt in [(rhand_use, rw), (lhand_use, lw)]:
         cv2.circle(img, wr_pt, arm_t+1, C_SKIND, -1, cv2.LINE_AA)
         cv2.circle(img, wr_pt, arm_t-1, C_SKIN,  -1, cv2.LINE_AA)
+        # Use detected hand or generate a default resting pose
+        hand = hand_raw if (hand_raw and not (abs(hand_raw[0][0])<0.001 and abs(hand_raw[0][1])<0.001))                else make_default_hand(wr_pt)
         draw_realistic_hand(img, hand, C_SKIN, C_SKIND, arm_t)
 
 
