@@ -105,6 +105,48 @@ ARABIC_TO_ENGLISH = {
     'أحتاج': 'NEED', 'أريد': 'WANT', 'أعرف': 'KNOW',
 }
 
+
+import os as _os
+
+def _translate_arabic_to_english(word: str) -> str | None:
+    """Use OpenAI to translate a single Arabic word to English sign name."""
+    api_key = _os.getenv('OPENAI_API_KEY', '')
+    if not api_key:
+        return None
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key)
+        signs = get_available_signs()
+        # Ask GPT to pick the best matching sign name
+        r = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=[{
+                'role': 'system',
+                'content': (
+                    'You are a sign language dictionary. Given an Arabic word, '
+                    'return the single best matching English sign name from this list. '
+                    'Return ONLY the sign name in uppercase, nothing else. '
+                    'If no good match exists, return NONE.\n\n'
+                    'Available signs: ' + ', '.join(signs[:300])
+                )
+            }, {
+                'role': 'user',
+                'content': word
+            }],
+            max_tokens=20,
+            temperature=0,
+        )
+        result = r.choices[0].message.content.strip().upper()
+        if result == 'NONE' or not result: return None
+        # Validate it's actually in our sign list
+        if result in signs: return result
+        # Try similarity
+        best = find_best_sign(result, threshold=0.85)
+        return best
+    except Exception as e:
+        print(f'[Translate] {word} error: {e}')
+        return None
+
 def word_to_clips(word: str, available: set) -> list[str]:
     """Return list of video paths for a word.
     For Arabic: translate to English first, try exact match, then finger-spell.
@@ -115,23 +157,27 @@ def word_to_clips(word: str, available: set) -> list[str]:
 
     # --- Arabic word ---
     if is_arabic:
-        # 1. Translate to English and try exact/similarity match
+        # 1. Dict lookup (fast, no API call)
         english = ARABIC_TO_ENGLISH.get(word) or ARABIC_TO_ENGLISH.get(word.strip('\u0627\u0644'))
+
+        # 2. OpenAI translation for unknown words
+        if not english:
+            english = _translate_arabic_to_english(word)
+            if english:
+                ARABIC_TO_ENGLISH[word] = english  # cache for session
+
         if english:
-            v = VIDEOS_DIR / f"{english}.mp4"
+            v = VIDEOS_DIR / f"{english.upper()}.mp4"
             if v.exists():
-                print(f"[Stitch] '{word}' → {english} (translated exact)")
+                print(f"[Stitch] '{word}' → {english} (match)")
                 return [str(v)]
-            # Similarity search on translated English word
-            best = find_best_sign(english, threshold=0.85)
+            # Similarity on the translated term
+            best = find_best_sign(english.upper(), threshold=0.82)
             if best:
                 v = VIDEOS_DIR / f"{best}.mp4"
-                if v.exists(): return [str(v)]
-        # 2. Similarity search on the Arabic word itself (romanized)
-        best = find_best_sign(word_up, threshold=0.85)
-        if best:
-            v = VIDEOS_DIR / f"{best}.mp4"
-            if v.exists(): return [str(v)]
+                if v.exists():
+                    print(f"[Stitch] '{word}' → {best} (~{english})")
+                    return [str(v)]
         # 3. Finger-spell Arabic letter by letter
         clips = []
         for char in word:

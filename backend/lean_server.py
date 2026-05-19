@@ -31,7 +31,7 @@ ABU_DHABI_MEDIA_COMPANY, AEEN, AIN_KHAT, AIR_CONDITIONER, AIR_HOST, AL, ALARM_CL
 
 Rules:
 - Output ONLY tokens separated by spaces. Max 10 tokens.
-- Match concepts broadly: "airport" → AIR_HOST if no AIRPORT sign, "closed" → check CLOSE/CLOSING
+- Match concepts broadly: "closed" → check CLOSE/CLOSING
 - For proper nouns with no match (Abu Dhabi, London) → output in Arabic: أبوظبي
 - For unknown concepts → translate to Arabic word
 
