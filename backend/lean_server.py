@@ -40,7 +40,7 @@ Input: good morning doctor
 Output: MORNING DOCTOR
 
 Input: airport closed due to war
-Output: AIR_CONDITIONER مغلق WAR
+Output: مطار مغلق WAR
 
 Input: I need help at school
 Output: HELPS SCHOOL

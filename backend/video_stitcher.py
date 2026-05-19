@@ -87,7 +87,9 @@ ARABIC_CHAR_MAP = {
 
 # Arabic word → English translation for sign lookup
 ARABIC_TO_ENGLISH = {
-    'مطار': 'AIRPORT', 'حرب': 'WAR', 'مغلق': 'CLOSED', 'مفتوح': 'OPEN',
+    'مطار': 'TRAVELS', 'مطارات': 'TRAVELS',
+    'طائرة': 'FLY', 'يطير': 'FLY', 'رحلة': 'TRAVELS',
+    'حرب': 'WAR', 'حروب': 'WAR', 'مغلق': 'CLOSED', 'مفتوح': 'OPEN',
     'دكتور': 'DOCTOR', 'طبيب': 'DOCTOR', 'مستشفى': 'HOSPITAL',
     'مدرسة': 'SCHOOL', 'عمل': 'WORK', 'عائلة': 'FAMILY',
     'صباح': 'MORNING', 'نوم': 'SLEEP', 'مساعدة': 'HELPS',
@@ -123,11 +125,13 @@ def _translate_arabic_to_english(word: str) -> str | None:
             messages=[{
                 'role': 'system',
                 'content': (
-                    'You are a sign language dictionary. Given an Arabic word, '
-                    'return the single best matching English sign name from this list. '
-                    'Return ONLY the sign name in uppercase, nothing else. '
-                    'If no good match exists, return NONE.\n\n'
-                    'Available signs: ' + ', '.join(signs[:300])
+                    'You are an Emirati Sign Language expert. Given an Arabic word, '
+                    'find the sign that has the SAME SEMANTIC MEANING — not just similar spelling. '
+                    'Only return a sign if it truly represents the same concept. '
+                    'Do NOT pick a sign just because it shares letters (e.g. AIRPORT ≠ AIR_CONDITIONER). '
+                    'If no sign matches the meaning closely, return NONE. '
+                    'Return ONLY the exact sign name in uppercase, nothing else.\n\n'
+                    'Available signs: ' + ', '.join(signs[:400])
                 )
             }, {
                 'role': 'user',
@@ -139,9 +143,11 @@ def _translate_arabic_to_english(word: str) -> str | None:
         result = r.choices[0].message.content.strip().upper()
         if result == 'NONE' or not result: return None
         # Validate it's actually in our sign list
-        if result in signs: return result
+        if result in signs:
+            print(f"[Translate] '{word}' → {result}")
+            return result
         # Try similarity
-        best = find_best_sign(result, threshold=0.85)
+        best = find_best_sign(result, threshold=0.92)
         return best
     except Exception as e:
         print(f'[Translate] {word} error: {e}')
@@ -172,7 +178,7 @@ def word_to_clips(word: str, available: set) -> list[str]:
                 print(f"[Stitch] '{word}' → {english} (match)")
                 return [str(v)]
             # Similarity on the translated term
-            best = find_best_sign(english.upper(), threshold=0.82)
+            best = find_best_sign(english.upper(), threshold=0.92)
             if best:
                 v = VIDEOS_DIR / f"{best}.mp4"
                 if v.exists():
@@ -198,7 +204,7 @@ def word_to_clips(word: str, available: set) -> list[str]:
         return [str(vid)]
 
     # 2. Similarity search at 85%+
-    best = find_best_sign(word_up, threshold=0.85)
+    best = find_best_sign(word_up, threshold=0.92)
     if best:
         v = VIDEOS_DIR / f"{best}.mp4"
         if v.exists(): return [str(v)]
