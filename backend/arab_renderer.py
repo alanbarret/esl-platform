@@ -339,39 +339,35 @@ def draw_avatar(img, pose, rhand, lhand):
     cv2.line(img, ls, rs, C_ROBE, arm_t*2+4, cv2.LINE_AA)
     cv2.line(img, ls, rs, C_ROBED, 2, cv2.LINE_AA)
 
-    # ── Arms ─────────────────────────────────────────────────────────────────
-    for sh, el, wr, v1, v2, v3 in [
-        (ls, le, lw, vis(L_SH) if ls==ls_raw else vis(R_SH), vis(L_EL) if le==le_raw else vis(R_EL), vis(L_WR) if lw==lw_raw else vis(R_WR)),
-        (rs, re, rw, vis(R_SH) if rs==rs_raw else vis(L_SH), vis(R_EL) if re==re_raw else vis(L_EL), vis(R_WR) if rw==rw_raw else vis(L_WR)),
-    ]:
-        if v1>0.2 and v2>0.2:
-            cv2.line(img, (sh[0]+2,sh[1]+2), (el[0]+2,el[1]+2), C_ROBES, arm_t*2+2, cv2.LINE_AA)
-            cv2.line(img, sh, el, C_ROBED, arm_t*2+2, cv2.LINE_AA)
-            cv2.line(img, sh, el, C_ROBE,  arm_t*2,   cv2.LINE_AA)
-        if v2>0.2 and v3>0.2:
-            cv2.line(img, (el[0]+2,el[1]+2), (wr[0]+2,wr[1]+2), C_ROBES, arm_t*2, cv2.LINE_AA)
-            cv2.line(img, el, wr, C_ROBED, arm_t*2,   cv2.LINE_AA)
-            cv2.line(img, el, wr, C_ROBE,  arm_t*2-2, cv2.LINE_AA)
-            # Sleeve cuff
-            cuff = lp(el, wr, 0.80)
-            cv2.line(img, cuff, wr, C_SLVD,   arm_t*2+2, cv2.LINE_AA)
-            cv2.line(img, cuff, wr, C_SLEEVE, arm_t*2,   cv2.LINE_AA)
-            # Cuff trim
-            cv2.line(img, cuff, (cuff[0]+int((wr[0]-cuff[0])*0.25), cuff[1]+int((wr[1]-cuff[1])*0.25)),
-                     (200,190,160), max(1,arm_t//3), cv2.LINE_AA)
-        if v2>0.2:
-            cv2.circle(img, el, arm_t+1, C_ROBED, -1, cv2.LINE_AA)
-            cv2.circle(img, el, arm_t-1, C_ROBE,  -1, cv2.LINE_AA)
+    # ── Arms — always connected to body regardless of MediaPipe visibility ───
+    for sh, el, wr in [(ls, le, lw), (rs, re, rw)]:
+        # Shadow
+        cv2.line(img, (sh[0]+2,sh[1]+2), (el[0]+2,el[1]+2), C_ROBES, arm_t*2+2, cv2.LINE_AA)
+        cv2.line(img, (el[0]+2,el[1]+2), (wr[0]+2,wr[1]+2), C_ROBES, arm_t*2,   cv2.LINE_AA)
+        # Upper arm
+        cv2.line(img, sh, el, C_ROBED, arm_t*2+2, cv2.LINE_AA)
+        cv2.line(img, sh, el, C_ROBE,  arm_t*2,   cv2.LINE_AA)
+        # Forearm
+        cv2.line(img, el, wr, C_ROBED, arm_t*2,   cv2.LINE_AA)
+        cv2.line(img, el, wr, C_ROBE,  arm_t*2-2, cv2.LINE_AA)
+        # Sleeve cuff
+        cuff = lp(el, wr, 0.80)
+        cv2.line(img, cuff, wr, C_SLVD,   arm_t*2+2, cv2.LINE_AA)
+        cv2.line(img, cuff, wr, C_SLEEVE, arm_t*2,   cv2.LINE_AA)
+        cv2.line(img, cuff, (cuff[0]+int((wr[0]-cuff[0])*0.25), cuff[1]+int((wr[1]-cuff[1])*0.25)),
+                 (200,190,160), max(1,arm_t//3), cv2.LINE_AA)
+        # Elbow joint
+        cv2.circle(img, el, arm_t+1, C_ROBED, -1, cv2.LINE_AA)
+        cv2.circle(img, el, arm_t-1, C_ROBE,  -1, cv2.LINE_AA)
 
-    # ── Wrist / hand base ────────────────────────────────────────────────────
-    for hand, wr_pt, v_wr in [(rhand_use, rw, vis(R_WR)), (lhand_use, lw, vis(L_WR))]:
-        if v_wr > 0.2:
-            cv2.circle(img, wr_pt, arm_t+1, C_SKIND, -1, cv2.LINE_AA)
-            cv2.circle(img, wr_pt, arm_t-1, C_SKIN,  -1, cv2.LINE_AA)
-        draw_realistic_hand(img, hand, C_SKIN, C_SKIND, arm_t)
-
-    # ── Face ─────────────────────────────────────────────────────────────────
+    # ── Face (before hands so hands render on top) ────────────────────────────
     draw_face(img, nose, sh_w)
+
+    # ── Hands — drawn LAST so always on top of everything ────────────────────
+    for hand, wr_pt in [(rhand_use, rw), (lhand_use, lw)]:
+        cv2.circle(img, wr_pt, arm_t+1, C_SKIND, -1, cv2.LINE_AA)
+        cv2.circle(img, wr_pt, arm_t-1, C_SKIN,  -1, cv2.LINE_AA)
+        draw_realistic_hand(img, hand, C_SKIN, C_SKIND, arm_t)
 
 
 def render_avatar_video(sign: str) -> str | None:
