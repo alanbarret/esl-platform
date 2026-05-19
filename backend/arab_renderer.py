@@ -41,12 +41,14 @@ def draw_realistic_hand(img, hand, color_skin, color_shadow, arm_t):
     if not hand: return
     def hp(i): return px(hand[i])
 
-    # Finger thickness varies by segment
-    seg_thick = [max(3,arm_t-3), max(2,arm_t-5), max(2,arm_t-6)]
+    # Finger thickness — much thinner than arm, tapered per segment
+    ft = max(2, arm_t // 3)  # base finger thickness
+    seg_thick = [ft, max(1, ft-1), max(1, ft-1)]
 
-    # Palm fill (convex hull of base joints)
-    palm_pts = np.array([hp(0), hp(1), hp(5), hp(9), hp(13), hp(17)], np.int32)
+    # Palm fill
+    palm_pts = np.array([hp(0), hp(5), hp(9), hp(13), hp(17)], np.int32)
     cv2.fillConvexPoly(img, palm_pts, color_skin, cv2.LINE_AA)
+    cv2.polylines(img, [palm_pts], True, color_shadow, 1, cv2.LINE_AA)
 
     # Draw each finger with tapered segments
     fingers = [(0,1,2,3,4), (0,5,6,7,8), (0,9,10,11,12), (0,13,14,15,16), (0,17,18,19,20)]
@@ -59,18 +61,18 @@ def draw_realistic_hand(img, hand, color_skin, color_shadow, arm_t):
             cv2.line(img, (a[0]+1,a[1]+1), (b[0]+1,b[1]+1), color_shadow, thick+2, cv2.LINE_AA)
             # Main
             cv2.line(img, a, b, color_skin, thick, cv2.LINE_AA)
-            # Knuckle highlights
+            # Knuckle
             if seg_idx < 2:
-                cv2.circle(img, a, max(2, thick//2+1), color_shadow, -1, cv2.LINE_AA)
-                cv2.circle(img, a, max(1, thick//2), (min(255,color_skin[0]+20),min(255,color_skin[1]+15),min(255,color_skin[2]+10)), -1, cv2.LINE_AA)
+                cv2.circle(img, a, max(1, thick//2), color_shadow, -1, cv2.LINE_AA)
 
     # Fingertips
     for tip_idx in [4, 8, 12, 16, 20]:
-        cv2.circle(img, hp(tip_idx), max(3, arm_t-6), color_shadow, -1, cv2.LINE_AA)
-        cv2.circle(img, hp(tip_idx), max(2, arm_t-7), color_skin, -1, cv2.LINE_AA)
+        tr = max(2, ft)
+        cv2.circle(img, hp(tip_idx), tr+1, color_shadow, -1, cv2.LINE_AA)
+        cv2.circle(img, hp(tip_idx), tr,   color_skin,   -1, cv2.LINE_AA)
         # Nail
         tip = hp(tip_idx)
-        nail_r = max(2, arm_t-8)
+        nail_r = max(1, ft-1)
         cv2.ellipse(img, tip, (nail_r, max(1,nail_r-1)), 0, 0, 360, (210,190,175), -1, cv2.LINE_AA)
 
 def draw_face(img, nose, sh_w):
