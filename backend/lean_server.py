@@ -252,10 +252,28 @@ class Handler(BaseHTTPRequestHandler):
                             best = find_best_sign(t.upper(), threshold=0.85)
                             if best:
                                 ap = AVATAR_DIR / f"{best}.mp4"
-                        # 4. Use neutral fallback avatar (no on-demand MediaPipe — too heavy)
+                        # 4. Letter-by-letter spelling using avatar alphabet signs
                         if not (ap.exists() and ap.stat().st_size > 5000):
-                            fallback = AVATAR_DIR / 'HOW_ARE_YOU.mp4'
-                            if fallback.exists(): ap = fallback
+                            from video_stitcher import ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
+                            # Determine what to spell: Arabic word or English word
+                            spell_word = t  # the original token
+                            if not is_ar and eng:
+                                spell_word = eng  # spell the English translation
+                            letter_clips = []
+                            if any('\u0600' <= c <= '\u06ff' for c in spell_word):
+                                # Spell Arabic chars
+                                for ch in spell_word:
+                                    if ch in ARABIC_CHAR_MAP:
+                                        lp2 = AVATAR_DIR / f"{ARABIC_CHAR_MAP[ch]}.mp4"
+                                        if lp2.exists(): letter_clips.append(str(lp2))
+                            else:
+                                # Spell English chars via Arabic alphabet avatars
+                                for ch in spell_word.upper():
+                                    if ch in ENGLISH_LETTER_MAP:
+                                        lp2 = AVATAR_DIR / f"{ENGLISH_LETTER_MAP[ch]}.mp4"
+                                        if lp2.exists(): letter_clips.append(str(lp2))
+                            avatar_clips.extend(letter_clips)
+                            continue  # skip the single-clip append below
                     if ap.exists() and ap.stat().st_size > 5000:
                         avatar_clips.append(str(ap))
                 if avatar_clips:
