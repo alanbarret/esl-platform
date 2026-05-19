@@ -87,14 +87,19 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def serve_file(self, path: Path, mime: str, cache: int = 86400):
-        data = path.read_bytes()
+        size = path.stat().st_size
         self.send_response(200)
         for k, v in CORS.items(): self.send_header(k, v)
         self.send_header("Content-Type", mime)
-        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Content-Length", str(size))
         self.send_header("Cache-Control", f"public, max-age={cache}")
         self.end_headers()
-        self.wfile.write(data)
+        # Stream in 64KB chunks — avoids loading whole file into RAM
+        with open(path, 'rb') as f:
+            while True:
+                chunk = f.read(65536)
+                if not chunk: break
+                self.wfile.write(chunk)
 
     def do_OPTIONS(self):
         self.send_response(204)
