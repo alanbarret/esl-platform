@@ -1,31 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2, Play, RotateCcw, Download, Zap } from 'lucide-react';
+import { Loader2, Play, RotateCcw, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
-import { AvatarViewer, MocapData } from '../components/AvatarViewer';
+import type { MocapData } from '../components/AvatarViewer';
 
 export default function Home() {
   const {
     inputText, setInputText,
     language, setLanguage,
     isTranslating, glossTokens,
-    gltfAnimation, mocapData, videoUrl, error,
-    translate, reset, setMocapData,
+    skeletonVideos, videoUrl, error,
+    translate, reset,
   } = useAppStore();
 
-  const [activeTab, setActiveTab] = useState<'avatar' | 'video'>('avatar');
+  const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
+  const currentVideo = allVideos[currentVideoIdx] ?? null;
 
   const loadMocap = async (sign: string) => {
-    try {
-      const res = await fetch(`/api/v1/mocap/${sign}`);
-      if (res.ok) {
-        const data: MocapData = await res.json();
-        setMocapData(data);
-        useAppStore.setState({ glossTokens: [sign], gltfAnimation: null, error: null, isTranslating: false });
-        return true;
-      }
-    } catch {}
-    return false;
+    const vidUrl = `/api/v1/skeleton-video/${sign}`;
+    useAppStore.setState({
+      glossTokens: [sign],
+      skeletonVideos: [vidUrl],
+      videoUrl: vidUrl,
+      gltfAnimation: null,
+      error: null,
+      isTranslating: false,
+    });
+    setCurrentVideoIdx(0);
   };
 
   return (
@@ -69,7 +73,7 @@ export default function Home() {
                 const pose = e.target.value;
                 if (!pose) return;
                 setInputText(pose);
-                setMocapData(null);
+                useAppStore.setState({ mocapData: null } as any);
                 await loadMocap(pose);
               }}
               className="bg-[#1a1a2e] border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none cursor-pointer hover:border-violet-500 transition-all flex-1"
@@ -134,7 +138,7 @@ export default function Home() {
                 <><Play size={16} /> Generate Sign Video</>
               )}
             </button>
-            {(videoUrl || gltfAnimation || error) && (
+            {(videoUrl || error) && (
               <button onClick={reset}
                 className="px-4 py-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 <RotateCcw size={16} />
@@ -172,53 +176,72 @@ export default function Home() {
           )}
         </div>
 
-        {/* Right: Output Panel */}
+        {/* Right: Skeleton Video Player */}
         <div className="space-y-4">
-          {/* Tab switcher */}
-          {(gltfAnimation || videoUrl) && (
-            <div className="flex gap-2 border-b border-white/5 pb-4">
-              <button onClick={() => setActiveTab('avatar')}
-                className={`text-sm font-semibold pb-1 transition-all border-b-2
-                  ${activeTab === 'avatar' ? 'border-[#A8FF4B] text-white' : 'border-transparent text-gray-500'}`}>
-                3D Avatar
-              </button>
-              {videoUrl && (
-                <button onClick={() => setActiveTab('video')}
-                  className={`text-sm font-semibold pb-1 ml-4 transition-all border-b-2
-                    ${activeTab === 'video' ? 'border-[#A8FF4B] text-white' : 'border-transparent text-gray-500'}`}>
-                  Video
-                </button>
-              )}
+
+          {/* Loading */}
+          {isTranslating && (
+            <div className="aspect-video bg-white/2 border border-white/6 rounded-2xl
+                            flex items-center justify-center gap-3 text-gray-500">
+              <Loader2 size={22} className="animate-spin text-violet-400" />
+              <span className="text-sm">Generating sign video...</span>
             </div>
           )}
 
-          {/* Avatar viewer */}
-          {(gltfAnimation || mocapData || isTranslating) && activeTab === 'avatar' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <AvatarViewer animation={gltfAnimation} mocapData={mocapData} className="aspect-[4/3]" />
-            </motion.div>
-          )}
+          {/* Skeleton video */}
+          {currentVideo && !isTranslating && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+              <div className="relative bg-black rounded-2xl overflow-hidden aspect-video border border-white/5">
+                <video
+                  ref={videoRef}
+                  key={currentVideo}
+                  src={currentVideo}
+                  autoPlay loop muted
+                  className="w-full h-full object-contain"
+                />
+                {/* Sign label badge */}
+                <div className="absolute top-3 left-3 bg-black/70 backdrop-blur px-3 py-1 rounded-full
+                                text-[#A8FF4B] font-bold text-xs border border-[#A8FF4B]/30">
+                  {glossTokens[currentVideoIdx] || 'Sign'}
+                </div>
+              </div>
 
-          {/* Video player */}
-          {videoUrl && activeTab === 'video' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="relative bg-black rounded-2xl overflow-hidden aspect-video">
-              <video src={videoUrl} controls autoPlay loop className="w-full h-full" />
-              <a href={videoUrl} download
-                className="absolute top-3 right-3 bg-black/60 backdrop-blur text-white
-                           p-2 rounded-lg hover:bg-black/80 transition-all">
-                <Download size={16} />
-              </a>
+              {/* Multi-sign navigation */}
+              {allVideos.length > 1 && (
+                <div className="flex items-center justify-between bg-white/3 rounded-xl px-4 py-2">
+                  <button
+                    onClick={() => setCurrentVideoIdx(i => Math.max(0, i-1))}
+                    disabled={currentVideoIdx === 0}
+                    className="p-1 rounded-lg hover:bg-white/10 disabled:opacity-30 transition-all">
+                    <ChevronLeft size={18} />
+                  </button>
+                  <div className="flex gap-2">
+                    {allVideos.map((_, i) => (
+                      <button key={i} onClick={() => setCurrentVideoIdx(i)}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all
+                          ${i === currentVideoIdx ? 'bg-[#A8FF4B] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                        {glossTokens[i] || i+1}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setCurrentVideoIdx(i => Math.min(allVideos.length-1, i+1))}
+                    disabled={currentVideoIdx === allVideos.length-1}
+                    className="p-1 rounded-lg hover:bg-white/10 disabled:opacity-30 transition-all">
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              )}
             </motion.div>
           )}
 
           {/* Empty state */}
-          {!gltfAnimation && !videoUrl && !isTranslating && (
-            <div className="aspect-[4/3] bg-white/2 border border-white/6 rounded-2xl
+          {!currentVideo && !isTranslating && (
+            <div className="aspect-video bg-white/2 border border-white/6 rounded-2xl
                             flex flex-col items-center justify-center gap-3 text-gray-600">
               <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center
                               justify-center text-3xl">🤟</div>
-              <p className="text-sm">Enter text and generate to see the avatar signing</p>
+              <p className="text-sm">Enter text or pick a sign to see the skeleton animation</p>
             </div>
           )}
         </div>

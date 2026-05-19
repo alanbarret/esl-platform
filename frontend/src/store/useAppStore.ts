@@ -4,6 +4,7 @@ import type { MocapData } from '../components/AvatarViewer';
 
 interface ESLState extends AppState {
   mocapData: MocapData | null;
+  skeletonVideos: string[];
   setMocapData: (d: MocapData | null) => void;
 }
 
@@ -22,6 +23,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
   videoUrl: null,
   gltfAnimation: null,
   mocapData: null,
+  skeletonVideos: [],
   error: null,
 
   // Actions
@@ -37,35 +39,19 @@ export const useAppStore = create<ESLState>((set, get) => ({
     set({ isTranslating: true, error: null, videoUrl: null, gltfAnimation: null, mocapData: null, glossTokens: [] });
 
     try {
-      // Step 1: Get gloss tokens from backend
-      const glossRes = await fetch('/api/v1/gloss', {
+      // Call translate — backend returns skeleton_videos array
+      const res = await fetch('/api/v1/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: inputText }),
       });
-      const glossData = await glossRes.json();
-      const tokens: string[] = glossData.gloss_tokens || [inputText.toUpperCase()];
-      set({ glossTokens: tokens });
-
-      // Step 2: For each gloss token, try to fetch real mocap data
-      // Chain them: play the first one that has mocap, or fallback to keyframes
-      const firstToken = tokens[0];
-      const mocapRes = await fetch(`/api/v1/mocap/${firstToken}`);
-      if (mocapRes.ok) {
-        const mocapData: MocapData = await mocapRes.json();
-        set({ mocapData, gltfAnimation: null, isTranslating: false });
-        return;
-      }
-
-      // Step 3: Fallback — request keyframe animation (old system)
-      const animRes = await fetch('/api/v1/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: inputText, output_format: 'gltf' }),
-      });
-      const animData = await animRes.json();
+      const data = await res.json();
+      const tokens: string[] = data.gloss_tokens || [inputText.toUpperCase()];
       set({
-        gltfAnimation: animData.gltf_animation ?? null,
+        glossTokens: tokens,
+        skeletonVideos: data.skeleton_videos || [],
+        videoUrl: data.skeleton_videos?.[0] || null,
+        gltfAnimation: null,
         mocapData: null,
         isTranslating: false,
       });
@@ -80,6 +66,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
     videoUrl: null,
     gltfAnimation: null,
     mocapData: null,
+    skeletonVideos: [],
     error: null,
     isTranslating: false,
   }),

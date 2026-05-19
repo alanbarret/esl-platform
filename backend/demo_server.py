@@ -3,10 +3,11 @@ ESL Platform — Demo Server with OpenAI Gloss Generation
 Converts Arabic/English text → ESL gloss using GPT-4o,
 then animates the Arab Man GLB avatar.
 """
-import json, os, uuid, math
+import json, os, uuid, math, threading
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+from skeleton_renderer import get_or_render, VIDEOS_DIR, MOCAP_DIR
 
 # ── MoCap frames DB ───────────────────────────────────────────────────────────
 MOCAP_DIR = Path(__file__).parent.parent / "data" / "processed" / "mocap"
@@ -276,6 +277,24 @@ class ESLHandler(BaseHTTPRequestHandler):
                 self.send_json(mocap_to_landmarks(data))
             else:
                 self.send_json({"error": f"No mocap data for {sign}"}, 404)
+        elif p.startswith("/api/v1/skeleton-video/"):
+            sign = p.split("/")[-1].upper().replace('.MP4','')
+            video_path = get_or_render(sign)
+            if video_path and os.path.exists(video_path):
+                with open(video_path, 'rb') as vf:
+                    data = vf.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'video/mp4')
+                self.send_header('Content-Length', str(len(data)))
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header('Cache-Control', 'public, max-age=86400')
+                self.end_headers()
+                self.wfile.write(data)
+            else:
+                self.send_json({"error": f"No skeleton video for {sign}"}, 404)
+        elif p == "/api/v1/skeleton-signs":
+            signs = sorted(p2.stem for p2 in MOCAP_DIR.glob('*.json'))
+            self.send_json({"signs": signs})
         else:
             self.send_json({"error": "Not found"}, 404)
 
@@ -289,16 +308,21 @@ class ESLHandler(BaseHTTPRequestHandler):
             print(f"[Translate] {text!r}")
             gloss_tokens = gloss_with_openai(text)
             print(f"[Gloss] {gloss_tokens}")
-            animation = make_animation(gloss_tokens)
+            # Find skeleton videos for each gloss token
+            skeleton_urls = []
+            for token in gloss_tokens:
+                vid = get_or_render(token)
+                if vid:
+                    skeleton_urls.append(f"/api/v1/skeleton-video/{token}")
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
                 "input_text": text,
                 "detected_language": "ar" if any(ord(c) > 0x600 for c in text) else "en",
                 "gloss_tokens": gloss_tokens,
-                "total_duration": animation["duration"],
                 "status": "completed",
-                "gltf_animation": animation,
-                "video_url": None,
+                "skeleton_videos": skeleton_urls,
+                "video_url": skeleton_urls[0] if skeleton_urls else None,
+                "gltf_animation": None,
             })
         elif p == "/api/v1/gloss":
             text = body.get("text", "")
