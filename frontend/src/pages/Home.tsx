@@ -19,13 +19,10 @@ export default function Home() {
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
   const rawVideo = allVideos[currentVideoIdx] ?? null;
-  // For avatar mode: use avatarVideoUrl if available, else try swapping skeleton→avatar URL
-  const toAvatarUrl = (url: string) => url.replace('/api/v1/skeleton-video/', '/api/v1/avatar-video/');
-  const currentVideo = rawVideo
-    ? (videoMode === 'avatar'
-        ? (avatarVideoUrl || toAvatarUrl(rawVideo))
-        : rawVideo)
-    : null;
+  // Avatar mode: use avatarVideoUrl directly (works for both typed text and dropdown)
+  const currentVideo = videoMode === 'avatar'
+    ? (avatarVideoUrl ?? rawVideo?.replace('/api/v1/skeleton-video/', '/api/v1/avatar-video/') ?? null)
+    : rawVideo;
   // Reset index when video list changes
   React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
@@ -240,14 +237,19 @@ export default function Home() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
               {/* Mode toggle */}
               <div className="flex gap-2">
-                {(['skeleton','avatar'] as const).map(mode => (
-                  <button key={mode}
-                    onClick={() => setVideoMode(mode)}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all
-                      ${videoMode===mode ? 'bg-[#A8FF4B] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
-                    {mode === 'skeleton' ? '🦴 Skeleton' : '👳 Arab Avatar'}
-                  </button>
-                ))}
+                <button onClick={() => setVideoMode('skeleton')}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all
+                    ${videoMode==='skeleton' ? 'bg-[#A8FF4B] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                  🦴 Skeleton
+                </button>
+                <button onClick={() => setVideoMode('avatar')}
+                  disabled={!avatarVideoUrl}
+                  title={!avatarVideoUrl ? 'Avatar not available for this sign' : ''}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all
+                    ${videoMode==='avatar' ? 'bg-[#A8FF4B] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}
+                    disabled:opacity-40 disabled:cursor-not-allowed`}>
+                  👳 Arab Avatar
+                </button>
               </div>
               <div className="relative bg-black rounded-2xl overflow-hidden aspect-video border border-white/5">
                 <video
