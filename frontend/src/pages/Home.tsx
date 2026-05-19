@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2, Play, RotateCcw, Download, Languages, Zap } from 'lucide-react';
+import { Loader2, Play, RotateCcw, Download, Zap } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { AvatarViewer, MocapData } from '../components/AvatarViewer';
 
@@ -8,24 +8,20 @@ export default function Home() {
   const {
     inputText, setInputText,
     language, setLanguage,
-    outputFormat, setOutputFormat,
     isTranslating, glossTokens,
-    videoUrl, gltfAnimation, error,
-    translate, reset,
+    gltfAnimation, mocapData, videoUrl, error,
+    translate, reset, setMocapData,
   } = useAppStore();
 
   const [activeTab, setActiveTab] = useState<'avatar' | 'video'>('avatar');
-  const [mocapData, setMocapData] = useState<MocapData | null>(null);
-  const [mocapSign, setMocapSign] = useState<string>('');
 
-  // Fetch mocap data when a sign is selected
   const loadMocap = async (sign: string) => {
     try {
       const res = await fetch(`/api/v1/mocap/${sign}`);
       if (res.ok) {
-        const data = await res.json();
+        const data: MocapData = await res.json();
         setMocapData(data);
-        setMocapSign(sign);
+        useAppStore.setState({ glossTokens: [sign], gltfAnimation: null, error: null, isTranslating: false });
         return true;
       }
     } catch {}
@@ -72,27 +68,9 @@ export default function Home() {
               onChange={async (e) => {
                 const pose = e.target.value;
                 if (!pose) return;
+                setInputText(pose);
                 setMocapData(null);
-                // Try mocap first (real motion data)
-                const hasMocap = await loadMocap(pose);
-                if (hasMocap) {
-                  setInputText(pose);
-                  useAppStore.setState({ glossTokens: [pose], isTranslating: false, error: null, gltfAnimation: null });
-                  return;
-                }
-                // Fall back to keyframe animation
-                try {
-                  const res = await fetch('/api/v1/translate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: pose, output_format: 'gltf' }),
-                  });
-                  const data = await res.json();
-                  if (data.gltf_animation) {
-                    setInputText(pose);
-                    useAppStore.setState({ glossTokens: [pose], gltfAnimation: data.gltf_animation, isTranslating: false, error: null });
-                  }
-                } catch (err) { console.error(err); }
+                await loadMocap(pose);
               }}
               className="bg-[#1a1a2e] border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none cursor-pointer hover:border-violet-500 transition-all flex-1"
             >
@@ -117,14 +95,9 @@ export default function Home() {
           {/* Language selector */}
           <div className="flex gap-2">
             {(['auto', 'ar', 'en'] as const).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setLanguage(lang)}
+              <button key={lang} onClick={() => setLanguage(lang)}
                 className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all
-                  ${language === lang
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
-              >
+                  ${language === lang ? 'bg-violet-600 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
                 {lang === 'auto' ? 'Auto' : lang === 'ar' ? 'العربية' : 'English'}
               </button>
             ))}
@@ -144,22 +117,7 @@ export default function Home() {
                        transition-all font-arabic"
           />
 
-          {/* Output format */}
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Output</span>
-            {(['mp4', 'gltf'] as const).map((fmt) => (
-              <button
-                key={fmt}
-                onClick={() => setOutputFormat(fmt)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all
-                  ${outputFormat === fmt
-                    ? 'bg-[#A8FF4B] text-black'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
-              >
-                {fmt.toUpperCase()}
-              </button>
-            ))}
-          </div>
+
 
           {/* Generate button */}
           <div className="flex gap-3">

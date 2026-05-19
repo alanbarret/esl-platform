@@ -1,12 +1,17 @@
 import { create } from 'zustand';
 import { AppState, Language, OutputFormat } from '../types';
-import { api } from '../utils/api';
+import type { MocapData } from '../components/AvatarViewer';
 
-export const useAppStore = create<AppState>((set, get) => ({
+interface ESLState extends AppState {
+  mocapData: MocapData | null;
+  setMocapData: (d: MocapData | null) => void;
+}
+
+export const useAppStore = create<ESLState>((set, get) => ({
   // Input
   inputText: '',
   language: 'auto',
-  outputFormat: 'mp4',
+  outputFormat: 'gltf',
 
   // Pipeline
   isTranslating: false,
@@ -16,41 +21,56 @@ export const useAppStore = create<AppState>((set, get) => ({
   // Output
   videoUrl: null,
   gltfAnimation: null,
+  mocapData: null,
   error: null,
 
   // Actions
   setInputText: (text) => set({ inputText: text }),
   setLanguage: (lang: Language) => set({ language: lang }),
   setOutputFormat: (fmt: OutputFormat) => set({ outputFormat: fmt }),
+  setMocapData: (d) => set({ mocapData: d }),
 
   translate: async () => {
-    const { inputText, language, outputFormat } = get();
+    const { inputText } = get();
     if (!inputText.trim()) return;
 
-    set({ isTranslating: true, error: null, videoUrl: null, gltfAnimation: null, glossTokens: [] });
+    set({ isTranslating: true, error: null, videoUrl: null, gltfAnimation: null, mocapData: null, glossTokens: [] });
 
     try {
-      const result = await api.translate({
-        text: inputText,
-        language,
-        output_format: outputFormat,
-        fps: 30,
-        width: 1920,
-        height: 1080,
-        transparent_bg: false,
+      // Step 1: Get gloss tokens from backend
+      const glossRes = await fetch('/api/v1/gloss', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: inputText }),
       });
+      const glossData = await glossRes.json();
+      const tokens: string[] = glossData.gloss_tokens || [inputText.toUpperCase()];
+      set({ glossTokens: tokens });
 
+      // Step 2: For each gloss token, try to fetch real mocap data
+      // Chain them: play the first one that has mocap, or fallback to keyframes
+      const firstToken = tokens[0];
+      const mocapRes = await fetch(`/api/v1/mocap/${firstToken}`);
+      if (mocapRes.ok) {
+        const mocapData: MocapData = await mocapRes.json();
+        set({ mocapData, gltfAnimation: null, isTranslating: false });
+        return;
+      }
+
+      // Step 3: Fallback — request keyframe animation (old system)
+      const animRes = await fetch('/api/v1/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: inputText, output_format: 'gltf' }),
+      });
+      const animData = await animRes.json();
       set({
-        glossTokens: result.gloss_tokens,
-        videoUrl: result.video_url ? `http://localhost:8000${result.video_url}` : null,
-        gltfAnimation: result.gltf_animation ?? null,
+        gltfAnimation: animData.gltf_animation ?? null,
+        mocapData: null,
         isTranslating: false,
       });
     } catch (err: any) {
-      set({
-        error: err.message || 'Translation failed',
-        isTranslating: false,
-      });
+      set({ error: err.message || 'Translation failed', isTranslating: false });
     }
   },
 
@@ -59,6 +79,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     glossTokens: [],
     videoUrl: null,
     gltfAnimation: null,
+    mocapData: null,
     error: null,
     isTranslating: false,
   }),
