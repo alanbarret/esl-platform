@@ -192,56 +192,41 @@ class Handler(BaseHTTPRequestHandler):
 
             # Stitch avatar video — resolve each token to an avatar clip
             import hashlib
-            from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, find_best_sign
+            from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
             key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
             avatar_stitch_dir = AVATAR_DIR / "stitched"
             avatar_stitch_dir.mkdir(exist_ok=True)
             avatar_stitched_path = avatar_stitch_dir / f"{key}.mp4"
-            if not (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000):
-                avatar_clips = []
-                for t in tokens:
-                    # Resolve token to an avatar video path
-                    # 1. Try direct English sign name
-                    ap = AVATAR_DIR / f"{t.upper()}.mp4"
-                    if not (ap.exists() and ap.stat().st_size > 5000):
-                        # 2. Arabic token → translate to English → look up avatar
+            avatar_url = None
+            try:
+                if not (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000):
+                    avatar_clips = []
+                    for t in tokens[:6]:  # cap at 6 tokens to limit clips
                         is_ar = any('\u0600' <= c <= '\u06ff' for c in t)
-                        if is_ar:
-                            eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
-                            if eng:
-                                ap = AVATAR_DIR / f"{eng.upper()}.mp4"
-                        # 3. Similarity search
+                        ap = AVATAR_DIR / f"{t.upper()}.mp4"
                         if not (ap.exists() and ap.stat().st_size > 5000):
-                            best = find_best_sign(t.upper(), threshold=0.85)
-                            if best:
-                                ap = AVATAR_DIR / f"{best}.mp4"
-                        # 4. Letter-by-letter spelling using avatar alphabet signs
-                        if not (ap.exists() and ap.stat().st_size > 5000):
-                            from video_stitcher import ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
-                            # Determine what to spell: Arabic word or English word
-                            spell_word = t  # the original token
-                            if not is_ar and eng:
-                                spell_word = eng  # spell the English translation
-                            letter_clips = []
-                            if any('\u0600' <= c <= '\u06ff' for c in spell_word):
-                                # Spell Arabic chars
-                                for ch in spell_word:
-                                    if ch in ARABIC_CHAR_MAP:
-                                        lp2 = AVATAR_DIR / f"{ARABIC_CHAR_MAP[ch]}.mp4"
-                                        if lp2.exists(): letter_clips.append(str(lp2))
-                            else:
-                                # Spell English chars via Arabic alphabet avatars
-                                for ch in spell_word.upper():
-                                    if ch in ENGLISH_LETTER_MAP:
-                                        lp2 = AVATAR_DIR / f"{ENGLISH_LETTER_MAP[ch]}.mp4"
-                                        if lp2.exists(): letter_clips.append(str(lp2))
-                            avatar_clips.extend(letter_clips)
-                            continue  # skip the single-clip append below
-                    if ap.exists() and ap.stat().st_size > 5000:
-                        avatar_clips.append(str(ap))
-                if avatar_clips:
-                    stitch_videos(avatar_clips, str(avatar_stitched_path))
-            avatar_url = f"/api/v1/avatar-video/{key}" if (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000) else None
+                            # Arabic → translate → find avatar
+                            if is_ar:
+                                eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
+                                if eng:
+                                    ap = AVATAR_DIR / f"{eng.upper()}.mp4"
+                        if ap.exists() and ap.stat().st_size > 5000:
+                            avatar_clips.append(str(ap))
+                        else:
+                            # Letter-by-letter (max 4 letters per word to limit clips)
+                            spell = t if is_ar else t.upper()
+                            for ch in spell[:4]:
+                                lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
+                                sign = lmap.get(ch)
+                                if sign:
+                                    lp2 = AVATAR_DIR / f"{sign}.mp4"
+                                    if lp2.exists(): avatar_clips.append(str(lp2))
+                    if avatar_clips:
+                        stitch_videos(avatar_clips, str(avatar_stitched_path))
+                if avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000:
+                    avatar_url = f"/api/v1/avatar-video/{key}"
+            except Exception as e:
+                print(f"[Avatar stitch error] {e}")
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
