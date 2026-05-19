@@ -21,8 +21,9 @@ export default function Home() {
   // Reset index when video list changes
   React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
-  const loadMocap = async (sign: string) => {
+  const loadMocap = (sign: string) => {
     const vidUrl = `/api/v1/skeleton-video/${sign}`;
+    setCurrentVideoIdx(0);
     useAppStore.setState({
       glossTokens: [sign],
       skeletonVideos: [vidUrl],
@@ -30,8 +31,7 @@ export default function Home() {
       gltfAnimation: null,
       error: null,
       isTranslating: false,
-    });
-    setCurrentVideoIdx(0);
+    } as any);
   };
 
   return (
@@ -80,20 +80,55 @@ export default function Home() {
               }}
               className="bg-[#1a1a2e] border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none cursor-pointer hover:border-violet-500 transition-all flex-1"
             >
-              <option value="">-- Select a test pose --</option>
-              <optgroup label="Hand Poses">
-                <option value="THUMBS_UP">👍 Thumbs Up</option>
-                <option value="V_SIGN">✌️ V / Peace Sign</option>
-              </optgroup>
-              <optgroup label="UAE Sign Language">
-                <option value="HELLO">👋 Hello</option>
+              <option value="">-- Select a sign --</option>
+              <optgroup label="Common Signs">
+                <option value="HOW_ARE_YOU">👋 How Are You</option>
                 <option value="DOCTOR">🏥 Doctor</option>
-                <option value="WORK">💼 Work</option>
                 <option value="FAMILY">👨‍👩‍👧 Family</option>
                 <option value="SCHOOL">🏫 School</option>
+                <option value="WORK">💼 Work</option>
+                <option value="MORNING">🌅 Morning</option>
                 <option value="SLEEP">😴 Sleep</option>
                 <option value="OPEN">📂 Open</option>
                 <option value="PUSH">🤜 Push</option>
+                <option value="HELP">🆘 Helps</option>
+                <option value="RELAX">😌 Relax</option>
+                <option value="RECOMMENDED">⭐ Recommended</option>
+              </optgroup>
+              <optgroup label="Actions">
+                <option value="PLAYS">🎮 Plays</option>
+                <option value="PLAYS_GUITAR">🎸 Plays Guitar</option>
+                <option value="WATERING">💧 Watering</option>
+                <option value="SEW">🧵 Sew</option>
+                <option value="SENDS">📤 Sends</option>
+                <option value="SELLS">🛒 Sells</option>
+                <option value="RUSH">⚡ Rush</option>
+                <option value="REMOVE">❌ Remove</option>
+                <option value="PULLS">↙️ Pulls</option>
+                <option value="PLOW">🌾 Plow</option>
+                <option value="SHOUTS">📢 Shouts</option>
+                <option value="RUBBING">🤲 Rubbing</option>
+              </optgroup>
+              <optgroup label="Arabic Alphabet">
+                <option value="ALIF">ا Alif</option>
+                <option value="BAA">ب Baa</option>
+                <option value="TAA">ت Taa</option>
+                <option value="JEEM">ج Jeem</option>
+                <option value="HAA">ح Haa</option>
+                <option value="DAAL">د Daal</option>
+                <option value="RAA">ر Raa</option>
+                <option value="SEEN">س Seen</option>
+                <option value="SHEEN">ش Sheen</option>
+                <option value="SAAD">ص Saad</option>
+                <option value="DAAD">ض Daad</option>
+                <option value="FAA">ف Faa</option>
+                <option value="QAAF">ق Qaaf</option>
+                <option value="KAAF">ك Kaaf</option>
+                <option value="LAA">ل Laa</option>
+                <option value="LAAM">لا Laam</option>
+                <option value="MEEM">م Meem</option>
+                <option value="NOON">ن Noon</option>
+                <option value="YAA">ي Yaa</option>
               </optgroup>
             </select>
           </div>
