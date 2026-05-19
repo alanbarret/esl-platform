@@ -9,43 +9,6 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 from video_stitcher import get_stitched_video, STITCHED_DIR, VIDEOS_DIR
 from arab_renderer import get_or_render_avatar, AVATAR_DIR, render_avatar_video
-from pathlib import Path as _Path
-
-def _extract_and_render(sign: str):
-    """Extract mocap from skeleton video on demand, then render Arab avatar."""
-    import cv2, json
-    import mediapipe as mp
-    skel = VIDEOS_DIR / f"{sign.upper()}.mp4"
-    mocap_out = _Path(__file__).parent.parent / 'data' / 'processed' / 'mocap' / f"{sign.upper()}.json"
-    if mocap_out.exists(): # already extracted
-        render_avatar_video(sign)
-        return
-    # Quick extraction with lite model
-    cap = cv2.VideoCapture(str(skel))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 25
-    frames = []
-    mp_hol = mp.solutions.holistic
-    with mp_hol.Holistic(min_detection_confidence=0.4, min_tracking_confidence=0.4,
-                         model_complexity=0, static_image_mode=False) as hol:
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret: break
-            small = cv2.resize(frame, (320, 180))
-            res = hol.process(cv2.cvtColor(small, cv2.COLOR_BGR2RGB))
-            fd = {}
-            if res.pose_landmarks:
-                fd['pose'] = [[lm.x,lm.y,lm.z,lm.visibility] for lm in res.pose_landmarks.landmark]
-            if res.right_hand_landmarks:
-                fd['rhand'] = [[lm.x,lm.y,lm.z] for lm in res.right_hand_landmarks.landmark]
-            if res.left_hand_landmarks:
-                fd['lhand'] = [[lm.x,lm.y,lm.z] for lm in res.left_hand_landmarks.landmark]
-            frames.append(fd)
-    cap.release()
-    mocap_out.parent.mkdir(exist_ok=True)
-    with open(mocap_out, 'w') as f:
-        json.dump({'fps': fps, 'frames': frames}, f, separators=(',', ':'))
-    render_avatar_video(sign)
-    print(f"[OnDemand] {sign} → {(AVATAR_DIR/f'{sign.upper()}.mp4').stat().st_size//1024 if (AVATAR_DIR/f'{sign.upper()}.mp4').exists() else 0}KB")
 
 BASE  = Path(__file__).parent.parent
 SIGNS = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
