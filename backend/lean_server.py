@@ -9,12 +9,31 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 from video_stitcher import get_stitched_video, STITCHED_DIR, VIDEOS_DIR
 
-BASE     = Path(__file__).parent.parent
-SIGNS    = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
+BASE  = Path(__file__).parent.parent
+SIGNS = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
 print(f"[ESL] {len(SIGNS)} skeleton videos ready")
 
 # ── OpenAI gloss ──────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
+SYSTEM_PROMPT = """You are an Emirati Sign Language (ESL) interpreter.
+Convert input text into a sequence of tokens for ESL rendering.
+
+Rules:
+1. For words matching a known ESL sign, use the exact sign token:
+   HOW_ARE_YOU, DOCTOR, FAMILY, SCHOOL, WORK, MORNING, SLEEP, OPEN, PUSH,
+   RELAX, RECOMMENDED, PLAYS, PLAYS_GUITAR, WATERING, SEW, SENDS, SELL,
+   RUSH, REMOVE, PULLS, PLOW, SHOUTS, RUBBING, HELPS, PHOTOGRAPHER, OUT,
+   HOME_LAWN, WOW, PUNISHMENT, REQUESTS.
+
+2. For ANY other word (English or other language), translate it to Arabic
+   and output the Arabic word in Arabic script.
+   Examples: airport=مطار, war=حرب, closed=مغلق, due=بسبب,
+   uae=الإمارات, hello=مرحبا, water=ماء, fire=نار, police=شرطة,
+   hospital=مستشفى, help=مساعدة, emergency=طوارئ, road=طريق.
+
+3. Output ONLY the tokens separated by spaces. Max 8 tokens. No punctuation.
+4. Every meaningful input word must produce exactly one token. Do not skip words."""
 
 def get_gloss(text: str) -> list[str]:
     if OPENAI_API_KEY:
@@ -24,46 +43,35 @@ def get_gloss(text: str) -> list[str]:
             r = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
-                    {"role": "system", "content": (
-                        "You are an Emirati Sign Language (ESL) interpreter. "
-                        "Convert input text to ESL gloss tokens. "
-                        "Output ONLY uppercase tokens separated by spaces. Max 8 tokens. "
-                        "Known sign tokens (use these exactly when they match): "
-                        "HOW_ARE_YOU, DOCTOR, FAMILY, SCHOOL, WORK, MORNING, SLEEP, OPEN, PUSH, "
-                        "RELAX, RECOMMENDED, PLAYS, PLAYS_GUITAR, WATERING, SEW, SENDS, SELL, "
-                        "RUSH, REMOVE, PULLS, PLOW, SHOUTS, RUBBING, HELPS, PHOTOGRAPHER, OUT, "
-                        "HOME_LAWN, WOW, PUNISHMENT, REQUESTS. "
-                        "For any word NOT in the known list, output it as a single UPPERCASE English token "
-                        "(e.g. AIRPORT, WAR, CLOSED). Do NOT skip words. Every input word must produce a token. "
-                        "For Arabic input, output each Arabic word in Arabic script (e.g. مرحبا) as its own token."
-                    )},
+                    {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": text}
                 ],
-                max_tokens=50, temperature=0.1,
+                max_tokens=80, temperature=0.1,
             )
-            tokens = r.choices[0].message.content.strip().upper().split()
-            return [t.strip('.,!?') for t in tokens if t.strip('.,!?')][:8] or ["HOW_ARE_YOU"]
+            raw = r.choices[0].message.content.strip()
+            # Split preserving Arabic tokens
+            tokens = [t.strip('.,!?؟،') for t in raw.split() if t.strip('.,!?؟،')]
+            return tokens[:8] or ["HOW_ARE_YOU"]
         except Exception as e:
             print(f"[OpenAI] Error: {e}")
 
-    # Rule-based fallback
-    ar = {
-        "مرحبا": "HOW_ARE_YOU", "كيف": "HOW_ARE_YOU", "حالك": "HOW_ARE_YOU",
-        "دكتور": "DOCTOR", "طبيب": "DOCTOR",
+    # Rule-based fallback — map common words to Arabic for finger-spelling
+    ar_map = {
+        "مرحبا": "مرحبا", "كيف": "كيف", "دكتور": "DOCTOR", "طبيب": "DOCTOR",
         "عائلة": "FAMILY", "مدرسة": "SCHOOL", "عمل": "WORK",
-        "صباح": "MORNING", "نوم": "SLEEP", "مساعدة": "HELPS",
     }
-    en = {
-        "hello": "HOW_ARE_YOU", "hi": "HOW_ARE_YOU", "how": "HOW_ARE_YOU",
-        "doctor": "DOCTOR", "family": "FAMILY", "school": "SCHOOL",
-        "work": "WORK", "morning": "MORNING", "sleep": "SLEEP",
-        "help": "HELPS", "open": "OPEN", "push": "PUSH", "relax": "RELAX",
+    en_map = {
+        "hello": "مرحبا", "hi": "مرحبا", "doctor": "DOCTOR",
+        "family": "FAMILY", "school": "SCHOOL", "work": "WORK",
+        "morning": "MORNING", "sleep": "SLEEP", "help": "مساعدة",
+        "airport": "مطار", "war": "حرب", "closed": "مغلق",
+        "hospital": "مستشفى", "police": "شرطة", "fire": "نار",
     }
     tokens = []
     for w in text.split():
         wc = w.strip(".,!?؟،").lower()
-        if wc in ar: tokens.append(ar[wc])
-        elif wc in en: tokens.append(en[wc])
+        if wc in ar_map: tokens.append(ar_map[wc])
+        elif wc in en_map: tokens.append(en_map[wc])
         elif len(wc) > 1: tokens.append(wc.upper())
     return tokens[:8] or ["HOW_ARE_YOU"]
 
@@ -95,7 +103,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(size))
         self.send_header("Cache-Control", f"public, max-age={cache}")
         self.end_headers()
-        # Stream in 64KB chunks — avoids loading whole file into RAM
         with open(path, 'rb') as f:
             while True:
                 chunk = f.read(65536)
@@ -124,7 +131,6 @@ class Handler(BaseHTTPRequestHandler):
             else: self.send_json({"error": f"No video for {sign}"}, 404)
 
         elif p.startswith("/api/v1/video/"):
-            # Serve stitched videos
             name = p.split("/")[-1]
             vid = STITCHED_DIR / name
             if vid.exists(): self.serve_file(vid, "video/mp4", cache=3600)
@@ -151,7 +157,6 @@ class Handler(BaseHTTPRequestHandler):
             tokens = get_gloss(text)
             print(f"[Translate] {text!r} → {tokens}")
 
-            # Stitch all tokens into one video (with letter-by-letter fallback)
             stitched = get_stitched_video(tokens)
             if stitched:
                 vid_name = Path(stitched).name
