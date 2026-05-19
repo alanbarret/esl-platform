@@ -64,6 +64,7 @@ export interface AppState {
 
   // Output
   videoUrl: string | null;
+  avatarVideoUrl: string | null;
   skeletonVideos: string[];
   gltfAnimation: GLTFAnimation | null;
   error: string | null;

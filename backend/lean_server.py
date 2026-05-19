@@ -144,13 +144,17 @@ class Handler(BaseHTTPRequestHandler):
             else: self.send_json({"error": f"No video for {sign}"}, 404)
 
         elif p.startswith("/api/v1/avatar-video/"):
-            sign = p.split("/")[-1].upper().replace(".MP4", "")
-            # Serve cached or render on demand
-            vid_path = get_or_render_avatar(sign)
+            name = p.split("/")[-1].upper().replace(".MP4", "")
+            # Check stitched avatar cache first
+            stitched = AVATAR_DIR / "stitched" / f"{name}.mp4"
+            if stitched.exists() and stitched.stat().st_size > 5000:
+                self.serve_file(stitched, "video/mp4"); return
+            # Single sign avatar
+            vid_path = get_or_render_avatar(name)
             if vid_path:
                 self.serve_file(Path(vid_path), "video/mp4")
             else:
-                self.send_json({"error": f"No avatar video for {sign}"}, 404)
+                self.send_json({"error": f"No avatar video for {name}"}, 404)
 
         elif p.startswith("/api/v1/video/"):
             name = p.split("/")[-1]
@@ -186,14 +190,25 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 video_url = None
 
-            # Also stitch avatar video
-            from video_stitcher import get_stitched_video as gsv
-            avatar_tokens = [t for t in tokens if (AVATAR_DIR/f"{t.upper()}.mp4").exists()]
-            # Render missing avatar videos on demand
-            for t in tokens:
-                if not (AVATAR_DIR/f"{t.upper()}.mp4").exists():
-                    get_or_render_avatar(t)
-            avatar_stitched = gsv(tokens) if tokens else None
+            # Stitch avatar video using avatar clips
+            import hashlib, shutil
+            key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
+            avatar_stitch_dir = AVATAR_DIR / "stitched"
+            avatar_stitch_dir.mkdir(exist_ok=True)
+            avatar_stitched_path = avatar_stitch_dir / f"{key}.mp4"
+            if not (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000):
+                # Collect avatar clips (render on demand if missing)
+                avatar_clips = []
+                for t in tokens:
+                    ap = AVATAR_DIR / f"{t.upper()}.mp4"
+                    if not (ap.exists() and ap.stat().st_size > 5000):
+                        get_or_render_avatar(t)
+                    if ap.exists() and ap.stat().st_size > 5000:
+                        avatar_clips.append(str(ap))
+                if avatar_clips:
+                    from video_stitcher import stitch_videos
+                    stitch_videos(avatar_clips, str(avatar_stitched_path))
+            avatar_url = f"/api/v1/avatar-video/{key}" if avatar_stitched_path.exists() else None
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
@@ -201,6 +216,7 @@ class Handler(BaseHTTPRequestHandler):
                 "gloss_tokens": tokens,
                 "gloss_string": " ".join(tokens),
                 "video_url": video_url,
+                "avatar_video_url": avatar_url,
                 "skeleton_videos": [video_url] if video_url else [],
                 "status": "completed",
             })

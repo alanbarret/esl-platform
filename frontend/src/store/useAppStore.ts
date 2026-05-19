@@ -5,6 +5,7 @@ import type { MocapData } from '../components/AvatarViewer';
 interface ESLState extends AppState {
   mocapData: MocapData | null;
   skeletonVideos: string[];
+  avatarVideoUrl: string | null;
   setMocapData: (d: MocapData | null) => void;
 }
 
@@ -24,6 +25,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
   gltfAnimation: null,
   mocapData: null,
   skeletonVideos: [],
+  avatarVideoUrl: null,
   error: null,
 
   // Actions
@@ -51,6 +53,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
         glossTokens: tokens,
         skeletonVideos: data.skeleton_videos || [],
         videoUrl: data.skeleton_videos?.[0] || null,
+        avatarVideoUrl: data.avatar_video_url || null,
         gltfAnimation: null,
         mocapData: null,
         isTranslating: false,
@@ -67,6 +70,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
     gltfAnimation: null,
     mocapData: null,
     skeletonVideos: [],
+    avatarVideoUrl: null,
     error: null,
     isTranslating: false,
   }),

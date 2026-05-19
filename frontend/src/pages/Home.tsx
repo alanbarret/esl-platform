@@ -9,7 +9,7 @@ export default function Home() {
     inputText, setInputText,
     language, setLanguage,
     isTranslating, glossTokens,
-    skeletonVideos, videoUrl, error,
+    skeletonVideos, videoUrl, avatarVideoUrl, error,
     translate, reset,
   } = useAppStore();
 
@@ -18,20 +18,26 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
-  // For avatar mode swap skeleton-video URLs to avatar-video URLs
-  const toAvatarUrl = (url: string) => url.replace('/api/v1/skeleton-video/', '/api/v1/avatar-video/').replace('/api/v1/video/', '/api/v1/avatar-video/');
   const rawVideo = allVideos[currentVideoIdx] ?? null;
-  const currentVideo = rawVideo && videoMode === 'avatar' ? toAvatarUrl(rawVideo) : rawVideo;
+  // For avatar mode: use avatarVideoUrl if available, else try swapping skeleton→avatar URL
+  const toAvatarUrl = (url: string) => url.replace('/api/v1/skeleton-video/', '/api/v1/avatar-video/');
+  const currentVideo = rawVideo
+    ? (videoMode === 'avatar'
+        ? (avatarVideoUrl || toAvatarUrl(rawVideo))
+        : rawVideo)
+    : null;
   // Reset index when video list changes
   React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
   const loadMocap = (sign: string) => {
     const vidUrl = `/api/v1/skeleton-video/${sign}`;
+    const avUrl = `/api/v1/avatar-video/${sign}`;
     setCurrentVideoIdx(0);
     useAppStore.setState({
       glossTokens: [sign],
       skeletonVideos: [vidUrl],
       videoUrl: vidUrl,
+      avatarVideoUrl: avUrl,
       gltfAnimation: null,
       error: null,
       isTranslating: false,
