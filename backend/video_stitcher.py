@@ -4,6 +4,36 @@ Uses ffmpeg concat — no Python video libraries needed.
 """
 import subprocess, os, tempfile, hashlib
 from pathlib import Path
+from difflib import SequenceMatcher
+
+# Cache available signs list
+_SIGNS_CACHE: list[str] | None = None
+
+def get_available_signs() -> list[str]:
+    global _SIGNS_CACHE
+    if _SIGNS_CACHE is None:
+        _SIGNS_CACHE = [p.stem.upper() for p in VIDEOS_DIR.glob('*.mp4')
+                        if p.stem.isascii() and p.stem.replace('_','').isalpha()]
+    return _SIGNS_CACHE
+
+def similarity(a: str, b: str) -> float:
+    return SequenceMatcher(None, a.upper(), b.upper()).ratio()
+
+def find_best_sign(word: str, threshold: float = 0.85) -> str | None:
+    """Find best matching sign name with similarity >= threshold."""
+    signs = get_available_signs()
+    word_up = word.upper()
+    best_score = 0.0
+    best_sign = None
+    for sign in signs:
+        s = similarity(word_up, sign)
+        if s > best_score:
+            best_score = s
+            best_sign = sign
+    if best_score >= threshold:
+        print(f"[Stitch] '{word}' ~~ {best_sign} ({best_score:.0%})")
+        return best_sign
+    return None
 
 VIDEOS_DIR = Path(__file__).parent.parent / "data" / "skeleton_videos"
 STITCHED_DIR = Path(__file__).parent.parent / "data" / "stitched_videos"
@@ -83,20 +113,24 @@ def word_to_clips(word: str, available: set) -> list[str]:
 
     # --- Arabic word ---
     if is_arabic:
-        # 1. Translate to English and try sign lookup
+        # 1. Translate to English and try exact/similarity match
         english = ARABIC_TO_ENGLISH.get(word) or ARABIC_TO_ENGLISH.get(word.strip('\u0627\u0644'))
         if english:
             v = VIDEOS_DIR / f"{english}.mp4"
             if v.exists():
-                print(f"[Stitch] '{word}' → {english} (translated match)")
+                print(f"[Stitch] '{word}' → {english} (translated exact)")
                 return [str(v)]
-            # Try synonyms of the translated word
-            for syn in [english+'S', english[:-1], english+'ING']:
-                v = VIDEOS_DIR / f"{syn}.mp4"
-                if v.exists():
-                    print(f"[Stitch] '{word}' → {syn} (synonym)")
-                    return [str(v)]
-        # 2. Finger-spell Arabic letter by letter
+            # Similarity search on translated English word
+            best = find_best_sign(english, threshold=0.85)
+            if best:
+                v = VIDEOS_DIR / f"{best}.mp4"
+                if v.exists(): return [str(v)]
+        # 2. Similarity search on the Arabic word itself (romanized)
+        best = find_best_sign(word_up, threshold=0.85)
+        if best:
+            v = VIDEOS_DIR / f"{best}.mp4"
+            if v.exists(): return [str(v)]
+        # 3. Finger-spell Arabic letter by letter
         clips = []
         for char in word:
             if char in ARABIC_CHAR_MAP:
@@ -114,6 +148,12 @@ def word_to_clips(word: str, available: set) -> list[str]:
     if vid.exists():
         print(f"[Stitch] '{word}' → exact match")
         return [str(vid)]
+
+    # 2. Similarity search at 85%+
+    best = find_best_sign(word_up, threshold=0.85)
+    if best:
+        v = VIDEOS_DIR / f"{best}.mp4"
+        if v.exists(): return [str(v)]
 
     # Try common synonyms
     synonyms = {
@@ -180,6 +220,8 @@ def get_stitched_video(gloss_tokens: list[str]) -> str | None:
     Given gloss tokens, stitch skeleton videos together.
     Returns path to stitched MP4 (cached by token hash).
     """
+    global _SIGNS_CACHE
+    _SIGNS_CACHE = None  # refresh on every stitch call
     available = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
 
     # Collect all clips
