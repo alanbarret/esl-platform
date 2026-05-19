@@ -1,0 +1,43 @@
+/* ESL Plugin — Article page enhancements */
+
+/* Better article typography */
+.single .entry-content,
+.single .post-content,
+article .entry-content {
+    font-size: 17px !important;
+    line-height: 1.75 !important;
+    color: #1a1a2e !important;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.single .entry-content p,
+article .entry-content p {
+    margin-bottom: 1.4em !important;
+}
+
+/* Highlight selected text */
+::selection {
+    background: rgba(124, 58, 237, 0.18);
+    color: inherit;
+}
+::-moz-selection {
+    background: rgba(124, 58, 237, 0.18);
+}
+
+/* ESL hint bar at top of articles */
+.esl-article-hint {
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(168,85,247,0.05));
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #7c3aed;
+    font-weight: 500;
+}
+.esl-article-hint-icon { font-size: 20px; flex-shrink: 0; }
+.esl-article-hint strong { font-weight: 700; }
