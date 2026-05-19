@@ -144,17 +144,17 @@ class Handler(BaseHTTPRequestHandler):
             else: self.send_json({"error": f"No video for {sign}"}, 404)
 
         elif p.startswith("/api/v1/avatar-video/"):
-            name = p.split("/")[-1].upper().replace(".MP4", "")
-            # Check stitched avatar cache first
-            stitched = AVATAR_DIR / "stitched" / f"{name}.mp4"
+            raw_name = p.split("/")[-1].replace(".mp4","").replace(".MP4","")
+            # Check stitched avatar cache first (hash is lowercase)
+            stitched = AVATAR_DIR / "stitched" / f"{raw_name}.mp4"
             if stitched.exists() and stitched.stat().st_size > 5000:
                 self.serve_file(stitched, "video/mp4"); return
-            # Single sign avatar
-            vid_path = get_or_render_avatar(name)
+            # Single sign avatar (sign names are uppercase)
+            vid_path = get_or_render_avatar(raw_name.upper())
             if vid_path:
                 self.serve_file(Path(vid_path), "video/mp4")
             else:
-                self.send_json({"error": f"No avatar video for {name}"}, 404)
+                self.send_json({"error": f"No avatar video for {raw_name}"}, 404)
 
         elif p.startswith("/api/v1/video/"):
             name = p.split("/")[-1]
