@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Play, RotateCcw, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import type { MocapData } from '../components/AvatarViewer';
+import { Avatar3DViewer } from '../components/Avatar3DViewer';
+import type { RawMocapData } from '../components/Avatar3DViewer';
 
 export default function Home() {
   const {
@@ -15,6 +17,7 @@ export default function Home() {
 
   const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
   const [videoMode, setVideoMode] = useState<'skeleton'|'avatar'>('skeleton');
+  const [rawMocap, setRawMocap] = useState<RawMocapData | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
@@ -26,10 +29,16 @@ export default function Home() {
   // Reset index when video list changes
   React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
-  const loadMocap = (sign: string) => {
+  const loadMocap = async (sign: string) => {
     const vidUrl = `/api/v1/skeleton-video/${sign}`;
     const avUrl = `/api/v1/avatar-video/${sign}`;
     setCurrentVideoIdx(0);
+    setRawMocap(null);
+    // Fetch raw mocap for 3D viewer
+    try {
+      const r = await fetch(`/api/v1/mocap-raw/${sign}`);
+      if (r.ok) setRawMocap(await r.json());
+    } catch {}
     useAppStore.setState({
       glossTokens: [sign],
       skeletonVideos: [vidUrl],
@@ -302,8 +311,19 @@ export default function Home() {
                             flex flex-col items-center justify-center gap-3 text-gray-600">
               <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center
                               justify-center text-3xl">🤟</div>
-              <p className="text-sm">Enter text or pick a sign to see the skeleton animation</p>
+              <p className="text-sm">Enter text or pick a sign to see the animation</p>
             </div>
+          )}
+
+          {/* 3D Avatar section */}
+          {rawMocap && (
+            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="space-y-2 mt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#A8FF4B] uppercase tracking-wider">🤖 3D Model</span>
+                <span className="text-xs text-gray-600">Real-time bone retargeting · {rawMocap.frames.length} frames</span>
+              </div>
+              <Avatar3DViewer mocapData={rawMocap} className="aspect-[4/3]" />
+            </motion.div>
           )}
         </div>
       </main>

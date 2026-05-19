@@ -137,6 +137,25 @@ class Handler(BaseHTTPRequestHandler):
         elif p == "/api/v1/skeleton-signs":
             self.send_json({"signs": sorted(SIGNS)})
 
+        elif p.startswith("/api/v1/mocap-raw/"):
+            sign = p.split("/")[-1].upper().replace(".JSON","")
+            from pathlib import Path as _P
+            mf = _P(__file__).parent.parent / "data" / "processed" / "mocap" / f"{sign}.json"
+            if mf.exists():
+                self.send_response(200)
+                for k,v in CORS.items(): self.send_header(k,v)
+                self.send_header("Content-Type","application/json")
+                self.send_header("Cache-Control","public, max-age=86400")
+                self.send_header("Content-Length",str(mf.stat().st_size))
+                self.end_headers()
+                with open(mf,'rb') as f:
+                    while True:
+                        chunk=f.read(65536)
+                        if not chunk: break
+                        self.wfile.write(chunk)
+            else:
+                self.send_json({"error":f"No mocap for {sign}"},404)
+
         elif p.startswith("/api/v1/skeleton-video/"):
             sign = p.split("/")[-1].upper().replace(".MP4", "")
             vid = VIDEOS_DIR / f"{sign}.mp4"
