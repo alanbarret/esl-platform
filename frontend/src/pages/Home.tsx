@@ -18,6 +18,8 @@ export default function Home() {
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
   const currentVideo = allVideos[currentVideoIdx] ?? null;
+  // Reset index when video list changes
+  React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
   const loadMocap = async (sign: string) => {
     const vidUrl = `/api/v1/skeleton-video/${sign}`;

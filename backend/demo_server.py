@@ -20,7 +20,8 @@ def load_mocap(sign: str) -> dict | None:
     return None
 
 def mocap_to_landmarks(data: dict) -> dict:
-    """Convert raw mocap frames to compact landmark format for frontend."""
+    """Convert raw mocap frames to compact landmark format for frontend.
+    Drops Z coordinates and full arrays to minimize payload size."""
     frames = []
     for fd in data['frames']:
         frame = {}
@@ -45,7 +46,7 @@ def mocap_to_landmarks(data: dict) -> dict:
     return {'fps': data['fps'], 'frames': frames}
 
 AVAILABLE_MOCAP = {p.stem for p in MOCAP_DIR.glob('*.json')} if MOCAP_DIR.exists() else set()
-print(f'[MoCap] {len(AVAILABLE_MOCAP)} signs available: {sorted(AVAILABLE_MOCAP)}')
+print(f'[MoCap] {len(AVAILABLE_MOCAP)} signs indexed (lazy-load)')
 
 # ── Dataset ───────────────────────────────────────────────────────────────────
 SIGNS_PATH = Path(__file__).parent.parent / "data" / "raw" / "uae_signs_raw.json"
