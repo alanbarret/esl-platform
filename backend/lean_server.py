@@ -190,25 +190,40 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 video_url = None
 
-            # Stitch avatar video using avatar clips
-            import hashlib, shutil
+            # Stitch avatar video — resolve each token to an avatar clip
+            import hashlib
+            from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, find_best_sign
             key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
             avatar_stitch_dir = AVATAR_DIR / "stitched"
             avatar_stitch_dir.mkdir(exist_ok=True)
             avatar_stitched_path = avatar_stitch_dir / f"{key}.mp4"
             if not (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000):
-                # Collect avatar clips (render on demand if missing)
                 avatar_clips = []
                 for t in tokens:
+                    # Resolve token to an avatar video path
+                    # 1. Try direct English sign name
                     ap = AVATAR_DIR / f"{t.upper()}.mp4"
                     if not (ap.exists() and ap.stat().st_size > 5000):
-                        get_or_render_avatar(t)
+                        # 2. Arabic token → translate to English → look up avatar
+                        is_ar = any('\u0600' <= c <= '\u06ff' for c in t)
+                        if is_ar:
+                            eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
+                            if eng:
+                                ap = AVATAR_DIR / f"{eng.upper()}.mp4"
+                        # 3. Similarity search
+                        if not (ap.exists() and ap.stat().st_size > 5000):
+                            best = find_best_sign(t.upper(), threshold=0.85)
+                            if best:
+                                ap = AVATAR_DIR / f"{best}.mp4"
+                        # 4. Render on demand if we found a name but no file
+                        if not (ap.exists() and ap.stat().st_size > 5000):
+                            rendered = get_or_render_avatar(t.upper())
+                            if rendered: ap = Path(rendered)
                     if ap.exists() and ap.stat().st_size > 5000:
                         avatar_clips.append(str(ap))
                 if avatar_clips:
-                    from video_stitcher import stitch_videos
                     stitch_videos(avatar_clips, str(avatar_stitched_path))
-            avatar_url = f"/api/v1/avatar-video/{key}" if avatar_stitched_path.exists() else None
+            avatar_url = f"/api/v1/avatar-video/{key}" if (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000) else None
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
