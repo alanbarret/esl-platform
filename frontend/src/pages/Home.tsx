@@ -204,8 +204,9 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-violet-500/10 border border-violet-500/20 rounded-xl p-4"
             >
-              <div className="text-xs text-violet-400 font-semibold mb-2 uppercase tracking-wider">
-                ESL Gloss Sequence
+              <div className="text-xs text-violet-400 font-semibold mb-2 uppercase tracking-wider flex justify-between">
+                <span>ESL Gloss Sequence</span>
+                {avatarVideoUrl && <span className="text-[#A8FF4B]">✓ Avatar ready</span>}
               </div>
               <div className="flex flex-wrap gap-2">
                 {glossTokens.map((g, i) => (

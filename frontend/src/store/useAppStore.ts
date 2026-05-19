@@ -38,7 +38,7 @@ export const useAppStore = create<ESLState>((set, get) => ({
     const { inputText } = get();
     if (!inputText.trim()) return;
 
-    set({ isTranslating: true, error: null, videoUrl: null, gltfAnimation: null, mocapData: null, glossTokens: [], skeletonVideos: [] });
+    set({ isTranslating: true, error: null, videoUrl: null, avatarVideoUrl: null, gltfAnimation: null, mocapData: null, glossTokens: [], skeletonVideos: [] });
 
     try {
       // Call translate — backend returns skeleton_videos array
