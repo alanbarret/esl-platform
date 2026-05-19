@@ -100,17 +100,7 @@ def render_skeleton_video(sign: str, label: str = None) -> str | None:
             for lm in lhand:
                 cv2.circle(img, to_px(lm), 3, (168, 255, 75), -1, cv2.LINE_AA)
 
-        # Label bar at top
-        cv2.rectangle(img, (0, 0), (W, 28), (0, 0, 0), -1)
-        cv2.putText(img, sign_label, (10, 19),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.55, (168, 255, 75), 1, cv2.LINE_AA)
-        cv2.putText(img, 'Emirates Sign Language', (W - 185, 19),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.38, (100, 100, 130), 1, cv2.LINE_AA)
-
-        # Progress bar
-        prog = int(W * 0.9 * (fi + 1) / TOTAL)
-        cv2.rectangle(img, (int(W*0.05), H-5), (int(W*0.05)+int(W*0.9), H-1), (25, 24, 42), -1)
-        cv2.rectangle(img, (int(W*0.05), H-5), (int(W*0.05)+prog, H-1), (124, 58, 237), -1)
+        pass  # no overlay text or progress bar
 
         out.write(img)
 
