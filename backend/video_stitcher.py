@@ -53,12 +53,50 @@ ARABIC_CHAR_MAP = {
     'لا': 'LAAM',
 }
 
-def word_to_clips(word: str, available: set) -> list[str]:
-    """Return list of video paths for a word. Falls back to letter-by-letter."""
-    word_up = word.upper()
+# Arabic word → English translation for sign lookup
+ARABIC_TO_ENGLISH = {
+    'مطار': 'AIRPORT', 'حرب': 'WAR', 'مغلق': 'CLOSED', 'مفتوح': 'OPEN',
+    'دكتور': 'DOCTOR', 'طبيب': 'DOCTOR', 'مستشفى': 'HOSPITAL',
+    'مدرسة': 'SCHOOL', 'عمل': 'WORK', 'عائلة': 'FAMILY',
+    'صباح': 'MORNING', 'نوم': 'SLEEP', 'مساعدة': 'HELPS',
+    'ماء': 'WATER', 'طعام': 'FOOD', 'بيت': 'HOME', 'منزل': 'HOME',
+    'شرطة': 'POLICE', 'نار': 'FIRE', 'طوارئ': 'EMERGENCY',
+    'مطعم': 'RESTAURANT', 'فندق': 'HOTEL', 'بنك': 'BANK',
+    'سيارة': 'CAR', 'طريق': 'ROAD', 'جسر': 'BRIDGE',
+    'مرحبا': 'HOW_ARE_YOU', 'شكرا': 'THANK_YOU', 'نعم': 'YES', 'لا': 'NO',
+    'صديق': 'FRIEND', 'أخ': 'BROTHER', 'أخت': 'SISTER', 'أم': 'MOTHER', 'أب': 'FATHER',
+    'كبير': 'BIG', 'صغير': 'SMALL', 'جديد': 'NEW', 'قديم': 'OLD',
+    'سعيد': 'HAPPY', 'حزين': 'SAD', 'غاضب': 'ANGRY',
+    'الخير': 'GOOD', 'جيد': 'GOOD', 'سيء': 'BAD',
+    'أبوظبي': 'ABU_DHABI', 'دبي': 'DUBAI', 'الإمارات': 'UAE',
+    'بسبب': 'BECAUSE', 'في': 'IN', 'على': 'ON', 'من': 'FROM',
+    'أحتاج': 'NEED', 'أريد': 'WANT', 'أعرف': 'KNOW',
+}
 
-    # If contains Arabic characters → finger-spell using ARABIC_CHAR_MAP
-    if any('\u0600' <= c <= '\u06ff' for c in word):
+def word_to_clips(word: str, available: set) -> list[str]:
+    """Return list of video paths for a word.
+    For Arabic: translate to English first, try exact match, then finger-spell.
+    For English: try exact match, then synonyms.
+    """
+    word_up = word.upper()
+    is_arabic = any('\u0600' <= c <= '\u06ff' for c in word)
+
+    # --- Arabic word ---
+    if is_arabic:
+        # 1. Translate to English and try sign lookup
+        english = ARABIC_TO_ENGLISH.get(word) or ARABIC_TO_ENGLISH.get(word.strip('\u0627\u0644'))
+        if english:
+            v = VIDEOS_DIR / f"{english}.mp4"
+            if v.exists():
+                print(f"[Stitch] '{word}' → {english} (translated match)")
+                return [str(v)]
+            # Try synonyms of the translated word
+            for syn in [english+'S', english[:-1], english+'ING']:
+                v = VIDEOS_DIR / f"{syn}.mp4"
+                if v.exists():
+                    print(f"[Stitch] '{word}' → {syn} (synonym)")
+                    return [str(v)]
+        # 2. Finger-spell Arabic letter by letter
         clips = []
         for char in word:
             if char in ARABIC_CHAR_MAP:
@@ -66,11 +104,15 @@ def word_to_clips(word: str, available: set) -> list[str]:
                 p = VIDEOS_DIR / f"{sign}.mp4"
                 if p.exists():
                     clips.append(str(p))
+        if clips:
+            print(f"[Stitch] '{word}' → finger-spell ({len(clips)} letters)")
         return clips
 
-    # Try exact match
+    # --- English word ---
+    # 1. Exact match
     vid = VIDEOS_DIR / f"{word_up}.mp4"
     if vid.exists():
+        print(f"[Stitch] '{word}' → exact match")
         return [str(vid)]
 
     # Try common synonyms
