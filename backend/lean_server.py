@@ -28,13 +28,14 @@ def get_gloss(text: str) -> list[str]:
                         "You are an Emirati Sign Language (ESL) interpreter. "
                         "Convert input text to ESL gloss tokens. "
                         "Output ONLY uppercase tokens separated by spaces. Max 8 tokens. "
-                        "Known sign tokens (use these exactly): HOW_ARE_YOU, DOCTOR, FAMILY, SCHOOL, WORK, "
-                        "MORNING, SLEEP, OPEN, PUSH, RELAX, RECOMMENDED, PLAYS, PLAYS_GUITAR, WATERING, SEW, "
-                        "SENDS, SELL, RUSH, REMOVE, PULLS, PLOW, SHOUTS, RUBBING, HELPS, "
-                        "PHOTOGRAPHER, OUT, HOME_LAWN, WOW, PUNISHMENT, REQUESTS. "
-                        "IMPORTANT: For Arabic words or unknown English words, output the ARABIC word itself "
-                        "in Arabic script as a single token (e.g. مرحبا) — do NOT transliterate. "
-                        "The system will finger-spell Arabic words character by character automatically."
+                        "Known sign tokens (use these exactly when they match): "
+                        "HOW_ARE_YOU, DOCTOR, FAMILY, SCHOOL, WORK, MORNING, SLEEP, OPEN, PUSH, "
+                        "RELAX, RECOMMENDED, PLAYS, PLAYS_GUITAR, WATERING, SEW, SENDS, SELL, "
+                        "RUSH, REMOVE, PULLS, PLOW, SHOUTS, RUBBING, HELPS, PHOTOGRAPHER, OUT, "
+                        "HOME_LAWN, WOW, PUNISHMENT, REQUESTS. "
+                        "For any word NOT in the known list, output it as a single UPPERCASE English token "
+                        "(e.g. AIRPORT, WAR, CLOSED). Do NOT skip words. Every input word must produce a token. "
+                        "For Arabic input, output each Arabic word in Arabic script (e.g. مرحبا) as its own token."
                     )},
                     {"role": "user", "content": text}
                 ],

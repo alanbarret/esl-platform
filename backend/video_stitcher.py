@@ -9,6 +9,16 @@ VIDEOS_DIR = Path(__file__).parent.parent / "data" / "skeleton_videos"
 STITCHED_DIR = Path(__file__).parent.parent / "data" / "stitched_videos"
 STITCHED_DIR.mkdir(exist_ok=True)
 
+# English letter → Arabic sign approximation (for finger-spelling unknown words)
+ENGLISH_LETTER_MAP = {
+    'A': 'ALIF', 'B': 'BAA',  'C': 'SEEN', 'D': 'DAAL', 'E': 'AEEN',
+    'F': 'FAA',  'G': 'JEEM', 'H': 'HAA',  'I': 'ALIF', 'J': 'JEEM',
+    'K': 'KAAF', 'L': 'LAA',  'M': 'MEEM', 'N': 'NOON', 'O': 'AEEN',
+    'P': 'FAA',  'Q': 'QAAF', 'R': 'RAA',  'S': 'SEEN', 'T': 'TAA',
+    'U': 'AEEN', 'V': 'FAA',  'W': 'WOW',  'X': 'SEEN', 'Y': 'YAA',
+    'Z': 'ZAAI',
+}
+
 # Arabic letter → sign name mapping
 ARABIC_CHAR_MAP = {
     'ا': 'ALIF', 'أ': 'ALIF', 'إ': 'ALIF', 'آ': 'ALIF',
@@ -81,10 +91,16 @@ def word_to_clips(word: str, available: set) -> list[str]:
         if alt.exists():
             return [str(alt)]
 
-    # English word not found → try Arabic letter-by-letter as last resort
-    # (won't have videos for English letters so return empty)
-    print(f"[Stitch] No video for '{word}' — skipping")
-    return []
+    # Unknown English word → finger-spell using English→Arabic sign map
+    print(f"[Stitch] Finger-spelling '{word}'")
+    clips = []
+    for char in word.upper():
+        if char in ENGLISH_LETTER_MAP:
+            sign = ENGLISH_LETTER_MAP[char]
+            p = VIDEOS_DIR / f"{sign}.mp4"
+            if p.exists():
+                clips.append(str(p))
+    return clips
 
 
 def stitch_videos(clip_paths: list[str], output_path: str) -> bool:
