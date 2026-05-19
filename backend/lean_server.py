@@ -16,24 +16,24 @@ print(f"[ESL] {len(SIGNS)} skeleton videos ready")
 # ── OpenAI gloss ──────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
-SYSTEM_PROMPT = """You are an Emirati Sign Language (ESL) interpreter.
-Convert input text into a sequence of tokens for ESL rendering.
+SYSTEM_PROMPT = """Translate the input sentence to Arabic.
+Output ONLY the Arabic words separated by spaces. No punctuation, no diacritics, no explanation.
+Max 8 words. Keep it concise.
 
-Rules:
-1. For words matching a known ESL sign, use the exact sign token:
-   HOW_ARE_YOU, DOCTOR, FAMILY, SCHOOL, WORK, MORNING, SLEEP, OPEN, PUSH,
-   RELAX, RECOMMENDED, PLAYS, PLAYS_GUITAR, WATERING, SEW, SENDS, SELL,
-   RUSH, REMOVE, PULLS, PLOW, SHOUTS, RUBBING, HELPS, PHOTOGRAPHER, OUT,
-   HOME_LAWN, WOW, PUNISHMENT, REQUESTS.
+Examples:
+Input: airport closed due to war
+Output: مطار مغلق بسبب حرب
 
-2. For ANY other word (English or other language), translate it to Arabic
-   and output the Arabic word in Arabic script.
-   Examples: airport=مطار, war=حرب, closed=مغلق, due=بسبب,
-   uae=الإمارات, hello=مرحبا, water=ماء, fire=نار, police=شرطة,
-   hospital=مستشفى, help=مساعدة, emergency=طوارئ, road=طريق.
+Input: I need help urgently
+Output: أحتاج مساعدة بسرعة
 
-3. Output ONLY the tokens separated by spaces. Max 8 tokens. No punctuation.
-4. Every meaningful input word must produce exactly one token. Do not skip words."""
+Input: good morning doctor
+Output: صباح الخير دكتور
+
+Input: مرحبا كيف حالك
+Output: مرحبا كيف حالك
+
+Output ONLY the Arabic words, nothing else."""
 
 def get_gloss(text: str) -> list[str]:
     if OPENAI_API_KEY:
