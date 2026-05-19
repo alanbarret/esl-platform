@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Play, RotateCcw, Download, Languages, Zap } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
-import { AvatarViewer } from '../components/AvatarViewer';
+import { AvatarViewer, MocapData } from '../components/AvatarViewer';
 
 export default function Home() {
   const {
@@ -15,6 +15,22 @@ export default function Home() {
   } = useAppStore();
 
   const [activeTab, setActiveTab] = useState<'avatar' | 'video'>('avatar');
+  const [mocapData, setMocapData] = useState<MocapData | null>(null);
+  const [mocapSign, setMocapSign] = useState<string>('');
+
+  // Fetch mocap data when a sign is selected
+  const loadMocap = async (sign: string) => {
+    try {
+      const res = await fetch(`/api/v1/mocap/${sign}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMocapData(data);
+        setMocapSign(sign);
+        return true;
+      }
+    } catch {}
+    return false;
+  };
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white font-sans">
@@ -46,6 +62,7 @@ export default function Home() {
             <p className="text-gray-400 text-sm">
               Convert Arabic or English text into Emirati Sign Language avatar video.
             </p>
+          </div>
 
           {/* Test Pose Dropdown */}
           <div className="flex items-center gap-3">
@@ -55,6 +72,15 @@ export default function Home() {
               onChange={async (e) => {
                 const pose = e.target.value;
                 if (!pose) return;
+                setMocapData(null);
+                // Try mocap first (real motion data)
+                const hasMocap = await loadMocap(pose);
+                if (hasMocap) {
+                  setInputText(pose);
+                  useAppStore.setState({ glossTokens: [pose], isTranslating: false, error: null, gltfAnimation: null });
+                  return;
+                }
+                // Fall back to keyframe animation
                 try {
                   const res = await fetch('/api/v1/translate', {
                     method: 'POST',
@@ -64,12 +90,7 @@ export default function Home() {
                   const data = await res.json();
                   if (data.gltf_animation) {
                     setInputText(pose);
-                    useAppStore.setState({
-                      glossTokens: [pose],
-                      gltfAnimation: data.gltf_animation,
-                      isTranslating: false,
-                      error: null,
-                    });
+                    useAppStore.setState({ glossTokens: [pose], gltfAnimation: data.gltf_animation, isTranslating: false, error: null });
                   }
                 } catch (err) { console.error(err); }
               }}
@@ -91,8 +112,6 @@ export default function Home() {
                 <option value="PUSH">🤜 Push</option>
               </optgroup>
             </select>
-          </div>
-
           </div>
 
           {/* Language selector */}
@@ -216,9 +235,9 @@ export default function Home() {
           )}
 
           {/* Avatar viewer */}
-          {(gltfAnimation || isTranslating) && activeTab === 'avatar' && (
+          {(gltfAnimation || mocapData || isTranslating) && activeTab === 'avatar' && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <AvatarViewer animation={gltfAnimation} className="aspect-[4/3]" />
+              <AvatarViewer animation={gltfAnimation} mocapData={mocapData} className="aspect-[4/3]" />
             </motion.div>
           )}
 

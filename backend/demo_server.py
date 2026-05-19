@@ -6,7 +6,45 @@ then animates the Arab Man GLB avatar.
 import json, os, uuid, math
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
+
+# ── MoCap frames DB ───────────────────────────────────────────────────────────
+MOCAP_DIR = Path(__file__).parent.parent / "data" / "processed" / "mocap"
+
+def load_mocap(sign: str) -> dict | None:
+    """Load pre-extracted MediaPipe landmark frames for a sign."""
+    p = MOCAP_DIR / f"{sign.upper()}.json"
+    if p.exists():
+        return json.loads(p.read_text())
+    return None
+
+def mocap_to_landmarks(data: dict) -> dict:
+    """Convert raw mocap frames to compact landmark format for frontend."""
+    frames = []
+    for fd in data['frames']:
+        frame = {}
+        if 'pose' in fd:
+            # Only send key landmarks to reduce payload
+            pose = fd['pose']
+            frame['pose'] = {
+                'lsh': pose[11][:3], 'rsh': pose[12][:3],
+                'lel': pose[13][:3], 'rel': pose[14][:3],
+                'lwr': pose[15][:3], 'rwr': pose[16][:3],
+                'lhp': pose[23][:3], 'rhp': pose[24][:3],
+                'lkn': pose[25][:3], 'rkn': pose[26][:3],
+                'lan': pose[27][:3], 'ran': pose[28][:3],
+                'nose': pose[0][:3],
+                'lvis': pose[11][3], 'rvis': pose[12][3],
+            }
+        if 'rhand' in fd:
+            frame['rhand'] = fd['rhand']
+        if 'lhand' in fd:
+            frame['lhand'] = fd['lhand']
+        frames.append(frame)
+    return {'fps': data['fps'], 'frames': frames}
+
+AVAILABLE_MOCAP = {p.stem for p in MOCAP_DIR.glob('*.json')} if MOCAP_DIR.exists() else set()
+print(f'[MoCap] {len(AVAILABLE_MOCAP)} signs available: {sorted(AVAILABLE_MOCAP)}')
 
 # ── Dataset ───────────────────────────────────────────────────────────────────
 SIGNS_PATH = Path(__file__).parent.parent / "data" / "raw" / "uae_signs_raw.json"
@@ -227,9 +265,17 @@ class ESLHandler(BaseHTTPRequestHandler):
         elif p == "/api/v1/models/status":
             self.send_json({"gloss_model": {"loaded": True, "device": "openai" if OPENAI_API_KEY else "cpu-rules"}})
         elif p == "/api/v1/test-poses":
-            # Return list of available test poses with their animation data
             test_names = ["THUMBS_UP", "V_SIGN", "HELLO", "DOCTOR", "WORK", "FAMILY", "SCHOOL"]
             self.send_json({"poses": test_names})
+        elif p == "/api/v1/mocap-signs":
+            self.send_json({"signs": sorted(AVAILABLE_MOCAP)})
+        elif p.startswith("/api/v1/mocap/"):
+            sign = p.split("/")[-1].upper()
+            data = load_mocap(sign)
+            if data:
+                self.send_json(mocap_to_landmarks(data))
+            else:
+                self.send_json({"error": f"No mocap data for {sign}"}, 404)
         else:
             self.send_json({"error": "Not found"}, 404)
 
