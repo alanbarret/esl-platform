@@ -2,9 +2,11 @@
 Stitches skeleton video clips together into one MP4.
 Uses ffmpeg concat — no Python video libraries needed.
 """
-import subprocess, os, tempfile, hashlib
+import subprocess, os, tempfile, hashlib, threading
 from pathlib import Path
 from difflib import SequenceMatcher
+
+_STITCH_LOCK = threading.Lock()  # serialize ffmpeg calls to prevent OOM
 
 # Cache available signs list
 _SIGNS_CACHE: list[str] | None = None
@@ -200,19 +202,21 @@ def stitch_videos(clip_paths: list[str], output_path: str) -> bool:
             f.write(f"file '{p}'\n")
         list_file = f.name
 
-    try:
-        result = subprocess.run([
-            'ffmpeg', '-y',
-            '-f', 'concat', '-safe', '0',
-            '-i', list_file,
-            '-c:v', 'libx264', '-crf', '20', '-preset', 'fast',
-            '-pix_fmt', 'yuv420p',
-            '-vf', 'scale=640:360',
-            output_path
-        ], capture_output=True, timeout=60)
-        return result.returncode == 0
-    finally:
-        os.unlink(list_file)
+    with _STITCH_LOCK:
+        try:
+            result = subprocess.run([
+                'ffmpeg', '-y',
+                '-f', 'concat', '-safe', '0',
+                '-i', list_file,
+                '-c:v', 'libx264', '-crf', '23', '-preset', 'ultrafast',
+                '-pix_fmt', 'yuv420p',
+                '-vf', 'scale=640:360',
+                '-threads', '1',
+                output_path
+            ], capture_output=True, timeout=60)
+            return result.returncode == 0
+        finally:
+            os.unlink(list_file)
 
 
 def get_stitched_video(gloss_tokens: list[str]) -> str | None:
