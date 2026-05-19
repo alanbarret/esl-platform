@@ -145,22 +145,64 @@ class Handler(BaseHTTPRequestHandler):
 
         elif p.startswith("/api/v1/avatar-video/"):
             raw_name = p.split("/")[-1].replace(".mp4","").replace(".MP4","")
-            # Check stitched avatar cache first (hash is lowercase)
             stitched = AVATAR_DIR / "stitched" / f"{raw_name}.mp4"
+
+            # Lazy stitch: build from token cache if needed
+            if not (stitched.exists() and stitched.stat().st_size > 5000):
+                token_cache = AVATAR_DIR / "stitched" / f"{raw_name}.tokens.json"
+                if token_cache.exists():
+                    import json as _j
+                    from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
+                    try:
+                        toks = _j.loads(token_cache.read_text())
+                        clips = []
+                        for t in toks[:6]:
+                            is_ar = any('\u0600'<=c<='\u06ff' for c in t)
+                            ap = AVATAR_DIR / f"{t.upper()}.mp4"
+                            if not (ap.exists() and ap.stat().st_size>5000) and is_ar:
+                                eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
+                                if eng: ap = AVATAR_DIR / f"{eng.upper()}.mp4"
+                            if ap.exists() and ap.stat().st_size>5000:
+                                clips.append(str(ap))
+                            else:
+                                lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
+                                for ch in (t if is_ar else t.upper())[:4]:
+                                    s2 = lmap.get(ch)
+                                    if s2:
+                                        lp2 = AVATAR_DIR/f"{s2}.mp4"
+                                        if lp2.exists(): clips.append(str(lp2))
+                        if clips: stitch_videos(clips, str(stitched))
+                    except Exception as ex:
+                        print(f"[AvatarGET stitch] {ex}")
+                else:
+                    # Single sign
+                    vid_path = get_or_render_avatar(raw_name.upper())
+                    if vid_path: stitched = Path(vid_path)
+
             if stitched.exists() and stitched.stat().st_size > 5000:
-                self.serve_file(stitched, "video/mp4"); return
-            # Single sign avatar (sign names are uppercase)
-            vid_path = get_or_render_avatar(raw_name.upper())
-            if vid_path:
-                self.serve_file(Path(vid_path), "video/mp4")
+                self.serve_file(stitched, "video/mp4")
             else:
                 self.send_json({"error": f"No avatar video for {raw_name}"}, 404)
 
         elif p.startswith("/api/v1/video/"):
             name = p.split("/")[-1]
             vid = STITCHED_DIR / name
-            if vid.exists(): self.serve_file(vid, "video/mp4", cache=3600)
-            else: self.send_json({"error": "Video not found"}, 404)
+            if not (vid.exists() and vid.stat().st_size > 5000):
+                # Lazy stitch from token cache
+                key = name.replace('.mp4', '')
+                sk_cache = STITCHED_DIR / f"{key}.tokens.json"
+                if sk_cache.exists():
+                    try:
+                        import json as _j3
+                        toks = _j3.loads(sk_cache.read_text())
+                        result = get_stitched_video(toks)
+                        if result: vid = Path(result)
+                    except Exception as ex:
+                        print(f"[SkeletonGET stitch] {ex}")
+            if vid.exists() and vid.stat().st_size > 5000:
+                self.serve_file(vid, "video/mp4", cache=3600)
+            else:
+                self.send_json({"error": "Video not found"}, 404)
 
         elif p == "/api/v1/models/status":
             self.send_json({"gloss_model": {"loaded": True, "device": "lean"}})
@@ -183,50 +225,29 @@ class Handler(BaseHTTPRequestHandler):
             tokens = get_gloss(text)
             print(f"[Translate] {text!r} → {tokens}")
 
-            stitched = get_stitched_video(tokens)
-            if stitched:
-                vid_name = Path(stitched).name
-                video_url = f"/api/v1/video/{vid_name}"
+            # Skeleton: stitch lazily on first GET (avoid ffmpeg during request)
+            import hashlib as _hl
+            skel_key = _hl.md5("_".join(tokens).encode()).hexdigest()[:10]
+            skel_cached = STITCHED_DIR / f"{skel_key}.mp4"
+            if skel_cached.exists() and skel_cached.stat().st_size > 5000:
+                video_url = f"/api/v1/video/{skel_key}.mp4"
             else:
-                video_url = None
+                # Store tokens for lazy skeleton stitch
+                sk_cache = STITCHED_DIR / f"{skel_key}.tokens.json"
+                if not sk_cache.exists():
+                    import json as _j2
+                    sk_cache.write_text(_j2.dumps(tokens))
+                video_url = f"/api/v1/video/{skel_key}.mp4"
 
-            # Stitch avatar video — resolve each token to an avatar clip
-            import hashlib
-            from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
+            # Avatar URL — stitched lazily on first GET request (not during translate)
+            import hashlib, json as _json
             key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
-            avatar_stitch_dir = AVATAR_DIR / "stitched"
-            avatar_stitch_dir.mkdir(exist_ok=True)
-            avatar_stitched_path = avatar_stitch_dir / f"{key}.mp4"
-            avatar_url = None
-            try:
-                if not (avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000):
-                    avatar_clips = []
-                    for t in tokens[:6]:  # cap at 6 tokens to limit clips
-                        is_ar = any('\u0600' <= c <= '\u06ff' for c in t)
-                        ap = AVATAR_DIR / f"{t.upper()}.mp4"
-                        if not (ap.exists() and ap.stat().st_size > 5000):
-                            # Arabic → translate → find avatar
-                            if is_ar:
-                                eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
-                                if eng:
-                                    ap = AVATAR_DIR / f"{eng.upper()}.mp4"
-                        if ap.exists() and ap.stat().st_size > 5000:
-                            avatar_clips.append(str(ap))
-                        else:
-                            # Letter-by-letter (max 4 letters per word to limit clips)
-                            spell = t if is_ar else t.upper()
-                            for ch in spell[:4]:
-                                lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
-                                sign = lmap.get(ch)
-                                if sign:
-                                    lp2 = AVATAR_DIR / f"{sign}.mp4"
-                                    if lp2.exists(): avatar_clips.append(str(lp2))
-                    if avatar_clips:
-                        stitch_videos(avatar_clips, str(avatar_stitched_path))
-                if avatar_stitched_path.exists() and avatar_stitched_path.stat().st_size > 5000:
-                    avatar_url = f"/api/v1/avatar-video/{key}"
-            except Exception as e:
-                print(f"[Avatar stitch error] {e}")
+            # Store token list for lazy stitching
+            token_cache = AVATAR_DIR / "stitched" / f"{key}.tokens.json"
+            token_cache.parent.mkdir(exist_ok=True)
+            if not token_cache.exists():
+                token_cache.write_text(_json.dumps(tokens))
+            avatar_url = f"/api/v1/avatar-video/{key}"
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
