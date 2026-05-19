@@ -14,10 +14,14 @@ export default function Home() {
   } = useAppStore();
 
   const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
+  const [videoMode, setVideoMode] = useState<'skeleton'|'avatar'>('skeleton');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
-  const currentVideo = allVideos[currentVideoIdx] ?? null;
+  // For avatar mode swap skeleton-video URLs to avatar-video URLs
+  const toAvatarUrl = (url: string) => url.replace('/api/v1/skeleton-video/', '/api/v1/avatar-video/').replace('/api/v1/video/', '/api/v1/avatar-video/');
+  const rawVideo = allVideos[currentVideoIdx] ?? null;
+  const currentVideo = rawVideo && videoMode === 'avatar' ? toAvatarUrl(rawVideo) : rawVideo;
   // Reset index when video list changes
   React.useEffect(() => { setCurrentVideoIdx(0); }, [allVideos.length, allVideos[0]]);
 
@@ -213,7 +217,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* Right: Skeleton Video Player */}
+        {/* Right: Video Player */}
         <div className="space-y-4">
 
           {/* Loading */}
@@ -225,9 +229,20 @@ export default function Home() {
             </div>
           )}
 
-          {/* Skeleton video */}
+          {/* Video + mode toggle */}
           {currentVideo && !isTranslating && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+              {/* Mode toggle */}
+              <div className="flex gap-2">
+                {(['skeleton','avatar'] as const).map(mode => (
+                  <button key={mode}
+                    onClick={() => setVideoMode(mode)}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all
+                      ${videoMode===mode ? 'bg-[#A8FF4B] text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                    {mode === 'skeleton' ? '🦴 Skeleton' : '👳 Arab Avatar'}
+                  </button>
+                ))}
+              </div>
               <div className="relative bg-black rounded-2xl overflow-hidden aspect-video border border-white/5">
                 <video
                   ref={videoRef}

@@ -8,10 +8,12 @@ from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 from video_stitcher import get_stitched_video, STITCHED_DIR, VIDEOS_DIR
+from arab_renderer import get_or_render_avatar, AVATAR_DIR
 
 BASE  = Path(__file__).parent.parent
 SIGNS = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
-print(f"[ESL] {len(SIGNS)} skeleton videos ready")
+AVATAR_SIGNS = {p.stem.upper() for p in AVATAR_DIR.glob("*.mp4")}
+print(f"[ESL] {len(SIGNS)} skeleton | {len(AVATAR_SIGNS)} avatar videos ready")
 
 # ── OpenAI gloss ──────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
@@ -141,6 +143,15 @@ class Handler(BaseHTTPRequestHandler):
             if vid.exists(): self.serve_file(vid, "video/mp4")
             else: self.send_json({"error": f"No video for {sign}"}, 404)
 
+        elif p.startswith("/api/v1/avatar-video/"):
+            sign = p.split("/")[-1].upper().replace(".MP4", "")
+            # Serve cached or render on demand
+            vid_path = get_or_render_avatar(sign)
+            if vid_path:
+                self.serve_file(Path(vid_path), "video/mp4")
+            else:
+                self.send_json({"error": f"No avatar video for {sign}"}, 404)
+
         elif p.startswith("/api/v1/video/"):
             name = p.split("/")[-1]
             vid = STITCHED_DIR / name
@@ -174,6 +185,15 @@ class Handler(BaseHTTPRequestHandler):
                 video_url = f"/api/v1/video/{vid_name}"
             else:
                 video_url = None
+
+            # Also stitch avatar video
+            from video_stitcher import get_stitched_video as gsv
+            avatar_tokens = [t for t in tokens if (AVATAR_DIR/f"{t.upper()}.mp4").exists()]
+            # Render missing avatar videos on demand
+            for t in tokens:
+                if not (AVATAR_DIR/f"{t.upper()}.mp4").exists():
+                    get_or_render_avatar(t)
+            avatar_stitched = gsv(tokens) if tokens else None
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
