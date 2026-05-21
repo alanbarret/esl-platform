@@ -199,7 +199,7 @@ class Handler(BaseHTTPRequestHandler):
                     if vid_path: stitched = Path(vid_path)
 
             if stitched.exists() and stitched.stat().st_size > 5000:
-                self.serve_file(stitched, "video/mp4")
+                self.serve_file(stitched, "video/mp4", cache=0)  # no cache
             else:
                 self.send_json({"error": f"No avatar video for {raw_name}"}, 404)
 

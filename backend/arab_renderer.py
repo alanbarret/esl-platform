@@ -6,7 +6,11 @@ Features: proper face anatomy, detailed hands with fingers, kandura, ghutrah.
 import cv2, numpy as np, json, os, subprocess, math
 from pathlib import Path
 
-MOCAP_DIR  = Path(__file__).parent.parent / "data" / "processed" / "mocap"
+# Use mocap_2d (image-space landmarks) for the 2D avatar.
+# Falls back to mocap (world landmarks) if mocap_2d not available — but should not be used directly.
+MOCAP_DIR_2D = Path(__file__).parent.parent / "data" / "processed" / "mocap_2d"
+MOCAP_DIR_WORLD = Path(__file__).parent.parent / "data" / "processed" / "mocap"
+MOCAP_DIR  = MOCAP_DIR_2D if MOCAP_DIR_2D.exists() else MOCAP_DIR_WORLD
 AVATAR_DIR = Path(__file__).parent.parent / "data" / "avatar_videos"
 AVATAR_DIR.mkdir(exist_ok=True)
 (AVATAR_DIR / "stitched").mkdir(exist_ok=True)
@@ -133,17 +137,7 @@ def draw_face(img, nose, sh_w):
     WHT  = (245, 242, 238)   # eye white
     BROW = (25,  35,  58)    # eyebrow
 
-    # ── Neck ──────────────────────────────────────────────────────────────────
-    neck_w = max(14, hr//3)
-    neck_h = int(hr*1.6)
-    neck_pts = np.array([
-        (hx-neck_w,     hy+int(hr*0.95)),
-        (hx+neck_w,     hy+int(hr*0.95)),
-        (hx+neck_w-3,   hy+neck_h),
-        (hx-neck_w+3,   hy+neck_h),
-    ], np.int32)
-    cv2.fillPoly(img, [neck_pts], SKD, cv2.LINE_AA)
-    cv2.fillPoly(img, [neck_pts[0:2]], SKL, cv2.LINE_AA)  # front highlight
+    # Neck drawn separately before robe in draw_avatar
 
     # ── Head base ─────────────────────────────────────────────────────────────
     cv2.ellipse(img, (hx,hy), (hr+2, int(hr*1.18)), 0, 0, 360, SKD, -1, cv2.LINE_AA)
@@ -354,6 +348,23 @@ def draw_avatar(img, pose, rhand, lhand):
     cv2.ellipse(img, (sh_mid[0], H-12), (sh_w//2+20,8), 0, 0, 360, (0,0,0), -1, cv2.LINE_AA)
 
     # ── Robe body ─────────────────────────────────────────────────────────────
+    # ── Neck (drawn BEFORE robe so the collar can cover it) ──────────────────
+    _hr_neck = max(22, sh_w // 2)
+    _nx = nose[0]
+    _ny_top = nose[1] - int(_hr_neck * 0.25) + int(_hr_neck * 0.85)
+    _ny_bot = sh_mid[1] + 15
+    _nw = max(14, _hr_neck // 3)
+    _neck_skin_d = (85, 128, 172)
+    _neck_skin_s = (105, 152, 198)
+    neck_pts = np.array([
+        (_nx - _nw,     _ny_top),
+        (_nx + _nw,     _ny_top),
+        (_nx + _nw - 4, _ny_bot),
+        (_nx - _nw + 4, _ny_bot),
+    ], np.int32)
+    cv2.fillPoly(img, [neck_pts], _neck_skin_d, cv2.LINE_AA)
+    cv2.fillPoly(img, [neck_pts[:3]], _neck_skin_s, cv2.LINE_AA)
+
     rp = np.array([
         (ls[0]-arm_t-2, ls[1]),
         (rs[0]+arm_t+2, rs[1]),
@@ -415,7 +426,10 @@ def draw_avatar(img, pose, rhand, lhand):
 
 def render_avatar_video(sign: str) -> str | None:
     out_path = AVATAR_DIR / f"{sign.upper()}.mp4"
-    mocap = MOCAP_DIR / f"{sign.upper()}.json"
+    # Prefer image-space mocap_2d, fall back to world for missing signs
+    mocap = MOCAP_DIR_2D / f"{sign.upper()}.json"
+    if not mocap.exists():
+        mocap = MOCAP_DIR_WORLD / f"{sign.upper()}.json"
     if not mocap.exists(): return None
 
     with open(mocap) as f: data = json.load(f)
