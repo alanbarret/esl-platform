@@ -14,7 +14,8 @@ from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.models.gloss_model import get_gloss_model
 from app.models.motion_engine import get_motion_engine
-from app.services.video_renderer import VideoRenderer, RenderConfig
+# Old 2D OpenCV renderer replaced with 3D GLTF avatar pipeline (DigiHuman-style).
+from app.services.avatar_renderer_3d import Avatar3DRenderer, Render3DConfig
 
 logger = get_logger(__name__)
 
@@ -49,7 +50,7 @@ class TranslationService:
 
     text → [GlossModel] → gloss_tokens
     gloss_tokens → [MotionEngine] → MotionSequence
-    MotionSequence → [VideoRenderer] → MP4
+    Gloss tokens → [Avatar3DRenderer] → MP4 (via DigiHuman-style retargeting)
     MotionSequence → [GLTF Export] → animation JSON
     """
 
@@ -86,15 +87,22 @@ class TranslationService:
             gltf_animation = None
 
             if req.output_format == "mp4":
-                renderer = VideoRenderer(RenderConfig(
-                    width=req.width,
-                    height=req.height,
-                    fps=req.fps,
-                    transparent_bg=req.transparent_bg,
+                # 3D pipeline: pass the gloss tokens directly to the avatar renderer.
+                # Each token corresponds to a source video in data/motion_db/{TOKEN}.mp4
+                # which is retargeted onto the GLTF avatar and concatenated.
+                renderer = Avatar3DRenderer(Render3DConfig(
+                    width=req.width if req.width else 600,
+                    height=req.height if req.height else 700,
+                    fps=req.fps if req.fps else 25,
+                    output_dir=self.settings.VIDEO_OUTPUT_DIR,
                 ))
-                out_file = self.settings.VIDEO_OUTPUT_DIR / f"{request_id}.mp4"
-                render_result = await renderer.render(motion, out_file)
+                render_result = await renderer.render_sequence(gloss_tokens, output_name=request_id)
                 output_path = str(render_result.output_path)
+                logger.info("avatar3d_rendered",
+                            id=request_id,
+                            tokens_rendered=render_result.tokens_rendered,
+                            tokens_missing=render_result.tokens_missing,
+                            duration=render_result.duration_seconds)
 
             elif req.output_format == "gltf":
                 gltf_animation = motion.to_gltf_animation()

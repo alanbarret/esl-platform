@@ -5,18 +5,71 @@ Tiny memory footprint — no MediaPipe, no numpy at startup.
 """
 import json, os, uuid
 from pathlib import Path
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 from video_stitcher import get_stitched_video, STITCHED_DIR, VIDEOS_DIR
-from arab_renderer import get_or_render_avatar, AVATAR_DIR, render_avatar_video
+# NEW 3D avatar pipeline (DigiHuman-style retargeting onto GLB avatar)
+from avatar_3d_renderer import (
+    get_or_render_avatar_3d, stitch_avatar_videos,
+    RENDER_DIR as AVATAR_DIR,
+    STITCHED_DIR as AVATAR_STITCHED_DIR,
+    MOTION_DB_DIR,
+)
 
 BASE  = Path(__file__).parent.parent
 SIGNS = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
-AVATAR_SIGNS = {p.stem.upper() for p in AVATAR_DIR.glob("*.mp4")}
-print(f"[ESL] {len(SIGNS)} skeleton | {len(AVATAR_SIGNS)} avatar videos ready")
+# Available signs for the 3D avatar = anything we have a source video for in motion_db
+AVATAR_SIGNS = {p.stem.upper() for p in MOTION_DB_DIR.glob("*.mp4")}
+print(f"[ESL] {len(SIGNS)} skeleton | {len(AVATAR_SIGNS)} 3D avatar source videos available")
 
 # ── OpenAI gloss ──────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
+# Cache for English -> Arabic word translations (persists across requests).
+# Avoids re-asking OpenAI for the same word repeatedly.
+_EN2AR_CACHE_PATH = Path(__file__).parent.parent / "data" / "processed" / "en2ar_cache.json"
+_EN2AR_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+try:
+    _EN2AR_CACHE = json.loads(_EN2AR_CACHE_PATH.read_text()) if _EN2AR_CACHE_PATH.exists() else {}
+except Exception:
+    _EN2AR_CACHE = {}
+
+def translate_to_arabic(word):
+    """Translate a single English word to its Arabic counterpart.
+    Returns None on failure (caller should fall back to English letter-spell).
+    Results are cached on disk.
+    """
+    word = (word or '').strip()
+    if not word: return None
+    key = word.lower()
+    if key in _EN2AR_CACHE:
+        return _EN2AR_CACHE[key]
+    if not OPENAI_API_KEY:
+        return None
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        r = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content":
+                    "Translate the English word to its single most common Arabic equivalent. "
+                    "Output ONLY the Arabic word, no diacritics, no English, no punctuation."},
+                {"role": "user", "content": word},
+            ],
+            max_tokens=20, temperature=0,
+        )
+        ar = (r.choices[0].message.content or '').strip().strip('.,!?؟،"\'')
+        if ar and any('\u0600' <= c <= '\u06ff' for c in ar):
+            _EN2AR_CACHE[key] = ar
+            try:
+                _EN2AR_CACHE_PATH.write_text(json.dumps(_EN2AR_CACHE, ensure_ascii=False, indent=2))
+            except Exception:
+                pass
+            return ar
+    except Exception as e:
+        print(f"[en2ar] error for {word!r}: {e}")
+    return None
 
 SYSTEM_PROMPT = """You are an ESL (Emirati Sign Language) interpreter.
 Convert input text to a list of sign tokens.
@@ -162,41 +215,116 @@ class Handler(BaseHTTPRequestHandler):
             if vid.exists(): self.serve_file(vid, "video/mp4")
             else: self.send_json({"error": f"No video for {sign}"}, 404)
 
+        elif p.startswith("/api/v1/avatar-glb/"):
+            # Serve the merged avatar+animation GLB for live Three.js playback.
+            # Same exact data as the MP4 — just delivered as a GLB so the frontend
+            # can play it with AnimationMixer instead of a video element.
+            from urllib.parse import unquote
+            raw_name = unquote(p.split("/")[-1]).replace(".glb","").replace(".GLB","")
+            from pathlib import Path as _P
+            from video_stitcher import ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
+
+            # Resolve a token to one or more renderable signs that have source videos.
+            def resolve_renderable(t):
+                t = t.strip()
+                if not t: return []
+                is_ar = any('\u0600' <= c <= '\u06ff' for c in t)
+                up = t if is_ar else t.upper()
+                # Direct match?
+                if (MOTION_DB_DIR / f"{up}.mp4").exists():
+                    return [up]
+                # Arabic-to-English mapping?
+                if is_ar:
+                    eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
+                    if eng and (MOTION_DB_DIR / f"{eng.upper()}.mp4").exists():
+                        return [eng.upper()]
+                # 3. English token with no sign match — translate to Arabic first, then fingerspell.
+                #    This produces meaningful Arabic finger-spelling (e.g. WAR -> حرب -> HAA, RAA, BAA)
+                #    instead of nonsensical English-letters-mapped-to-Arabic-signs.
+                if not is_ar:
+                    ar = translate_to_arabic(t)
+                    if ar:
+                        t = ar
+                        is_ar = True
+                # 4. Letter-spell fallback
+                lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
+                chars = t if is_ar else t.upper()
+                letters = []
+                for ch in chars:
+                    s2 = lmap.get(ch)
+                    if s2 and (MOTION_DB_DIR / f"{s2}.mp4").exists():
+                        letters.append(s2)
+                return letters
+
+            # If query has ?list=1, return JSON of renderable sign names (so frontend
+            # can request individual GLBs and play them in sequence).
+            from urllib.parse import parse_qs as _parse_qs
+            qs = _parse_qs(urlparse(self.path).query)
+            if qs.get('list'):
+                signs = resolve_renderable(raw_name)
+                self.send_json({"token": raw_name, "signs": signs})
+                return
+
+            # Otherwise serve the GLB for the first renderable sign for this token
+            signs = resolve_renderable(raw_name)
+            if not signs:
+                self.send_json({"error": f"No avatar GLB for {raw_name}"}, 404)
+                return
+            target = signs[0]
+            single_glb = _P("/root/.openclaw/workspace/esl-platform/data/avatars/arab-man") / f"arab_sheik_{target}.glb"
+            if not (single_glb.exists() and single_glb.stat().st_size > 5000):
+                # Lazy render the per-token MP4 (side-effect: also builds the merged GLB)
+                get_or_render_avatar_3d(target)
+            if single_glb.exists() and single_glb.stat().st_size > 5000:
+                self.serve_file(single_glb, "model/gltf-binary", cache=3600)
+            else:
+                self.send_json({"error": f"GLB build failed for {raw_name} -> {target}"}, 500)
+
         elif p.startswith("/api/v1/avatar-video/"):
             raw_name = p.split("/")[-1].replace(".mp4","").replace(".MP4","")
-            stitched = AVATAR_DIR / "stitched" / f"{raw_name}.mp4"
+            stitched = AVATAR_STITCHED_DIR / f"{raw_name}.mp4"
 
-            # Lazy stitch: build from token cache if needed
+            # Lazy render: build from token cache if needed
             if not (stitched.exists() and stitched.stat().st_size > 5000):
-                token_cache = AVATAR_DIR / "stitched" / f"{raw_name}.tokens.json"
+                token_cache = AVATAR_STITCHED_DIR / f"{raw_name}.tokens.json"
                 if token_cache.exists():
                     import json as _j
-                    from video_stitcher import stitch_videos, ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
                     try:
                         toks = _j.loads(token_cache.read_text())
-                        clips = []
+                        # Filter to tokens we have source videos for; map Arabic to English where possible
+                        from video_stitcher import ARABIC_TO_ENGLISH, ARABIC_CHAR_MAP, ENGLISH_LETTER_MAP
+                        renderable = []
                         for t in toks[:6]:
                             is_ar = any('\u0600'<=c<='\u06ff' for c in t)
-                            ap = AVATAR_DIR / f"{t.upper()}.mp4"
-                            if not (ap.exists() and ap.stat().st_size>5000) and is_ar:
+                            up = t.upper() if not is_ar else t
+                            # Direct match?
+                            if (MOTION_DB_DIR / f"{up}.mp4").exists():
+                                renderable.append(up)
+                                continue
+                            # Arabic to English mapping?
+                            if is_ar:
                                 eng = ARABIC_TO_ENGLISH.get(t) or ARABIC_TO_ENGLISH.get(t.strip('\u0627\u0644'))
-                                if eng: ap = AVATAR_DIR / f"{eng.upper()}.mp4"
-                            if ap.exists() and ap.stat().st_size>5000:
-                                clips.append(str(ap))
-                            else:
-                                lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
-                                for ch in (t if is_ar else t.upper())[:4]:
-                                    s2 = lmap.get(ch)
-                                    if s2:
-                                        lp2 = AVATAR_DIR/f"{s2}.mp4"
-                                        if lp2.exists(): clips.append(str(lp2))
-                        if clips: stitch_videos(clips, str(stitched))
+                                if eng and (MOTION_DB_DIR / f"{eng.upper()}.mp4").exists():
+                                    renderable.append(eng.upper())
+                                    continue
+                            # Letter-spell fallback
+                            lmap = ARABIC_CHAR_MAP if is_ar else ENGLISH_LETTER_MAP
+                            chars = (t if is_ar else t.upper())[:4]
+                            for ch in chars:
+                                s2 = lmap.get(ch)
+                                if s2 and (MOTION_DB_DIR / f"{s2}.mp4").exists():
+                                    renderable.append(s2)
+                        if renderable:
+                            stitch_avatar_videos(renderable, stitched)
                     except Exception as ex:
-                        print(f"[AvatarGET stitch] {ex}")
+                        import traceback; traceback.print_exc()
+                        print(f"[Avatar3D stitch] {ex}")
                 else:
                     # Single sign
-                    vid_path = get_or_render_avatar(raw_name.upper())
-                    if vid_path: stitched = Path(vid_path)
+                    vid_path = get_or_render_avatar_3d(raw_name.upper())
+                    if vid_path:
+                        import shutil
+                        shutil.copyfile(vid_path, stitched)
 
             if stitched.exists() and stitched.stat().st_size > 5000:
                 self.serve_file(stitched, "video/mp4", cache=0)  # no cache
@@ -258,12 +386,11 @@ class Handler(BaseHTTPRequestHandler):
                     sk_cache.write_text(_j2.dumps(tokens))
                 video_url = f"/api/v1/video/{skel_key}.mp4"
 
-            # Avatar URL — stitched lazily on first GET request (not during translate)
+            # Avatar URL — rendered lazily on first GET request (not during translate)
             import hashlib, json as _json
             key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
-            # Store token list for lazy stitching
-            token_cache = AVATAR_DIR / "stitched" / f"{key}.tokens.json"
-            token_cache.parent.mkdir(exist_ok=True)
+            token_cache = AVATAR_STITCHED_DIR / f"{key}.tokens.json"
+            token_cache.parent.mkdir(parents=True, exist_ok=True)
             if not token_cache.exists():
                 token_cache.write_text(_json.dumps(tokens))
             avatar_url = f"/api/v1/avatar-video/{key}"
@@ -286,4 +413,6 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     port = 8001
     print(f"[ESL] Lean server :{port} | signs={len(SIGNS)} | openai={'yes' if OPENAI_API_KEY else 'no'}")
-    HTTPServer(("0.0.0.0", port), Handler).serve_forever()
+    # ThreadingHTTPServer: handle each request in its own thread so slow renders
+    # don't block other requests (avatar rendering can take 10-30s per token).
+    ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()

@@ -5,6 +5,7 @@ import { useAppStore } from '../store/useAppStore';
 import type { MocapData } from '../components/AvatarViewer';
 import { Avatar3DViewer } from '../components/Avatar3DViewer';
 import type { RawMocapData } from '../components/Avatar3DViewer';
+import { Avatar3DPlayer } from '../components/Avatar3DPlayer';
 
 export default function Home() {
   const {
@@ -18,6 +19,42 @@ export default function Home() {
   const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
   const [videoMode, setVideoMode] = useState<'skeleton'|'avatar'>('skeleton');
   const [rawMocap, setRawMocap] = useState<RawMocapData | null>(null);
+  const [avatarGlbUrls, setAvatarGlbUrls] = useState<string[] | null>(null);
+  const [avatarLabels, setAvatarLabels] = useState<string[]>([]);
+
+  // Whenever the gloss token list changes, ask the backend which signs each token
+  // resolves into (handles Arabic mapping, finger-spelling fallback), then build
+  // the full URL list for sequential playback.
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (glossTokens.length === 0) {
+        setAvatarGlbUrls(null);
+        setAvatarLabels([]);
+        return;
+      }
+      const allSigns: string[] = [];
+      for (const tok of glossTokens) {
+        try {
+          const r = await fetch(`/api/v1/avatar-glb/${encodeURIComponent(tok)}?list=1`);
+          if (!r.ok) continue;
+          const j = await r.json();
+          if (Array.isArray(j.signs)) {
+            for (const s of j.signs) allSigns.push(s);
+          }
+        } catch { /* ignore */ }
+      }
+      if (cancelled) return;
+      if (allSigns.length > 0) {
+        setAvatarGlbUrls(allSigns.map((s) => `/api/v1/avatar-glb/${encodeURIComponent(s)}`));
+        setAvatarLabels(allSigns);
+      } else {
+        setAvatarGlbUrls(null);
+        setAvatarLabels([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [glossTokens]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const allVideos = skeletonVideos.length > 0 ? skeletonVideos : (videoUrl ? [videoUrl] : []);
@@ -34,6 +71,8 @@ export default function Home() {
     const avUrl = `/api/v1/avatar-video/${sign}`;
     setCurrentVideoIdx(0);
     setRawMocap(null);
+    // Live 3D playback uses the merged GLB (same data as MP4)
+    setAvatarGlbUrls([`/api/v1/avatar-glb/${sign}`]);
     // Fetch raw mocap for 3D viewer
     try {
       const r = await fetch(`/api/v1/mocap-raw/${sign}`);
@@ -269,10 +308,21 @@ export default function Home() {
                   autoPlay loop muted
                   className="w-full h-full object-contain"
                 />
-                {/* Sign label badge */}
-                <div className="absolute top-3 left-3 bg-black/70 backdrop-blur px-3 py-1 rounded-full
-                                text-[#A8FF4B] font-bold text-xs border border-[#A8FF4B]/30">
-                  {glossTokens[currentVideoIdx] || 'Sign'}
+                {/* Sign label badge — shows all tokens, current one highlighted */}
+                <div className="absolute top-3 left-3 max-w-[85%] bg-black/70 backdrop-blur px-3 py-1.5
+                                rounded-2xl border border-[#A8FF4B]/30 flex flex-wrap gap-1.5 items-center">
+                  {glossTokens.length > 0 ? glossTokens.map((tok, i) => (
+                    <span key={i}
+                      className={`text-xs font-bold transition-colors
+                        ${i === currentVideoIdx
+                          ? 'text-[#A8FF4B]'
+                          : 'text-gray-400'}`}
+                      style={{ direction: /[\u0600-\u06ff]/.test(tok) ? 'rtl' : 'ltr' }}>
+                      {tok}
+                    </span>
+                  )) : (
+                    <span className="text-[#A8FF4B] font-bold text-xs">Sign</span>
+                  )}
                 </div>
               </div>
 
@@ -315,15 +365,19 @@ export default function Home() {
             </div>
           )}
 
-          {/* 3D Avatar section */}
-          {rawMocap && (
+          {/* 3D Avatar section — LIVE PLAYBACK of the same GLBs the MP4 was rendered from */}
+          {avatarGlbUrls && avatarGlbUrls.length > 0 && (
             <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="space-y-2 mt-4">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#A8FF4B] uppercase tracking-wider">🤖 3D Model</span>
-                <span className="text-xs text-gray-600">Real-time bone retargeting · {rawMocap.frames.length} frames</span>
+                <span className="text-xs font-bold text-[#A8FF4B] uppercase tracking-wider">🤖 3D Model (Live)</span>
+                <span className="text-xs text-gray-600">Plays each token sequentially (looping) · DigiHuman pipeline</span>
               </div>
-              <Avatar3DViewer mocapData={rawMocap} className="aspect-[4/3]" />
+              <Avatar3DPlayer glbUrls={avatarGlbUrls} labels={avatarLabels} className="aspect-[4/3]" />
             </motion.div>
+          )}
+          {/* Legacy in-browser retargeting viewer (kept for debug — hidden by default) */}
+          {false && rawMocap && (
+            <Avatar3DViewer mocapData={rawMocap} className="aspect-[4/3]" />
           )}
         </div>
       </main>

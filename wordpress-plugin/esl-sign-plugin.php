@@ -3,15 +3,15 @@
  * Plugin Name: ESL Sign Language Video Generator
  * Plugin URI:  https://github.com/alanbarret/esl-platform
  * Description: Select any text on a news article and generate an Emirati Sign Language video instantly.
- * Version:     1.0.0
+ * Version:     1.0.3
  * Author:      Alan Barrett
  * License:     MIT
  */
 
 if (!defined('ABSPATH')) exit;
 
-define('ESL_PLUGIN_VERSION', '1.0.1');
-define('ESL_API_URL', get_option('esl_api_url', 'https://panel-living-mens-juice.trycloudflare.com'));
+define('ESL_PLUGIN_VERSION', '1.0.3');
+define('ESL_API_URL', get_option('esl_api_url', 'https://fluid-enforcement-teachers-mixer.trycloudflare.com'));
 
 // ── Admin settings page ───────────────────────────────────────────────────────
 add_action('admin_menu', function() {
@@ -32,7 +32,7 @@ function esl_settings_page() { ?>
       <tr>
         <th>API URL</th>
         <td>
-          <input type="url" name="esl_api_url" value="<?php echo esc_attr(get_option('esl_api_url', 'https://panel-living-mens-juice.trycloudflare.com')); ?>" class="regular-text" />
+          <input type="url" name="esl_api_url" value="<?php echo esc_attr(get_option('esl_api_url', 'https://fluid-enforcement-teachers-mixer.trycloudflare.com')); ?>" class="regular-text" />
           <p class="description">Your ESL Platform API base URL (without trailing slash)</p>
         </td>
       </tr>
@@ -71,22 +71,32 @@ add_filter('the_content', function($content) {
 
 // ── Enqueue frontend assets ───────────────────────────────────────────────────
 add_action('wp_enqueue_scripts', function() {
-    if (!is_singular()) return; // Only on single posts/pages
+    // Load on all front-end pages so the floating trigger button works everywhere
+    // (text selection-to-sign is useful on home, archives, single posts, etc.)
+    if (is_admin()) return;
+
+    // Use filemtime() for cache-busting so any CSS/JS edit forces a refresh
+    $css_path = plugin_dir_path(__FILE__) . 'assets/esl-sign.css';
+    $art_path = plugin_dir_path(__FILE__) . 'assets/article-style.css';
+    $js_path  = plugin_dir_path(__FILE__) . 'assets/esl-sign.js';
+    $css_ver = file_exists($css_path) ? (string) filemtime($css_path) : ESL_PLUGIN_VERSION;
+    $art_ver = file_exists($art_path) ? (string) filemtime($art_path) : ESL_PLUGIN_VERSION;
+    $js_ver  = file_exists($js_path)  ? (string) filemtime($js_path)  : ESL_PLUGIN_VERSION;
 
     wp_enqueue_style(
         'esl-sign-plugin',
         plugin_dir_url(__FILE__) . 'assets/esl-sign.css',
-        [], ESL_PLUGIN_VERSION
+        [], $css_ver
     );
     wp_enqueue_style(
         'esl-article-style',
         plugin_dir_url(__FILE__) . 'assets/article-style.css',
-        [], ESL_PLUGIN_VERSION
+        [], $art_ver
     );
     wp_enqueue_script(
         'esl-sign-plugin',
         plugin_dir_url(__FILE__) . 'assets/esl-sign.js',
-        [], ESL_PLUGIN_VERSION, true
+        [], $js_ver, true
     );
     wp_localize_script('esl-sign-plugin', 'eslConfig', [
         'apiUrl'    => esc_url(get_option('esl_api_url', ESL_API_URL)),

@@ -1,0 +1,19 @@
+{
+  "name": "esl-animate",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "render": "node render.js"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "^4.0.0",
+    "gl": "^8.0.0",
+    "puppeteer": "^25.0.4",
+    "three": "^0.160.0"
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

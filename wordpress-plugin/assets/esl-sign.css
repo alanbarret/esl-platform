@@ -134,12 +134,17 @@
 }
 
 /* ── Video ───────────────────────────────────────────────────────────── */
+/* 3D avatar videos are portrait (600x700, ~6:7). Use a portrait-friendly
+   aspect ratio so the avatar fits without heavy letterboxing.
+   The skeleton 2D videos (640x540) work fine in this taller frame too. */
 #esl-video-wrap {
-    background:#000; aspect-ratio:16/9;
+    background:#000;
+    aspect-ratio: 6 / 7;
+    max-height: 70vh;
     display:flex; align-items:center; justify-content:center;
     flex-shrink:0; overflow:hidden;
 }
-#esl-video { width:100%; height:100%; object-fit:contain; display:none; }
+#esl-video { width:100%; height:100%; object-fit:contain; display:none; background:#000; }
 
 #esl-loading {
     display:flex; flex-direction:column; align-items:center;

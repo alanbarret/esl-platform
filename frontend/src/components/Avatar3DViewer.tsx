@@ -198,13 +198,33 @@ function LandmarkCloud({ mocapData, timeRef, position, debugRef }: {
 
   useFrame(() => {
     if (!mocapData?.frames?.length || !groupRef.current) return;
-    // Anchor at avatar's hips world position (avatar scale 1.8, pos -1.8 → hips world Y = 0.034)
-    groupRef.current.position.set(0, 0.034, 0);
 
     const fi = Math.floor(timeRef.current * (mocapData.fps||25)) % mocapData.frames.length;
     const frame = mocapData.frames[fi];
     const pose = frame.pose;
     if (!pose) return;
+
+    // AUTO-SCALE: fit MP landmarks to avatar's body proportions
+    const lsh = pose[11], rsh = pose[12], lhp = pose[23], rhp = pose[24];
+    const mpShW = Math.abs(lsh[0] - rsh[0]);
+    const mpHipY = (lhp[1] + rhp[1]) / 2;
+    const mpShY  = (lsh[1] + rsh[1]) / 2;
+    const mpTorsoH = Math.abs(mpShY - mpHipY);
+    const AV_SH_W = 0.60;
+    const AV_TORSO = 0.86;
+    const scaleX = mpShW > 0.01 ? AV_SH_W / mpShW : 1;
+    const scaleY = mpTorsoH > 0.01 ? AV_TORSO / mpTorsoH : 1;
+    const S = (scaleX + scaleY) / 2;
+
+    const mpHipX = (lhp[0] + rhp[0]) / 2;
+    const mpHipZ = (lhp[2] + rhp[2]) / 2;
+    // Anchor MP hips to avatar hips world (0, 0.034, 0); flip Y/Z via negative scale
+    groupRef.current.position.set(
+      -mpHipX * S,
+      0.034 + mpHipY * S,
+      -mpHipZ * S
+    );
+    groupRef.current.scale.set(S, S, S);
 
     for (let i = 0; i < 33 && i < pose.length; i++) {
       const lm = pose[i];
@@ -266,17 +286,15 @@ function LandmarkCloud({ mocapData, timeRef, position, debugRef }: {
       if (!vis(pose[wristIdx])) {
         dots.forEach(d => d.visible = false); return;
       }
-      const hipX2 = ((pose[23][0]+pose[24][0])/2);
-      const hipY2 = ((pose[23][1]+pose[24][1])/2);
-      const hipZ2 = ((pose[23][2]+pose[24][2])/2);
-      const wx = (pose[wristIdx][0]-hipX2)*1.4, wy = -(pose[wristIdx][1]-hipY2)*1.4, wz = -(pose[wristIdx][2]-hipZ2)*1.4;
+      // Use raw pose wrist X/Y; reduce Z scale since pose Z is large depth estimate (-1..0)
+      const wx = pose[wristIdx][0], wy = pose[wristIdx][1], wz = pose[wristIdx][2] * 0.1;
       const hw = hand[0];
       for (let i = 0; i < 21 && i < hand.length; i++) {
         const lm = hand[i];
         const d = dots[i];
         if (!d) continue;
         d.visible = true;
-        d.position.set(wx + (lm[0]-hw[0])*1.4, wy - (lm[1]-hw[1])*1.4, wz - (lm[2]-hw[2])*1.4);
+        d.position.set(wx + (lm[0]-hw[0]), wy + (lm[1]-hw[1]), wz + (lm[2]-hw[2]));
       }
     };
     renderHand(frame.rhand, MP.R_WR, handDotsRef.current.r);

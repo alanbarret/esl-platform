@@ -136,23 +136,21 @@ async def generate_gloss_only(req: GlossOnlyRequest) -> dict:
 @router.post("/generate-video")
 async def generate_video_from_gloss(
     gloss_tokens: list[str],
-    fps: int = 30,
-    width: int = 1920,
-    height: int = 1080,
+    fps: int = 25,
+    width: int = 600,
+    height: int = 700,
 ) -> dict:
-    """Generate video from pre-computed gloss tokens."""
-    from app.services.video_renderer import VideoRenderer, RenderConfig
-    engine = get_motion_engine()
-    motion = engine.generate(gloss_tokens, fps=fps)
-
-    renderer = VideoRenderer(RenderConfig(width=width, height=height, fps=fps))
-    result = await renderer.render(motion)
+    """Generate video from pre-computed gloss tokens (3D GLTF avatar pipeline)."""
+    from app.services.avatar_renderer_3d import Avatar3DRenderer, Render3DConfig
+    renderer = Avatar3DRenderer(Render3DConfig(width=width, height=height, fps=fps))
+    result = await renderer.render_sequence(gloss_tokens)
 
     return {
         "gloss_tokens": gloss_tokens,
         "total_duration": result.duration_seconds,
-        "frame_count": result.frame_count,
         "video_url": f"/api/v1/video/{result.output_path.name}",
+        "tokens_rendered": result.tokens_rendered,
+        "tokens_missing": result.tokens_missing,
         "file_size_bytes": result.file_size_bytes,
     }
 
