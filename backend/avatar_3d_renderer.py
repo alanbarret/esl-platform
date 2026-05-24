@@ -22,6 +22,9 @@ AVATAR_GLB = DATA_DIR / "avatars" / "arab-man" / "source" / "ready player me ara
 MOTION_DB_DIR = DATA_DIR / "motion_db"
 HOLISTIC_CACHE = DATA_DIR / "processed" / "mocap_holistic_v2"
 ANIM_GLB_DIR = DATA_DIR / "avatars" / "arab-man"
+# Alias for clarity from the server's perspective: this is where merged
+# avatar+animation GLBs (arab_sheik_<TOKEN>.glb) are stored.
+AVATAR_GLB_DIR = ANIM_GLB_DIR
 RENDER_DIR = DATA_DIR / "avatar_videos_3d"
 STITCHED_DIR = RENDER_DIR / "stitched"
 
