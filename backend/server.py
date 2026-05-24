@@ -29,10 +29,12 @@ from avatar_3d_renderer import (
     MOTION_DB_DIR,
     AVATAR_GLB_DIR,
 )
+from video_stitcher import get_stitched_video, STITCHED_DIR, VIDEOS_DIR
 
 BASE = Path(__file__).parent.parent
 AVATAR_SIGNS = {p.stem.upper() for p in MOTION_DB_DIR.glob("*.mp4")}
-print(f"[ESL] {len(AVATAR_SIGNS)} 3D avatar source videos available")
+SKELETON_SIGNS = {p.stem.upper() for p in VIDEOS_DIR.glob("*.mp4")}
+print(f"[ESL] {len(SKELETON_SIGNS)} skeleton | {len(AVATAR_SIGNS)} 3D avatar source videos available")
 
 
 # ── Letter maps (inlined; previously in video_stitcher.py) ──────────────────
@@ -291,11 +293,43 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({
                 "status": "ok",
                 "signs": len(AVATAR_SIGNS),
+                "skeleton_signs": len(SKELETON_SIGNS),
+                "avatar_signs": len(AVATAR_SIGNS),
                 "ai": "openai" if OPENAI_API_KEY else "rules",
             })
 
         elif p == "/api/v1/signs":
             self.send_json({"signs": sorted(AVATAR_SIGNS)})
+
+        elif p == "/api/v1/skeleton-signs":
+            self.send_json({"signs": sorted(SKELETON_SIGNS)})
+
+        elif p.startswith("/api/v1/skeleton-video/"):
+            sign = p.split("/")[-1].upper().replace(".MP4", "")
+            vid = VIDEOS_DIR / f"{sign}.mp4"
+            if vid.exists():
+                self.serve_file(vid, "video/mp4")
+            else:
+                self.send_json({"error": f"No skeleton video for {sign}"}, 404)
+
+        elif p.startswith("/api/v1/video/"):
+            # Stitched skeleton sentence video (lazy-built from a token list cache)
+            name = p.split("/")[-1]
+            vid = STITCHED_DIR / name
+            if not (vid.exists() and vid.stat().st_size > 5000):
+                key = name.replace('.mp4', '')
+                sk_cache = STITCHED_DIR / f"{key}.tokens.json"
+                if sk_cache.exists():
+                    try:
+                        toks = json.loads(sk_cache.read_text())
+                        result = get_stitched_video(toks)
+                        if result: vid = Path(result)
+                    except Exception as ex:
+                        print(f"[skeleton stitch] {ex}")
+            if vid.exists() and vid.stat().st_size > 5000:
+                self.serve_file(vid, "video/mp4", cache=3600)
+            else:
+                self.send_json({"error": "Video not found"}, 404)
 
         elif p.startswith("/api/v1/avatar-glb/"):
             raw_name = unquote(p.split("/")[-1]).replace(".glb", "").replace(".GLB", "")
@@ -369,19 +403,31 @@ class Handler(BaseHTTPRequestHandler):
             tokens = get_gloss(text)
             print(f"[Translate] {text!r} → {tokens}")
 
-            # Cache the token list so the lazy /avatar-video/{KEY} endpoint can find it
+            # Same key drives both stitched outputs (skeleton + avatar).
             key = hashlib.md5("_".join(tokens).encode()).hexdigest()[:10]
-            token_cache = AVATAR_STITCHED_DIR / f"{key}.tokens.json"
-            token_cache.parent.mkdir(parents=True, exist_ok=True)
-            if not token_cache.exists():
-                token_cache.write_text(json.dumps(tokens, ensure_ascii=False))
+
+            # Skeleton sentence: cache the token list so /api/v1/video/{KEY} can build lazily.
+            sk_cache = STITCHED_DIR / f"{key}.tokens.json"
+            sk_cache.parent.mkdir(parents=True, exist_ok=True)
+            if not sk_cache.exists():
+                sk_cache.write_text(json.dumps(tokens, ensure_ascii=False))
+            skeleton_video_url = f"/api/v1/video/{key}.mp4"
+
+            # 3D avatar sentence: same idea, served by /api/v1/avatar-video/{KEY}.
+            av_cache = AVATAR_STITCHED_DIR / f"{key}.tokens.json"
+            av_cache.parent.mkdir(parents=True, exist_ok=True)
+            if not av_cache.exists():
+                av_cache.write_text(json.dumps(tokens, ensure_ascii=False))
+            avatar_video_url = f"/api/v1/avatar-video/{key}"
 
             self.send_json({
                 "request_id": str(uuid.uuid4())[:8],
                 "input_text": text,
                 "gloss_tokens": tokens,
                 "gloss_string": " ".join(tokens),
-                "avatar_video_url": f"/api/v1/avatar-video/{key}",
+                "video_url": skeleton_video_url,
+                "skeleton_videos": [skeleton_video_url],
+                "avatar_video_url": avatar_video_url,
                 "status": "completed",
             })
 
@@ -391,5 +437,5 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("ESL_PORT", 8001))
-    print(f"[ESL] Server :{port} | signs={len(AVATAR_SIGNS)} | openai={'yes' if OPENAI_API_KEY else 'no'}")
+    print(f"[ESL] Server :{port} | skeleton={len(SKELETON_SIGNS)} | avatar={len(AVATAR_SIGNS)} | openai={'yes' if OPENAI_API_KEY else 'no'}")
     ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()

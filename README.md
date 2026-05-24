@@ -11,29 +11,33 @@ TEXT (ar/en)
 GLOSS TOKENS  (sign names + Arabic words to finger-spell)
   ↓ token resolution (direct match / Arabic→English / translate-to-Arabic / letter-spell)
 SIGN LIST  (one or more renderable sign names per token)
-  ↓ for each sign:
-SOURCE VIDEO  →  MediaPipe Holistic (3D pose + 2 hands)
-              →  DigiHuman-style retargeting onto Mixamo-rigged GLB
-              →  Merged animation GLB
-              →  MP4 (headless Three.js render)
+  ↓ for each sign, two parallel artefacts:
+SOURCE VIDEO  →  MediaPipe Holistic landmarks
+              ├─  SKELETON  wireframe overlay MP4 (cheap, draws stick figure)
+              └─  3D AVATAR DigiHuman retargeting → merged GLB → MP4 (headless render)
 ```
 
-The backend exposes the merged GLB so the frontend can play it live with
-`AnimationMixer` — same data as the MP4, pixel-identical playback.
+The API returns both URLs in `/api/v1/translate`. The platform frontend
+shows the two side-by-side; the WordPress plugin uses the 3D avatar.
+
+The merged GLB endpoint lets the frontend play the 3D avatar live with
+Three.js `AnimationMixer` — same data as the MP4, pixel-identical playback.
 
 ## Components
 
 | Path | Purpose |
 |------|---------|
-| `backend/server.py` | HTTP API. Endpoints: `/health`, `/api/v1/gloss`, `/api/v1/translate`, `/api/v1/avatar-glb/{TOKEN}`, `/api/v1/avatar-video/{KEY}`. ThreadingHTTPServer, single file. |
+| `backend/server.py` | HTTP API. Endpoints: health, gloss, translate, skeleton-video, avatar-glb, avatar-video. ThreadingHTTPServer, single file. |
 | `backend/avatar_3d_renderer.py` | Subprocess orchestrator for the 3D pipeline (extract → retarget → merge → render) with on-disk caching. |
+| `backend/skeleton_renderer.py` | Renders skeleton wireframe MP4 from a mocap JSON. |
+| `backend/video_stitcher.py` | Concatenates skeleton clips for multi-token sentences. |
+| `scripts/scrape.py` | Manifest → source MP4 + MediaPipe mocap JSON + skeleton video. |
+| `scripts/batch_render.py` | Runs the 3D pipeline over every downloaded sign. |
 | `scripts/animate/extract_v2.py` | MediaPipe Tasks API (PoseLandmarker + HandLandmarker) — metric 3D landmarks. |
 | `scripts/animate/retarget_digihuman.py` | DigiHuman-style LookRotation retargeting onto the Arab sheikh GLB. |
 | `scripts/animate/merge_animation.py` | Bone-name remapped glTF animation merge. |
 | `scripts/animate/render.js` | Headless Chromium + Three.js renderer → MP4 via FFmpeg. |
 | `scripts/animate/build.sh` | Pipeline runner for a single token. |
-| `scripts/scrape.py` | Downloads source videos from the manifest into `data/motion_db/`. |
-| `scripts/batch_render.py` | Runs the full pipeline over every downloaded sign. |
 | `frontend/` | React + Three.js dashboard (Vite). |
 | `wordpress-plugin/` | WP plugin: select text on any article → translate + play avatar. |
 
@@ -87,20 +91,26 @@ export OPENAI_API_KEY=sk-...
 
 ## Run order
 
-### 1. Scrape the source videos
+### 1. Scrape source videos + skeletons
 
 ```bash
 python3 scripts/scrape.py
 ```
 
-This downloads all signs listed in `data/raw/uae_signs_full.json` into
-`data/motion_db/<TOKEN>.mp4`. Already-cached files are skipped, so it's safe
-to re-run. Common flags:
+For every entry in `data/raw/uae_signs_full.json` this produces three things:
+
+1. **Source MP4** — `data/motion_db/<TOKEN>.mp4` (consumed by the 3D pipeline)
+2. **Mocap JSON** — `data/processed/mocap/<TOKEN>.json` (MediaPipe Holistic)
+3. **Skeleton MP4** — `data/skeleton_videos/<TOKEN>.mp4` (wireframe overlay)
+
+Already-cached outputs are skipped, so re-running is safe. Flags:
 
 ```bash
 python3 scripts/scrape.py --limit 50          # just the first 50
 python3 scripts/scrape.py --filter sport      # only sport-related entries
 python3 scripts/scrape.py --workers 8         # bump parallelism (default 4)
+python3 scripts/scrape.py --skip-mocap        # only download MP4s
+python3 scripts/scrape.py --skip-skeleton     # download + mocap, no wireframe
 python3 scripts/scrape.py --force             # re-download everything
 ```
 
@@ -157,13 +167,16 @@ Configure the API URL in *Settings → ESL Sign Plugin*.
 
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/health` | Liveness + sign count |
-| GET | `/api/v1/signs` | List of every renderable sign |
+| GET | `/health` | Liveness + sign counts |
+| GET | `/api/v1/signs` | List of every 3D-renderable sign |
+| GET | `/api/v1/skeleton-signs` | List of every skeleton-renderable sign |
 | POST | `/api/v1/gloss` | `{"text":"..."}` → `{"gloss_tokens":[...]}` |
-| POST | `/api/v1/translate` | `{"text":"..."}` → tokens + `avatar_video_url` |
-| GET | `/api/v1/avatar-glb/{TOKEN}` | Merged GLB for live playback |
+| POST | `/api/v1/translate` | `{"text":"..."}` → tokens + `video_url` (skeleton) + `avatar_video_url` (3D) |
+| GET | `/api/v1/skeleton-video/{SIGN}` | Single skeleton wireframe MP4 |
+| GET | `/api/v1/video/{KEY}.mp4` | Stitched skeleton sentence MP4 (lazy) |
+| GET | `/api/v1/avatar-glb/{TOKEN}` | Merged GLB for live Three.js playback |
 | GET | `/api/v1/avatar-glb/{TOKEN}?list=1` | JSON: which signs this token expands into |
-| GET | `/api/v1/avatar-video/{KEY}` | Stitched MP4 (lazy-built and cached) |
+| GET | `/api/v1/avatar-video/{KEY}` | Stitched 3D avatar MP4 (lazy) |
 
 ## How a token gets rendered
 
@@ -184,12 +197,16 @@ Configure the API URL in *Settings → ESL Sign Plugin*.
 Everything under these paths is regenerated on demand:
 
 ```
-data/motion_db/*.mp4                  # source videos
-data/processed/mocap_holistic_v2/*    # MediaPipe landmark caches
-data/avatars/arab-man/_*.glb          # per-token animation tracks
+data/motion_db/*.mp4                   # source videos
+data/processed/mocap/*.json            # Holistic mocap (skeleton renderer's input)
+data/processed/mocap_holistic_v2/*     # Tasks API mocap (3D pipeline's input)
+data/skeleton_videos/*.mp4             # rendered skeleton wireframes
+data/stitched_videos/*                 # stitched skeleton sentences
+data/avatars/arab-man/_*.glb           # per-token animation tracks
 data/avatars/arab-man/arab_sheik_*.glb # merged avatar + animation
-data/avatar_videos_3d/*.mp4           # rendered MP4s
-data/processed/en2ar_cache.json       # English→Arabic translation cache
+data/avatar_videos_3d/*.mp4            # rendered 3D avatar MP4s
+data/avatar_videos_3d/stitched/*       # stitched 3D avatar sentences
+data/processed/en2ar_cache.json        # English→Arabic translation cache
 ```
 
 They are all listed in `.gitignore`. Delete to force a rebuild.
