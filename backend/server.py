@@ -41,7 +41,7 @@ print(f"[ESL] {len(SKELETON_SIGNS)} skeleton | {len(AVATAR_SIGNS)} 3D avatar sou
 ENGLISH_LETTER_MAP = {
     'A': 'ALIF', 'B': 'BAA',  'C': 'SEEN', 'D': 'DAAL', 'E': 'AEEN',
     'F': 'FAA',  'G': 'JEEM', 'H': 'HAA',  'I': 'ALIF', 'J': 'JEEM',
-    'K': 'KAAF', 'L': 'LAA',  'M': 'MEEM', 'N': 'NOON', 'O': 'AEEN',
+    'K': 'KAAF', 'L': 'LAAM', 'M': 'MEEM', 'N': 'NOON', 'O': 'AEEN',
     'P': 'FAA',  'Q': 'QAAF', 'R': 'RAA',  'S': 'SEEN', 'T': 'TAA',
     'U': 'AEEN', 'V': 'FAA',  'W': 'WOW',  'X': 'SEEN', 'Y': 'YAA',
     'Z': 'ZAAI',
@@ -70,7 +70,7 @@ ARABIC_CHAR_MAP = {
     'ف': 'FAA',
     'ق': 'QAAF',
     'ك': 'KAAF',
-    'ل': 'LAA',
+    'ل': 'LAAM',
     'م': 'MEEM',
     'ن': 'NOON',
     'ه': 'HAA',
@@ -307,7 +307,20 @@ class Handler(BaseHTTPRequestHandler):
         elif p.startswith("/api/v1/skeleton-video/"):
             sign = p.split("/")[-1].upper().replace(".MP4", "")
             vid = VIDEOS_DIR / f"{sign}.mp4"
-            if vid.exists():
+            if not vid.exists():
+                # Lazy build: if we have the source video, run the skeleton extractor.
+                src_mp4 = MOTION_DB_DIR / f"{sign}.mp4"
+                if src_mp4.exists():
+                    import subprocess
+                    try:
+                        subprocess.run(
+                            ["python3", str(BASE / "scripts" / "build_skeletons.py"),
+                             "--tokens", sign, "--workers", "1"],
+                            cwd=str(BASE), capture_output=True, timeout=120,
+                        )
+                    except Exception as ex:
+                        print(f"[skeleton lazy build] {ex}")
+            if vid.exists() and vid.stat().st_size > 1000:
                 self.serve_file(vid, "video/mp4")
             else:
                 self.send_json({"error": f"No skeleton video for {sign}"}, 404)

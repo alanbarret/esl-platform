@@ -26,7 +26,13 @@ def merge(avatar_path: str, anim_path: str, out_path: str):
     print(f"  nodes: {len(anim.nodes)}, animations: {len(anim.animations)}")
 
     # Build name -> avatar_node_index map
+    # Support both plain ("Hips") and prefixed ("mixamorig9:Hips") bone names.
+    def _strip(name):
+        for pfx in ('mixamorig9:', 'mixamorig:', 'mixamorig1:'):
+            if name.startswith(pfx): return name[len(pfx):]
+        return name
     avatar_name_to_idx = {n.name: i for i, n in enumerate(avatar.nodes) if n.name}
+    avatar_stripped_to_idx = {_strip(n.name): i for i, n in enumerate(avatar.nodes) if n.name}
 
     # Build animation_node_index -> name map
     anim_idx_to_name = {i: n.name for i, n in enumerate(anim.nodes) if n.name}
@@ -99,6 +105,18 @@ def merge(avatar_path: str, anim_path: str, out_path: str):
                 unmatched.append(f"<no-name idx={src_node_idx}>")
                 continue
             if bone_name not in avatar_name_to_idx:
+                stripped = _strip(bone_name)
+                if stripped in avatar_stripped_to_idx:
+                    resolved_idx = avatar_stripped_to_idx[stripped]
+                    new_ch = AnimationChannel()
+                    new_ch.sampler = ch.sampler
+                    new_target = AnimationChannelTarget()
+                    new_target.node = resolved_idx
+                    new_target.path = ch.target.path
+                    new_ch.target = new_target
+                    new_anim.channels.append(new_ch)
+                    matched += 1
+                    continue
                 unmatched.append(bone_name)
                 continue
             new_ch = AnimationChannel()

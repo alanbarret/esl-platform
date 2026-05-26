@@ -18,7 +18,7 @@ HOLISTIC_JSON="data/processed/mocap_holistic_v2/${WORD}.json"
 ANIM_OUT="data/avatars/arab-man/_${WORD}_anim.glb"
 MERGED_OUT="data/avatars/arab-man/arab_sheik_${WORD}.glb"
 VIDEO_OUT="data/avatar_videos_3d/arab_sheik_${WORD}.mp4"
-AVATAR="data/avatars/arab-man/source/ready player me arab sheik.glb"
+AVATAR="data/avatars/arab-man/source/ESL_Avatar.glb"
 
 if [ ! -f "$SOURCE_VIDEO" ]; then
   echo "ERROR: source video missing: $SOURCE_VIDEO"

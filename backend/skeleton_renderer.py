@@ -80,12 +80,40 @@ def render_and_trim(sign: str):
             t = y / H
             img[y, :] = (int(8+t*18), int(8+t*14), int(18+t*32))
 
-        pose  = fd.get('pose')
-        rhand = fd.get('rhand')
-        lhand = fd.get('lhand')
+        # The mocap JSON may store pose as either image-normalized (0..1) or
+        # world-space (meters, centered at hips). Detect by value range.
+        pose  = fd.get('pose_img') or fd.get('pose')
+        rhand = fd.get('rhand') or fd.get('rh_img') or fd.get('rh')
+        lhand = fd.get('lhand') or fd.get('lh_img') or fd.get('lh')
 
-        def to_px(lm):
-            return int(lm[0] * W), int(lm[1] * H)
+        # If pose is world-space (meters), values fall in roughly -1..+1.
+        # Project to image coords using the wrist landmarks of the hands as anchors,
+        # OR fall back to a centered isotropic scale.
+        pose_is_world = False
+        if pose and len(pose) > 0:
+            sample = pose[0]
+            if -2.0 < sample[0] < 2.0 and -2.0 < sample[1] < 2.0 and (sample[0] < 0 or sample[1] < 0):
+                pose_is_world = True
+
+        if pose_is_world and pose:
+            # Compute scale so the pose roughly fills the frame vertically.
+            ys = [p[1] for p in pose if (len(p) < 4 or p[3] > 0.3)]
+            xs = [p[0] for p in pose if (len(p) < 4 or p[3] > 0.3)]
+            if ys and xs:
+                y_range = max(ys) - min(ys)
+                y_scale = (H * 0.7) / y_range if y_range > 0.1 else H
+                # Centre horizontally
+                x_center = (max(xs) + min(xs)) / 2
+                y_top = min(ys)
+                def to_px(lm):
+                    # pose_world has +Y down; image has +Y down too
+                    px = int(W/2 + (lm[0] - x_center) * y_scale)
+                    py = int(H * 0.15 + (lm[1] - y_top) * y_scale)
+                    return px, py
+            else:
+                def to_px(lm): return int(lm[0] * W), int(lm[1] * H)
+        else:
+            def to_px(lm): return int(lm[0] * W), int(lm[1] * H)
 
         if pose:
             for a, b in POSE_CONNECTIONS:
@@ -101,21 +129,48 @@ def render_and_trim(sign: str):
                     cv2.circle(img, to_px(lm), 4, (80,60,160), -1, cv2.LINE_AA)
                     cv2.circle(img, to_px(lm), 3, (160,130,255), -1, cv2.LINE_AA)
 
-        if rhand:
-            for a, b in HAND_CONNECTIONS:
-                if a < len(rhand) and b < len(rhand):
-                    cv2.line(img, to_px(rhand[a]), to_px(rhand[b]), (160,100,40), 2, cv2.LINE_AA)
-                    cv2.line(img, to_px(rhand[a]), to_px(rhand[b]), (255,165,75), 1, cv2.LINE_AA)
-            for lm in rhand:
-                cv2.circle(img, to_px(lm), 3, (255,165,75), -1, cv2.LINE_AA)
+        # Draw hands, anchored at the pose's wrist position when available so the
+        # hand isn't floating in the image-normalized coordinate frame.
+        # MediaPipe pose wrist indices: 15 = left, 16 = right.
+        def draw_hand(hand_lm, wrist_idx, line_dark, line_light, dot_color):
+            if not hand_lm: return
+            if fi == keep[0]:  # debug first kept frame
+                print(f'  draw_hand wrist_idx={wrist_idx} pose_is_world={pose_is_world}', flush=True)
+            # If pose data is available, anchor hand at pose wrist & scale by
+            # forearm length (elbow → wrist distance in pose pixels).
+            anchor = None
+            scale = 1.0
+            if pose and wrist_idx < len(pose):
+                wrist_px = to_px(pose[wrist_idx])
+                elbow_idx = 13 if wrist_idx == 15 else 14
+                if elbow_idx < len(pose):
+                    elbow_px = to_px(pose[elbow_idx])
+                    forearm_len = ((wrist_px[0]-elbow_px[0])**2 + (wrist_px[1]-elbow_px[1])**2) ** 0.5
+                    if forearm_len > 5:
+                        # Hand should be ~70% of forearm length
+                        anchor = wrist_px
+                        # MediaPipe hand landmark 0 is the wrist. Scale relative to it.
+                        hand_size_norm = ((hand_lm[12][0]-hand_lm[0][0])**2 + (hand_lm[12][1]-hand_lm[0][1])**2) ** 0.5
+                        if hand_size_norm > 0.01:
+                            scale = (forearm_len * 0.7) / (hand_size_norm * max(W, H))
 
-        if lhand:
+            def hand_to_px(lm):
+                if anchor is None:
+                    return int(lm[0] * W), int(lm[1] * H)
+                # Offset from hand-landmark 0 (wrist), scaled, anchored at pose-wrist
+                dx = (lm[0] - hand_lm[0][0]) * W * scale
+                dy = (lm[1] - hand_lm[0][1]) * H * scale
+                return int(anchor[0] + dx), int(anchor[1] + dy)
+
             for a, b in HAND_CONNECTIONS:
-                if a < len(lhand) and b < len(lhand):
-                    cv2.line(img, to_px(lhand[a]), to_px(lhand[b]), (80,160,40), 2, cv2.LINE_AA)
-                    cv2.line(img, to_px(lhand[a]), to_px(lhand[b]), (168,255,75), 1, cv2.LINE_AA)
-            for lm in lhand:
-                cv2.circle(img, to_px(lm), 3, (168,255,75), -1, cv2.LINE_AA)
+                if a < len(hand_lm) and b < len(hand_lm):
+                    cv2.line(img, hand_to_px(hand_lm[a]), hand_to_px(hand_lm[b]), line_dark, 2, cv2.LINE_AA)
+                    cv2.line(img, hand_to_px(hand_lm[a]), hand_to_px(hand_lm[b]), line_light, 1, cv2.LINE_AA)
+            for lm in hand_lm:
+                cv2.circle(img, hand_to_px(lm), 3, dot_color, -1, cv2.LINE_AA)
+
+        draw_hand(rhand, 16, (160,100,40), (255,165,75), (255,165,75))
+        draw_hand(lhand, 15, (80,160,40),  (168,255,75), (168,255,75))
 
         out.write(img)
 

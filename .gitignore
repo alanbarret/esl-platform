@@ -75,3 +75,22 @@ models/
 *.tmp.avi
 _debug_*.jpg
 _debug_*.png
+
+# Session-only debug scratch
+tmp_debug/
+
+# Runtime-generated stitched video metadata
+data/avatar_videos_3d/stitched/*.tokens.json
+data/stitched_videos/*.tokens.json
+
+# Padded landmark renders + per-sign side-by-side videos (regeneratable)
+data/avatar_videos_3d/_landmarks_*.mp4
+data/avatar_videos_3d/*_sidebyside.mp4
+
+# Headless render frame scratch dirs
+scripts/animate/.frames-*/
+*_backup.glb
+
+# Regeneratable mocap JSON cache (12MB+, produced by scrape.py)
+data/processed/mocap/
+logs/

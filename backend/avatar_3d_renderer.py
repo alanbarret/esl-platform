@@ -18,12 +18,11 @@ from typing import Optional
 PLATFORM_ROOT = Path(__file__).parent.parent  # esl-platform/
 SCRIPTS_DIR = PLATFORM_ROOT / "scripts" / "animate"
 DATA_DIR = PLATFORM_ROOT / "data"
-AVATAR_GLB = DATA_DIR / "avatars" / "arab-man" / "source" / "ready player me arab sheik.glb"
+AVATAR_GLB = DATA_DIR / "avatars" / "arab-man" / "source" / "ESL_Avatar.glb"
 MOTION_DB_DIR = DATA_DIR / "motion_db"
 HOLISTIC_CACHE = DATA_DIR / "processed" / "mocap_holistic_v2"
 ANIM_GLB_DIR = DATA_DIR / "avatars" / "arab-man"
-# Alias for clarity from the server's perspective: this is where merged
-# avatar+animation GLBs (arab_sheik_<TOKEN>.glb) are stored.
+# Alias for clarity from the server's perspective.
 AVATAR_GLB_DIR = ANIM_GLB_DIR
 RENDER_DIR = DATA_DIR / "avatar_videos_3d"
 STITCHED_DIR = RENDER_DIR / "stitched"

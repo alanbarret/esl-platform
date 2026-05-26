@@ -109,16 +109,43 @@ def main():
                                   lm.visibility if lm.visibility else 1.0] for lm in pl]
 
             # Hands
+            #
+            # MediaPipe HandLandmarker's `handedness` label assumes the input
+            # image is in selfie (mirrored) view, so for a non-mirrored video
+            # the labels are swapped relative to the subject's anatomical L/R.
+            # To stay robust regardless of camera orientation, we ignore the
+            # handedness label and instead assign each detected hand to the
+            # subject's L/R by comparing each hand's image-space wrist position
+            # to the pose's L_WRIST (15) and R_WRIST (16) positions, picking
+            # whichever side is closer.
+            def _assign_side(idx):
+                # Returns 'L' or 'R' based on image-space proximity to pose wrists.
+                # Falls back to the (possibly mirrored) MP label only if pose
+                # wrists are unavailable.
+                if f['pose_img'] is None or hand_res.hand_landmarks is None or idx >= len(hand_res.hand_landmarks):
+                    label = hand_res.handedness[idx][0].category_name
+                    return 'L' if label == 'Left' else 'R'
+                hand_wrist = hand_res.hand_landmarks[idx][0]  # landmark 0 = wrist
+                hwx, hwy = hand_wrist.x, hand_wrist.y
+                l_pose = f['pose_img'][15]
+                r_pose = f['pose_img'][16]
+                dl = (l_pose[0] - hwx) ** 2 + (l_pose[1] - hwy) ** 2
+                dr = (r_pose[0] - hwx) ** 2 + (r_pose[1] - hwy) ** 2
+                return 'L' if dl < dr else 'R'
+
+            n_hands = max(
+                len(hand_res.hand_world_landmarks) if hand_res.hand_world_landmarks else 0,
+                len(hand_res.hand_landmarks) if hand_res.hand_landmarks else 0,
+            )
+            sides = [_assign_side(idx) for idx in range(n_hands)]
+
             if hand_res.hand_world_landmarks:
                 for idx, hlm in enumerate(hand_res.hand_world_landmarks):
-                    # handedness tells us which hand
-                    handedness = hand_res.handedness[idx][0].category_name  # "Left" or "Right"
-                    key = 'lh' if handedness == 'Left' else 'rh'
+                    key = 'lh' if sides[idx] == 'L' else 'rh'
                     f[key] = [[p.x, p.y, p.z] for p in hlm]
             if hand_res.hand_landmarks:
                 for idx, hlm in enumerate(hand_res.hand_landmarks):
-                    handedness = hand_res.handedness[idx][0].category_name
-                    key = 'lh_img' if handedness == 'Left' else 'rh_img'
+                    key = 'lh_img' if sides[idx] == 'L' else 'rh_img'
                     f[key] = [[p.x, p.y, p.z] for p in hlm]
 
             frames.append(f)

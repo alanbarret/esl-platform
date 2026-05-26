@@ -17,7 +17,7 @@ Usage:
   python3 retarget_digihuman.py <avatar.glb> <holistic.json> <output_anim.glb>
         [--smooth K] [--trim-trailing]
 """
-import sys, json, struct, argparse, math
+import sys, os, json, struct, argparse, math
 from pathlib import Path
 import numpy as np
 from pygltflib import GLTF2
@@ -174,7 +174,12 @@ class AvatarRig:
 
     def __init__(self, glb_path):
         self.g = GLTF2().load(glb_path)
-        self.name_to_idx = {n.name: i for i, n in enumerate(self.g.nodes) if n.name}
+        # Strip Mixamo prefix so retargeter works with both prefixed and plain rigs
+        def _strip(name):
+            for pfx in ('mixamorig9:', 'mixamorig:', 'mixamorig1:'):
+                if name.startswith(pfx): return name[len(pfx):]
+            return name
+        self.name_to_idx = {_strip(n.name): i for i, n in enumerate(self.g.nodes) if n.name}
         self.node_parent = {}
         for i, n in enumerate(self.g.nodes):
             for c in (n.children or []):
@@ -210,7 +215,10 @@ class AvatarRig:
             self.bone_inverse_rot[bone_name] = quat_mul(inv_rot, self.rest_world_q[bone_idx])
 
     def _compute_elbow_axis(self, joint_name):
-        """Return the rest elbow plane normal (cross of upper arm and forearm)."""
+        """Return the rest elbow plane normal.
+        For T-pose models (straight arm), the cross(upper, fore) is near-zero,
+        so fall back to cross(upper, body_forward) which gives the natural
+        anatomical bend axis (elbow points back)."""
         if 'Left' in joint_name:
             sh = self.world_pos('LeftArm')
             el = self.world_pos('LeftForeArm')
@@ -223,7 +231,21 @@ class AvatarRig:
             return None
         if sh is None or el is None or wr is None:
             return None
-        axis = np.cross(el - sh, wr - el)
+        upper = el - sh
+        fore = wr - el
+        un = np.linalg.norm(upper); fn = np.linalg.norm(fore)
+        if un < 1e-9 or fn < 1e-9: return None
+        dot = float(np.dot(upper/un, fore/fn))
+        if dot > 0.95:
+            # T-pose: use cross(upper, body_forward)
+            axis = np.cross(upper/un, self.body_forward_rest)
+            n = np.linalg.norm(axis)
+            if n < 1e-6:
+                axis = np.cross(upper/un, np.array([0.0, 1.0, 0.0]))
+                n = np.linalg.norm(axis)
+                if n < 1e-6: return None
+            return axis / n
+        axis = np.cross(upper, fore)
         n = np.linalg.norm(axis)
         if n < 1e-6:
             return None
@@ -232,6 +254,29 @@ class AvatarRig:
     def world_pos(self, bone_name):
         if bone_name not in self.name_to_idx: return None
         return self.rest_world_pos[self.name_to_idx[bone_name]]
+
+    def load_idle_arm_locals(self, idle_glb_path):
+        """Load per-bone LOCAL rotations from a reference idle GLB (e.g.
+        an Mixamo standing-idle animation). Used as a fallback for limbs
+        with no animation data so they hang naturally instead of staying
+        in the avatar's stiff T/A-pose. Returns a dict of {bone_name: quat}.
+        """
+        try:
+            ref = GLTF2().load(idle_glb_path)
+        except Exception as e:
+            print(f"  [relaxed-rest] could not load idle ref {idle_glb_path}: {e}")
+            return {}
+        def _strip(name):
+            for pfx in ('mixamorig9:', 'mixamorig:', 'mixamorig1:'):
+                if name.startswith(pfx): return name[len(pfx):]
+            return name
+        out = {}
+        for n in ref.nodes:
+            if not n.name: continue
+            nm = _strip(n.name)
+            if nm in self.name_to_idx and n.rotation is not None:
+                out[nm] = np.array(n.rotation, dtype=np.float64)
+        return out
 
     def _compute_world_q(self, idx):
         chain = []; cur = idx
@@ -272,7 +317,7 @@ def get_body_landmark(pose, joint_name):
     return None
 
 
-def solve_body_frame(pose, rig, vis_threshold=0.5):
+def solve_body_frame(pose, rig, vis_threshold=0.75):
     """Solve LOCAL rotations for body bones (arms + forearms).
     
     Skips per-side retargeting when the side's elbow/wrist visibility is below threshold.
@@ -306,7 +351,25 @@ def solve_body_frame(pose, rig, vis_threshold=0.5):
             sh = arr_w[LM.L_SHOULDER]; el = arr_w[LM.L_ELBOW]; wr = arr_w[LM.L_WRIST]
         else:
             sh = arr_w[LM.R_SHOULDER]; el = arr_w[LM.R_ELBOW]; wr = arr_w[LM.R_WRIST]
-        ax = np.cross(el - sh, wr - el)
+        upper = el - sh
+        fore = wr - el
+        un = np.linalg.norm(upper); fn = np.linalg.norm(fore)
+        if un < 1e-9 or fn < 1e-9: return None
+        dot = float(np.dot(upper/un, fore/fn))
+        if dot > 0.95:
+            # Straight-arm runtime: same axis convention as rest (body_forward)
+            lhip = arr_w[LM.L_HIP]; rhip = arr_w[LM.R_HIP]
+            lsh = arr_w[LM.L_SHOULDER]; rsh = arr_w[LM.R_SHOULDER]
+            spine_lm = ((lhip + rhip) * 0.5 + (lsh + rsh) * 0.5) * 0.5
+            body_fwd = triangle_normal(spine_lm, rhip, lhip)
+            ax = np.cross(upper/un, body_fwd)
+            n = np.linalg.norm(ax)
+            if n < 1e-6:
+                ax = np.cross(upper/un, np.array([0.0, 1.0, 0.0]))
+                n = np.linalg.norm(ax)
+                if n < 1e-6: return None
+            return ax / n
+        ax = np.cross(upper, fore)
         n = np.linalg.norm(ax)
         if n < 1e-5: return None
         return ax / n
@@ -403,11 +466,29 @@ def solve_hand_frame(pose, hand_lm, side, rig, forearm_anim_world_q=None, hand_l
     # Convert hand world landmarks via axis flip (same as point cloud renderer).
     h_world = np.array([mp_to_world(h[k]) for k in range(len(h))])
 
-    # Build OBSERVED hand frame in world space:
-    #   forward = wrist -> middle_MCP (palm direction)
-    #   palm normal = cross(wrist->index_MCP, wrist->pinky_MCP)
-    obs_forward = h_world[HM.MIDDLE1] - h_world[HM.WRIST]
+    # Build OBSERVED hand frame in world space.
+    # For the FORWARD axis we use the body pose's forearm direction
+    # (elbow \u2192 wrist) instead of hand_local (wrist \u2192 middle_MCP),
+    # because the body pose lives in true world coordinates and the
+    # forearm direction is what determines where the hand actually points
+    # in body space. The PALM normal uses the body's image-space hand
+    # landmarks (anchored in world via the camera) when available, falling
+    # back to hand_world's palm normal.
+    obs_forward = None
+    if pose is not None:
+        pw_b = np.array(pose)
+        body_w = np.array([mp_to_world(pw_b[i, :3]) for i in range(len(pw_b))])
+        if side == 'Left':
+            elbow_b = body_w[LM.L_ELBOW]; wrist_b = body_w[LM.L_WRIST]
+        else:
+            elbow_b = body_w[LM.R_ELBOW]; wrist_b = body_w[LM.R_WRIST]
+        forearm_dir = wrist_b - elbow_b
+        if np.linalg.norm(forearm_dir) > 1e-6:
+            obs_forward = forearm_dir
+    if obs_forward is None:
+        obs_forward = h_world[HM.MIDDLE1] - h_world[HM.WRIST]
     if np.linalg.norm(obs_forward) < 1e-6: return out
+    # Palm normal: cross of (index-wrist, pinky-wrist) in hand_world.
     obs_palm_normal = triangle_normal(h_world[HM.WRIST], h_world[HM.INDEX1], h_world[HM.PINKY1])
 
     # Build REST hand frame from avatar rest world positions:
@@ -419,7 +500,11 @@ def solve_hand_frame(pose, hand_lm, side, rig, forearm_anim_world_q=None, hand_l
     middle_rest = rig.world_pos(f'{side}HandMiddle1')
     if any(p is None for p in [wrist_rest, index_rest, pinky_rest, middle_rest]):
         return out
-    rest_forward = middle_rest - wrist_rest
+    # Use the avatar's forearm direction as 'rest_forward' to match what
+    # obs_forward represents (both are now elbow\u2192wrist in their respective
+    # worlds, not wrist\u2192middle).
+    fore_rest = rig.world_pos(f'{side}ForeArm')
+    rest_forward = wrist_rest - fore_rest if fore_rest is not None else middle_rest - wrist_rest
     if np.linalg.norm(rest_forward) < 1e-6: return out
     rest_palm_normal = triangle_normal(wrist_rest, index_rest, pinky_rest)
 
@@ -685,11 +770,56 @@ def main():
         for i, fr in enumerate(src):
             for b, q in fr.items(): tracks_raw[b][i] = q
 
-    # Fill None slots with the bone's REST LOCAL rotation so the avatar returns to
-    # its natural resting pose (A-pose for RPM models) when MediaPipe can't see the limb.
+    # Determine which sides were ever animated. If a side's arm never produced
+    # any solved frame, we force-emit a constant 'arm hanging relaxed' track so
+    # the limb doesn't stay stuck in the avatar's A/T-pose rest (arm out
+    # horizontally) just because MediaPipe couldn't see it. We use the local
+    # rotations from a reference idle GLB so the pose matches what the resting
+    # animation looks like (arms gently at the side, not glued to the leg).
+    def _side_animated(side):
+        arm = f'{side}Arm'; fore = f'{side}ForeArm'
+        for src in (arm, fore):
+            if src in tracks_raw and any(q is not None for q in tracks_raw[src]):
+                return True
+        return False
+    idle_ref_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                 'data', 'reference_animations', 'M_Standing_Expressions_012.glb')
+    idle_locals = rig.load_idle_arm_locals(idle_ref_path) if os.path.exists(idle_ref_path) else {}
+    # The set of arm bones we always want to fall back to the idle reference
+    # pose for (instead of the avatar's T/A-pose bind). This applies BOTH to
+    # fully-unanimated sides and to per-frame None slots in animated sides
+    # (e.g. trailing buffer frames after trim-trailing where the solver
+    # returned no rotation \u2014 those would otherwise snap to the T-pose).
+    ARM_BONES = ('LeftArm', 'LeftForeArm', 'LeftHand',
+                 'RightArm', 'RightForeArm', 'RightHand')
+    relaxed_local = {}
+    for side in ('Left', 'Right'):
+        if not _side_animated(side):
+            for bone in (f'{side}Arm', f'{side}ForeArm', f'{side}Hand'):
+                if bone not in rig.name_to_idx:
+                    continue
+                # Prefer the idle reference pose; fall back to the avatar's own rest local.
+                relaxed_local[bone] = idle_locals.get(bone, rig.rest_local_q[rig.name_to_idx[bone]])
+                if bone not in tracks_raw:
+                    tracks_raw[bone] = [None] * n
+            src_note = 'idle reference' if any(b in idle_locals for b in (f'{side}Arm', f'{side}ForeArm', f'{side}Hand')) else 'avatar rest'
+            print(f"  [relaxed-rest] {side} arm has no animation \u2192 using {src_note} pose")
+
+    # Fill None slots with a sensible fallback rotation so the avatar doesn't
+    # snap to its T/A-pose bind in any unanimated frame.
+    #   - For arm bones (Arm/ForeArm/Hand on either side): use the idle
+    #     reference pose if available, otherwise the avatar's rest local.
+    #     This prevents the active arm from flashing to T-pose during the
+    #     trailing buffer frames added by --trim-trailing.
+    #   - For everything else (spine, fingers, etc.): use the avatar's own
+    #     rest local as before.
     tracks = {}
     for b, seq in tracks_raw.items():
-        if b in rig.name_to_idx:
+        if b in relaxed_local:
+            rest_local = relaxed_local[b]
+        elif b in ARM_BONES and b in idle_locals:
+            rest_local = idle_locals[b]
+        elif b in rig.name_to_idx:
             rest_local = rig.rest_local_q[rig.name_to_idx[b]]
         else:
             rest_local = quat_identity()

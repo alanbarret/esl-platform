@@ -120,8 +120,12 @@ def extract_mocap_and_skeleton(token: str, video_path: Path,
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         res = holistic.process(rgb)
         fd: dict[str, list] = {}
+        # pose_landmarks: image-normalized (0..1) — used by skeleton wireframe + 2D overlays
+        if res.pose_landmarks:
+            fd["pose"] = [[lm.x, lm.y, lm.z, lm.visibility] for lm in res.pose_landmarks.landmark]
+        # pose_world_landmarks: metric meters — used by the 3D retargeter
         if res.pose_world_landmarks:
-            fd["pose"] = [[lm.x, lm.y, lm.z, lm.visibility] for lm in res.pose_world_landmarks.landmark]
+            fd["pose_world"] = [[lm.x, lm.y, lm.z, lm.visibility] for lm in res.pose_world_landmarks.landmark]
         if res.left_hand_landmarks:
             fd["lhand"] = [[lm.x, lm.y, lm.z] for lm in res.left_hand_landmarks.landmark]
         if res.right_hand_landmarks:
@@ -191,24 +195,64 @@ def _render_skeleton(token: str, frames_data: list[dict], has_hand: list[bool],
             for p in pts:
                 cv2.circle(img, p, 3, color, -1)
 
-        # Pose: pose_world is centered-around-hips and normalized; scale to fit the frame.
+        # Use pose landmarks (image-normalized 0..1 — same coord system as hand landmarks).
+        # Older files stored pose_world (-0.5..0.5 meters); detect and handle both.
         pose = fd.get("pose")
+        pose_is_world = pose and (pose[0][0] < 0 or pose[0][1] < 0)
+
+        if pose_is_world:
+            # World coords: scale + centre to fit the frame.
+            pose_scale = H * 0.85
+            pose_off_x = W // 2
+            pose_off_y = int(H * 0.65)
+            def pose_to_px(lm):
+                return int(lm[0] * pose_scale + pose_off_x), int(lm[1] * pose_scale + pose_off_y)
+        else:
+            # Image-normalized 0..1: map directly to pixels.
+            def pose_to_px(lm):
+                return int(lm[0] * W), int(lm[1] * H)
+
         if pose:
-            # Use the [-0.5..0.5] world range scaled to the frame, offset so hips sit mid-frame.
-            scale = H * 0.45
-            draw_landmarks(pose, POSE_CONN, (255, 80, 220), scale, scale, W // 2, H * 0.6)
+            # Body skeleton
+            pts = [pose_to_px(lm) for lm in pose]
+            for a, b in POSE_CONN:
+                if a < len(pts) and b < len(pts):
+                    cv2.line(img, pts[a], pts[b], (255, 80, 220), 2, cv2.LINE_AA)
+            for p in pts:
+                cv2.circle(img, p, 3, (255, 80, 220), -1)
+
+        def draw_hand_attached(hand_lm, pose_wrist_idx, pose_elbow_idx, color):
+            if not hand_lm: return
+            if not pose or len(pose) <= pose_wrist_idx: return
+            wrist_px = pose_to_px(pose[pose_wrist_idx])
+            elbow_px = pose_to_px(pose[pose_elbow_idx])
+            forearm_len = ((wrist_px[0]-elbow_px[0])**2 + (wrist_px[1]-elbow_px[1])**2) ** 0.5
+            if forearm_len < 5: return
+            # Compute hand's own extent (lm 0 = wrist, lm 12 = middle fingertip)
+            ref_size = ((hand_lm[12][0]-hand_lm[0][0])**2 + (hand_lm[12][1]-hand_lm[0][1])**2) ** 0.5
+            if ref_size < 0.01: return
+            # Scale: hand should be ~70% of forearm length in pixels
+            scale = (forearm_len * 0.7) / ref_size
+            def hand_to_px(lm):
+                dx = (lm[0] - hand_lm[0][0]) * scale
+                dy = (lm[1] - hand_lm[0][1]) * scale
+                return int(wrist_px[0] + dx), int(wrist_px[1] + dy)
+            pts = [hand_to_px(lm) for lm in hand_lm]
+            for a, b in HAND_CONN:
+                if a < len(pts) and b < len(pts):
+                    cv2.line(img, pts[a], pts[b], color, 2, cv2.LINE_AA)
+            for p in pts:
+                cv2.circle(img, p, 3, color, -1)
+
         lh = fd.get("lhand")
-        if lh:
-            # Hands use image-relative coords; project to top-left as a rough overlay.
-            draw_landmarks(lh, HAND_CONN, (80, 255, 80), W, H, 0, 0)
         rh = fd.get("rhand")
-        if rh:
-            draw_landmarks(rh, HAND_CONN, (80, 200, 255), W, H, 0, 0)
+        draw_hand_attached(lh, 15, 13, (80, 255, 80))   # MediaPipe pose: 15=L wrist, 13=L elbow
+        draw_hand_attached(rh, 16, 14, (80, 200, 255))  # 16=R wrist, 14=R elbow
 
         writer.write(img)
     writer.release()
 
-    # Re-encode to H.264 for browser playback
+    # Re-encode to H.264. Keep 640x360 (no crop) so we can debug.
     out_mp4 = SKELETON_DIR / f"{token}.mp4"
     subprocess.run(
         ["ffmpeg", "-y", "-i", str(tmp_avi),

@@ -91,10 +91,11 @@ async function main() {
   page.on('console', (msg) => console.log('  [page]', msg.text()));
   page.on('pageerror', (err) => console.error('  [page-error]', err.message));
 
+  page.setDefaultNavigationTimeout(90000);
   await page.goto(url, { waitUntil: 'load' });
 
   // Wait for the model + animations to be ready
-  await page.waitForFunction('window.__renderReady === true || window.__renderError', { timeout: 30000 });
+  await page.waitForFunction('window.__renderReady === true || window.__renderError', { timeout: 90000 });
   const err = await page.evaluate('window.__renderError');
   if (err) { console.error('Renderer error:', err); process.exit(2); }
 

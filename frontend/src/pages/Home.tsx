@@ -179,8 +179,8 @@ export default function Home() {
                 <option value="FAA">ف Faa</option>
                 <option value="QAAF">ق Qaaf</option>
                 <option value="KAAF">ك Kaaf</option>
-                <option value="LAA">ل Laa</option>
-                <option value="LAAM">لا Laam</option>
+                <option value="LAAM">ل Laam</option>
+                <option value="LAA">لا Laa</option>
                 <option value="MEEM">م Meem</option>
                 <option value="NOON">ن Noon</option>
                 <option value="YAA">ي Yaa</option>
