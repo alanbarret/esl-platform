@@ -198,24 +198,28 @@ window.__renderFrameAtTime = function (t) {
     const dt = (window.__lastT < 0) ? 0 : Math.max(0, t - lastT);
     window.__lastT = t;
 
-    // Set weights based on phase.
+    // Phase weights.
+    //
+    // We drive the ESL action's playhead MANUALLY by clip-time so the clip
+    // can never loop, no matter what AnimationMixer thinks of LoopOnce or
+    // clampWhenFinished. The clip's playhead is bounded to [0, duration],
+    // and during POST_HOLD we just hold it at `duration` (last keyframe).
     let idleW = 1, eslW = 0;
     if (t < FADE) {
       const k = t / FADE; idleW = 1 - k; eslW = k;
-    } else if (t < FADE + eslDur) {
-      idleW = 0; eslW = 1;
-    } else if (t < FADE + eslDur + FADE) {
-      const k = (t - FADE - eslDur) / FADE; idleW = k; eslW = 1 - k;
     } else {
-      idleW = 1; eslW = 0;
+      // Active sign AND post-hold: ESL clip alone, with playhead clamped
+      // to its last keyframe during POST_HOLD so the avatar freezes there.
+      idleW = 0; eslW = 1;
     }
-    // Unpause ESL once any weight goes to it
-    if (window.__action && window.__action.paused && eslW > 0) {
+    if (window.__action) {
       window.__action.paused = false;
-      window.__action.time = 0;
+      // ESL clip-time = real time minus the FADE-in offset, clamped to clip duration.
+      const clipT = Math.max(0, Math.min(eslDur, t - FADE));
+      window.__action.time = clipT;
+      window.__action.setEffectiveWeight(eslW);
     }
     if (window.__idleAction) window.__idleAction.setEffectiveWeight(idleW);
-    if (window.__action) window.__action.setEffectiveWeight(eslW);
     mixer.update(dt);
   }
   renderer.render(scene, camera);

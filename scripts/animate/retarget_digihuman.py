@@ -466,16 +466,29 @@ def solve_hand_frame(pose, hand_lm, side, rig, forearm_anim_world_q=None, hand_l
     # Convert hand world landmarks via axis flip (same as point cloud renderer).
     h_world = np.array([mp_to_world(h[k]) for k in range(len(h))])
 
-    # Build OBSERVED hand frame in world space.
-    # For the FORWARD axis we use the body pose's forearm direction
-    # (elbow \u2192 wrist) instead of hand_local (wrist \u2192 middle_MCP),
-    # because the body pose lives in true world coordinates and the
-    # forearm direction is what determines where the hand actually points
-    # in body space. The PALM normal uses the body's image-space hand
-    # landmarks (anchored in world via the camera) when available, falling
-    # back to hand_world's palm normal.
+    # Build OBSERVED hand frame in body-world space.
+    #
+    # The wrist's rotation must align the avatar's anatomical "finger
+    # extension axis" (wrist \u2192 middle_MCP) with the source's same axis,
+    # both expressed in the SAME world frame.
+    #
+    # `hand_world` (the metric hand landmarks) live in a HAND-LOCAL frame,
+    # not body world, so we can't use them directly for the forward axis.
+    # Instead we use `hand_lm_img` (image-normalized landmarks) which are in
+    # the camera's image plane \u2014 the same frame as pose_img \u2014 and
+    # convert to our world via the standard MediaPipe \u2192 world axis flip
+    # (x, -y, -z). This gives us a body-world wrist \u2192 middle vector that
+    # correctly reflects where the fingers are extending in 3D space.
     obs_forward = None
-    if pose is not None:
+    if hand_lm_img is not None:
+        hi = np.asarray(hand_lm_img)
+        if hi.shape[0] >= 21:
+            wi = hi[HM.WRIST]; mi = hi[HM.MIDDLE1]
+            obs_forward = np.array([mi[0] - wi[0], -(mi[1] - wi[1]), -(mi[2] - wi[2])])
+            if np.linalg.norm(obs_forward) < 1e-6:
+                obs_forward = None
+    # Fallback to forearm direction if image landmarks are missing.
+    if obs_forward is None and pose is not None:
         pw_b = np.array(pose)
         body_w = np.array([mp_to_world(pw_b[i, :3]) for i in range(len(pw_b))])
         if side == 'Left':
@@ -488,8 +501,20 @@ def solve_hand_frame(pose, hand_lm, side, rig, forearm_anim_world_q=None, hand_l
     if obs_forward is None:
         obs_forward = h_world[HM.MIDDLE1] - h_world[HM.WRIST]
     if np.linalg.norm(obs_forward) < 1e-6: return out
-    # Palm normal: cross of (index-wrist, pinky-wrist) in hand_world.
-    obs_palm_normal = triangle_normal(h_world[HM.WRIST], h_world[HM.INDEX1], h_world[HM.PINKY1])
+
+    # Palm normal in body world: cross of (index-wrist, pinky-wrist) using
+    # the same image-derived landmarks for consistency. Falls back to
+    # hand_world's palm normal if image data is missing.
+    obs_palm_normal = None
+    if hand_lm_img is not None:
+        hi = np.asarray(hand_lm_img)
+        if hi.shape[0] >= 21:
+            w  = np.array([hi[HM.WRIST  ][0], -hi[HM.WRIST  ][1], -hi[HM.WRIST  ][2]])
+            i_ = np.array([hi[HM.INDEX1 ][0], -hi[HM.INDEX1 ][1], -hi[HM.INDEX1 ][2]])
+            p_ = np.array([hi[HM.PINKY1 ][0], -hi[HM.PINKY1 ][1], -hi[HM.PINKY1 ][2]])
+            obs_palm_normal = triangle_normal(w, i_, p_)
+    if obs_palm_normal is None:
+        obs_palm_normal = triangle_normal(h_world[HM.WRIST], h_world[HM.INDEX1], h_world[HM.PINKY1])
 
     # Build REST hand frame from avatar rest world positions:
     hand_bone = f'{side}Hand'
@@ -500,11 +525,9 @@ def solve_hand_frame(pose, hand_lm, side, rig, forearm_anim_world_q=None, hand_l
     middle_rest = rig.world_pos(f'{side}HandMiddle1')
     if any(p is None for p in [wrist_rest, index_rest, pinky_rest, middle_rest]):
         return out
-    # Use the avatar's forearm direction as 'rest_forward' to match what
-    # obs_forward represents (both are now elbow\u2192wrist in their respective
-    # worlds, not wrist\u2192middle).
-    fore_rest = rig.world_pos(f'{side}ForeArm')
-    rest_forward = wrist_rest - fore_rest if fore_rest is not None else middle_rest - wrist_rest
+    # Rest forward is now the avatar's anatomical finger-extension axis
+    # (wrist \u2192 middle_MCP), matching what obs_forward represents.
+    rest_forward = middle_rest - wrist_rest
     if np.linalg.norm(rest_forward) < 1e-6: return out
     rest_palm_normal = triangle_normal(wrist_rest, index_rest, pinky_rest)
 

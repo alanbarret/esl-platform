@@ -399,7 +399,56 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json({"error": f"No avatar video for {raw_name}"}, 404)
 
         else:
+            # Static frontend fallback (SPA): serve files from frontend/dist,
+            # falling back to index.html for client-side routes.
+            self._serve_static(p)
+
+    def _serve_static(self, path: str):
+        dist = BASE / 'frontend' / 'dist'
+        if not dist.exists():
             self.send_json({"error": "Not found"}, 404)
+            return
+        # Strip leading slash; default to index.html
+        rel = path.lstrip('/') or 'index.html'
+        candidate = (dist / rel).resolve()
+        # Prevent escaping dist/
+        try:
+            candidate.relative_to(dist.resolve())
+        except ValueError:
+            self.send_json({"error": "Forbidden"}, 403)
+            return
+        if candidate.is_dir():
+            candidate = candidate / 'index.html'
+        if not candidate.exists():
+            # SPA fallback
+            candidate = dist / 'index.html'
+            if not candidate.exists():
+                self.send_json({"error": "Not found"}, 404)
+                return
+        ext = candidate.suffix.lower()
+        mime = {
+            '.html': 'text/html; charset=utf-8',
+            '.js':   'application/javascript; charset=utf-8',
+            '.mjs':  'application/javascript; charset=utf-8',
+            '.css':  'text/css; charset=utf-8',
+            '.json': 'application/json; charset=utf-8',
+            '.svg':  'image/svg+xml',
+            '.png':  'image/png',
+            '.jpg':  'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif':  'image/gif',
+            '.webp': 'image/webp',
+            '.ico':  'image/x-icon',
+            '.woff': 'font/woff',
+            '.woff2':'font/woff2',
+            '.ttf':  'font/ttf',
+            '.map':  'application/json',
+            '.mp4':  'video/mp4',
+            '.glb':  'model/gltf-binary',
+        }.get(ext, 'application/octet-stream')
+        # No cache for HTML (so updates show up), long cache for hashed assets.
+        cache = 0 if ext == '.html' else 86400
+        self.serve_file(candidate, mime, cache=cache)
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length", 0))
